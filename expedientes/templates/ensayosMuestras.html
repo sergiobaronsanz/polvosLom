@@ -1,0 +1,37 @@
+{% extends 'pages/layout.html'%}
+{%load static%}
+
+{%block style%} <link rel="stylesheet" href="{% static "css/expedientes/estilos.css" %}"> {%endblock%}
+
+{%block content%}
+
+<div id="content-wrapper" class="d-flex flex-column">
+    <div class="container py-5">  
+      <div class="row justify-content-center">
+          <div class="card mb-4 col-lg-8">
+            <div class="card-body">
+              <h2 class="text-center mb-5"> Ingresa los datos de la muestra   </h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="my-4 row col-lg-12 align-items-center justify-content-center border border-info">
+                            <h4 class="col-lg-7 mb-0 mt-3" name= {{campo.label}}>Rellene los datos para {{abreviatura}}</h4>                         
+                            {% for campo in form %}
+                                <div class="my-4 row col-lg-12 align-items-center justify-content-center" >
+                                    <label class="col-lg-5 mb-0" name= {{campo.label}}>{{ campo.label }}</label>
+                                    <div class="col-lg-7">
+                                        {{ campo }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row justify-content-center">
+                            <button id= "enviarFormulario" type="submit" class="btn btn-primary">Guardar {{abreviatura}}</button>
+                        </div>
+                    </form>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+{%endblock%}

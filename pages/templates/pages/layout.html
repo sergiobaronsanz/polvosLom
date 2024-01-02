@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+{% load static%}
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Dashboard</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    {%block style%}{%endblock%}
+ 
+
+    <!-- Custom fonts for this template-->
+    
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{%static 'css/pages/sb-admin-2.min.css'%}" rel="stylesheet">
+    <link href="{%static 'vendor/pages/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+
+    <style>
+        .blue-label{
+            color: #02265e!important;
+        }
+    </style>
+
+    <!--Para el autocompletado-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    
+    
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    
+    
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion pt-4" style= "background: #a9b2bb" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center pt-5 pb-5" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    
+                </div>
+                <img src="{%static 'img/pages/logo.png'%}" style="width: 90px" class="p-auto">
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'inicio'%}">
+                    <i class="bi bi-house blue-label"></i>
+                    
+                    <span class="blue-label">Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading blue-label">
+                ENSAYOS
+            </div>
+
+            <!-- Nav Item - Expedientes -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="bi bi-virus blue-label"></i>
+                    <span class="blue-label">Expedientes</span>
+                </a>
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'nuevoExpediente'%}">Nuevo expediente</a>
+                        <a class="collapse-item" href="utilities-border.html">Ver expedientes</a>
+                    </div>
+                </div>
+
+            <!-- Nav Item - Muestras -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseexpedientes"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="bi bi-virus blue-label"></i>
+                    <span class="blue-label">Muestras</span>
+                </a>
+                <div id="collapseexpedientes" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'recepcionMuestra'%}">Nueva muestra</a>
+                        <a class="collapse-item" href="#">Ver muestras</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Ensayos -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTest"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="bi bi-fire blue-label"></i>
+                    <span class="blue-label">Ensayos</span>
+                </a>
+                <div id="collapseTest" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="utilities-border.html">Humedad</a>
+                        <a class="collapse-item" href="utilities-color.html">Granulometría</a>
+                        <a class="collapse-item" href="utilities-color.html">TMIc</a>
+                        <a class="collapse-item" href="utilities-border.html">TMin</a>
+                        <a class="collapse-item" href="utilities-color.html">LIE</a>
+                        <a class="collapse-item" href="utilities-border.html">EMI</a>
+                        <a class="collapse-item" href="utilities-color.html">PMAX</a>
+                        <a class="collapse-item" href="utilities-border.html">CLO</a>
+                        <a class="collapse-item" href="utilities-color.html">REC</a>
+                        <a class="collapse-item" href="utilities-border.html">N1</a>
+                        <a class="collapse-item" href="utilities-color.html">N2</a>
+                        <a class="collapse-item" href="utilities-border.html">N3</a>
+                        <a class="collapse-item" href="utilities-border.html">N4</a>
+                        <a class="collapse-item" href="utilities-color.html">O1</a>
+                        <a class="collapse-item" href="utilities-border.html">IMacie</a>
+                        <a class="collapse-item" href="utilities-border.html">TAI</a>
+                    </div>
+                </div>
+            </li>
+
+           
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+            <!-- Sidebar Message -->
+            <div class="sidebar-card d-none d-lg-flex">
+                <img class="sidebar-card-illustration mb-2" src="{%static 'img/pages/undraw_rocket.svg'%}" alt="...">
+                <p class="text-center mb-2 blue-label"><strong>¿Problemas?</strong> Escríbeme anda</p>
+                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Escribir</a>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        {% block content%}
+        
+        {% endblock %}
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+
+    <script src="{% static 'vendor/pages/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/pages/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/pages/jquery-ui.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/pages/jquery-easing/jquery.easing.min.js'%}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/pages/sb-admin-2.min.js'%}"></script>
+    <script src="{% static 'js/pages/sb-admin-2.js'%}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/pages/chart.js/Chart.min.js'%}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{%static 'js/pages/demo/chart-area-demo.js'%}"></script>
+    <script src="{%static 'js/pages/demo/chart-pie-demo.js'%}"></script>
+    <script src="{%static 'vendor/pages/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{%static 'vendor/pages/jquery-easing/jquery.easing.min.js'%}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{%static 'js/pages/sb-admin-2.min.js'%}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{%static 'vendor/pages/chart.js/Chart.min.js'%}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{%static 'js/pages/demo/chart-area-demo.js'%}"></script>
+    <script src="{%static 'js/pages/demo/chart-pie-demo.js'%}"></script>
+    <script src="{%static 'js/pages/demo/chart-bar-demo.js'%}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+{% extends 'pages/layout.html'%}
+{%load static%}
+
+{%block style%} <link rel="stylesheet" href="{% static "css/muestras/estilos.css" %}"> {%endblock%}
+
+{%block content%}
+<div id="content-wrapper" class="d-flex flex-column">
+    <div class="container py-5">  
+      <div class="row">
+        <div class="col-lg-10 m-auto">
+          <div class="card mb-4">
+            <div class="card-body">
+              <form method="post">
+                {% csrf_token %}
+                {% for campo in form %}
+                    <div class="my-4 row col-lg-12 align-items-center justify-content-center">
+                        <label class="col-lg-3 mb-0">{{ campo.label }}</label>
+                        <div class="col-lg-9">
+                            {{ campo }}
+                            {% if campo.errors %}
+                                <ul class="text-danger">
+                                    {% for error in campo.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="row justify-content-center">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{%endblock%}

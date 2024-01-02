@@ -1,0 +1,132 @@
+{% extends 'pages/layout.html'%}
+{%load static%}
+
+{%block style%} <link rel="stylesheet" href="{% static "css/muestras/estilos.css" %}"> {%endblock%}
+
+{%block content%}
+<div id="content-wrapper" class="d-flex flex-column">
+    <div class="container py-5">  
+      <div class="row justify-content-center">
+          <div class="card mb-4 col-lg-8">
+            <div class="card-body">
+              <h2 class="text-center mb-5"> Ingresa los datos del expediente </h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for campo in form %}
+                        <div class="my-4 row col-lg-12 align-items-center justify-content-center" >
+                            <label class="col-lg-5 mb-0" name= {{campo.label}}>{{ campo.label }}</label>
+                            <div class="col-lg-7">
+                                {{ campo }}
+                            </div>
+                            {%if campo.label == "Abreviatura"%} 
+                              <p id="abreviaturaError" style= "display:none; color: red"> La abreviatura está en uso </p>
+                            {%endif%}
+                        </div>
+                    {% endfor %}
+                    <div class="row justify-content-center">
+                        <button type="submit" class="btn btn-primary" id= "envioFormulario">Siguiente</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script>
+  var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+
+  //Autocompletado
+  $('input[name="empresa"]').autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: '{% url "empresasSugeridas" %}',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          'action': 'autocomplete',
+          'term': request.term,
+          csrfmiddlewaretoken: csrf_token
+        },
+      }).done(function(data){
+        response(data);
+      });
+    },
+    delay:500,
+  });
+
+  //Ocultar abreviatura
+  $('input[name="empresa"]').on('input blur', function() {
+    // Obtener el valor del campo de entrada
+    var searchTerm = $(this).val();
+
+    // Enviar una solicitud AJAX
+    $.ajax({
+        url: '{% url "empresasExistente" %}',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            'term': searchTerm,
+            csrfmiddlewaretoken: csrf_token
+        },
+        success: function(data) {
+            // Manejar la respuesta de la solicitud AJAX aquí
+            if (data === false) {
+              // Si data está vacío, oculta el campo Abreviatura
+              $('input[name="abreviatura"]').show();
+              $('label[name="Abreviatura"]').show();
+              
+            }else {
+              // Si hay datos, muestra el campo Abreviatura
+              $('input[name="abreviatura"]').hide();
+              $('label[name="Abreviatura"]').hide();
+              
+          }
+        },
+        error: function(error) {
+            // Manejar errores si los hay
+            console.error(error);
+        }
+    });
+});
+
+  //Comprobar abreviatura
+  $('input[name="abreviatura"]').on('input blur', function() {
+    // Obtener el valor del campo de entrada
+    var searchTerm = $(this).val();
+
+    // Enviar una solicitud AJAX
+    $.ajax({
+        url: '{% url "abreviaturaExistente" %}',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            'term': searchTerm,
+            csrfmiddlewaretoken: csrf_token
+        },
+        success: function(data) {
+            // Manejar la respuesta de la solicitud AJAX aquí
+            if (data === false) {
+              // Si data es falso
+              $('#abreviaturaError').hide();  
+              $('#envioFormulario').prop('disabled', false);           
+            }else {
+              // Si es verdadero, muestra el mensaje de error y anula el envio del form
+              $('#abreviaturaError').show();
+              $('#envioFormulario').prop('disabled', true);
+          }
+        },
+        error: function(error) {
+            // Manejar errores si los hay
+            console.error(error);
+        }
+    });
+  });
+  
+</script>
+
+{%endblock%}
