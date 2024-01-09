@@ -23,8 +23,12 @@ def nuevoExpediente(request):
                 empresa= Empresa(empresa=empresaForm, abreviatura=abreviaturaForm)
                 empresa.save()
             
-            expediente= Expedientes(expediente= expedienteForm, empresa= empresa, estado=1,nMuestras=nMuestrasForm)
-            expediente.save()   
+            try:
+                expediente=Expedientes.objects.get(expediente=expedienteForm)
+                expediente.nMuestras += int(nMuestrasForm)
+            except ObjectDoesNotExist:
+                expediente= Expedientes(expediente= expedienteForm, empresa= empresa, estado=1,nMuestras=nMuestrasForm)
+                expediente.save()   
             
             abreviatura= empresa.abreviatura 
             
@@ -62,7 +66,7 @@ def abreviaturaExistente(request):
     return JsonResponse(data, safe=False)
 
 
-#Seleccion ensayos muestras
+#Seleccion de los ensayos para cada muestra
 def ensayosMuestras(request,expediente, empresa, nMuestras):
     
     #Extraemos los objetos de expediente y empresa
@@ -119,3 +123,8 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         'abreviatura': abreviatura,
         'form': form
     })
+
+
+#Ver expedientes
+def verExpedientes(request):
+    return render(request, "verExpedientes.html", )

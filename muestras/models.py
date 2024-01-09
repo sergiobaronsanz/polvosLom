@@ -30,7 +30,7 @@ class Muestras(models.Model):
         verbose_name_plural="Muestras"
         
     def __str__(self):
-        return f"{self.expediente.empresa.abreviatura}- {self.id_muestra}| {self.expediente}"
+        return f"{self.empresa} | {self.expediente.empresa.abreviatura}- {self.id_muestra} | {self.expediente}"
 
 
 class DescripcionMuestra(models.Model):
@@ -58,7 +58,7 @@ class DescripcionMuestra(models.Model):
     etiquetado= models.CharField(max_length=300, choices=etiqueta, verbose_name="Etiquetado")
     envolturaExt= models.CharField(max_length=300, verbose_name="Envoltura exterior")
     envolturaInt= models.CharField(max_length=300, verbose_name="Envoltura interior")
-    peso= models.DecimalField(decimal_places=2, max_digits=3, verbose_name="Peso")
+    peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso")
     procedencia= models.CharField(max_length=300, verbose_name="Procedencia")
     estadoEnvio=models.CharField(max_length=300, verbose_name="Estado del envío")
     aspectoMuestra=models.CharField(max_length=300, verbose_name="Aspecto de la muestra")

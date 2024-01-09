@@ -19,7 +19,7 @@ from muestras.forms import DescripcionMuestraForm, MuestrasForm
 def recepcionMuestra(request):
     if request.method == 'POST':
         print("hola")
-        form = DescripcionMuestraForm(request.POST)
+        form = DescripcionMuestraForm(request.POST, request.FILES)
         if form.is_valid():
             # Guardar el formulario si es válido
             form.save()
