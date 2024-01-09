@@ -127,4 +127,33 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
 
 #Ver expedientes
 def verExpedientes(request):
-    return render(request, "verExpedientes.html", )
+
+    #Sacamos los expedientes
+    try:
+        expedientes= Expedientes.objects.all().order_by()
+    except ObjectDoesNotExist:
+        print("no hay expedientes")
+
+    
+
+
+
+    return render(request, "verExpedientes.html",{
+        'expedientes': expedientes
+    } )
+
+
+def expediente (request, nExpediente):
+
+    #Sacamos el expediente
+    try:
+        expediente= Expedientes.objects.get(expediente=nExpediente)
+    except ObjectDoesNotExist:
+        print("No existe expediente")
+    
+    #Sacamos las muestras asignadas a ese expediente
+
+
+    return render (request, "revisarExpediente.html", {
+        "expediente": expediente
+    })
