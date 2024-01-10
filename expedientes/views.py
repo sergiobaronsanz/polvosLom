@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from expedientes.forms import ExpedientesForm, EmpresaForm, EnsayosMuestras
 from django.http import JsonResponse
 from .models import Empresa, Expedientes
+from ensayos.models import *
 from muestras.models import Muestras
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -99,25 +100,25 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
     #mandamos el formulario
     form= EnsayosMuestras()
     
-    if request.POST:
-        listaEnsayos = request.POST.getlist('listaEnsayos')
-        observaciones= request.POST.get('observaciones')
-        
-        nuevaMuestra= Muestras(
-            id_muestra= id_muestra, 
-            empresa= empresa, 
-            expediente= expediente, 
-            observaciones= observaciones)
-        nuevaMuestra.save()
-        
-        nuevaMuestra.listaEnsayos.set(listaEnsayos) #Al ser una mny to many no se puede ingresar directamentec como las otras
-        
-        
-        if nMuestras>1:
-            return redirect('ensayosMuestras', nMuestras=nMuestras-1, empresa= empresa, expediente=expediente) 
-        else:
-            return redirect('inicio')
-    
+    if form.is_valid:
+        if request.POST:
+            listaEnsayos = request.POST.getlist('listaEnsayos')
+            observaciones= request.POST.get('observaciones')
+            
+            nuevaMuestra= Muestras(
+                id_muestra= id_muestra, 
+                empresa= empresa, 
+                expediente= expediente, 
+                observaciones= observaciones)
+            nuevaMuestra.save()
+            
+            nuevaMuestra.listaEnsayos.set(listaEnsayos) #Al ser una mny to many no se puede ingresar directamentec como las otras
+            
+            
+            if nMuestras>1:
+                return redirect('ensayosMuestras', nMuestras=nMuestras-1, empresa= empresa, expediente=expediente) 
+            else:
+                return redirect('inicio')    
     
     return render(request, 'ensayosMuestras.html',{
         'abreviatura': abreviatura,
@@ -135,9 +136,6 @@ def verExpedientes(request):
         print("no hay expedientes")
 
     
-
-
-
     return render(request, "verExpedientes.html",{
         'expedientes': expedientes
     } )

@@ -1,6 +1,7 @@
 
 from django.shortcuts import render, redirect
 from muestras.forms import DescripcionMuestraForm, MuestrasForm
+from .models import Muestras
 
 # Create your views here.
 
@@ -18,12 +19,18 @@ from muestras.forms import DescripcionMuestraForm, MuestrasForm
 
 def recepcionMuestra(request):
     if request.method == 'POST':
-        print("hola")
         form = DescripcionMuestraForm(request.POST, request.FILES)
         if form.is_valid():
             # Guardar el formulario si es válido
             form.save()
-            print("Guardado")
+            
+            #Actualizar el estado de la muestra
+            id_muestra= request.POST['muestra']
+            muestra= Muestras.objects.get(id= id_muestra)
+            muestra.estado= "3"
+            muestra.save()
+            
+            
     else:
         form = DescripcionMuestraForm()
 

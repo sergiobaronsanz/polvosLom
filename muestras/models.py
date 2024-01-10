@@ -16,14 +16,24 @@ class ListaEnsayos(models.Model):
     
         
 class Muestras(models.Model):
+    estados=[
+        ("1", "Esperando muestra"),
+        ("2", "Parada"),
+        ("3", "Ensayando"),
+        ("4", "Por revisar"),
+        ("5", "Terminada")
+    ]
+    
     id_muestra=models.IntegerField(verbose_name="Numero muestra", blank= True, null=True)
     expediente= models.ForeignKey(Expedientes, on_delete=models.CASCADE, verbose_name="Expediente")
     empresa= models.ForeignKey(Empresa, on_delete=models.CASCADE, verbose_name="Empresa", null=True, blank=True)
     listaEnsayos= models.ManyToManyField(ListaEnsayos, verbose_name="Ensayos")
+    estado= models.CharField(choices=estados, max_length=300, verbose_name="Estado", default="1")
     observaciones= models.TextField(verbose_name= "Observaciones", null=True, blank=True)
     fecha= models.DateField(auto_now_add=True, verbose_name="Fecha")
     fechaComienzo= models.DateField(verbose_name="Fecha comienzo ensayos",blank=True, null=True)
     fechaRevision= models.DateField(verbose_name="Fecha revisión", blank=True, null=True)
+    
     
     class Meta():
         verbose_name="Muestra"

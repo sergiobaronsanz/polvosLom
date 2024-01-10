@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import TMIc
 
-# Register your models here.
+class TMIcAdmin(admin.ModelAdmin):
+    list_display= ('muestra',)
+
+
+
+admin.site.register(TMIc, TMIcAdmin)
