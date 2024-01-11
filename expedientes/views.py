@@ -66,10 +66,9 @@ def abreviaturaExistente(request):
     print (abreviatura, data)
     return JsonResponse(data, safe=False)
 
-
 #Seleccion de los ensayos para cada muestra
 def ensayosMuestras(request,expediente, empresa, nMuestras):
-    
+
     #Extraemos los objetos de expediente y empresa
     try:
         expediente= Expedientes.objects.get(expediente=expediente)
@@ -104,6 +103,8 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         if request.POST:
             listaEnsayos = request.POST.getlist('listaEnsayos')
             observaciones= request.POST.get('observaciones')
+            print('----------------------')
+            print(listaEnsayos)
             
             nuevaMuestra= Muestras(
                 id_muestra= id_muestra, 
