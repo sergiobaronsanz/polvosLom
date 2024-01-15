@@ -1,0 +1,32 @@
+{% extends 'pages/layout.html'%}
+{%load static%}
+
+{%block style%} <link rel="stylesheet" href="{% static "css/muestras/estilos.css" %}"> {%endblock%}
+
+{%block content%}
+<div id="content-wrapper" class="d-flex flex-column">
+    <div class="container py-5">  
+      <div class="row">
+        <div class="col-lg-10 m-auto">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div id="descripcion-muestra" class= "row">
+                <div id="imagenes" class= "col-4">
+                  <img class= "img-fluid" src="{{descripcion.imagenMuestra.url}}" alt="Imagen de la muestra">
+                </div>
+                <div id="nombre-muestra" class= "col-8">
+                  <h2> {{muestra.empresa.abreviatura}} - {{muestra.id_muestra}}</h2>
+                  <p> {{descripcion.id_fabricante}}
+                </div>
+              </div>
+              <div id="resultados-ensayos">
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{%endblock%}

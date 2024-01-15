@@ -9,12 +9,41 @@
     <div class="container py-5">  
       <div class="row justify-content-center">
           <div class="card mb-4 col-lg-12">
-            {{expediente.expediente}}
-            {{expediente.fecha}}
+            <div class= "mt-3 d-flex justify-content-between">
+              <h2 > Las muestras asignadas al expediente {{expediente.expediente}} </h2>
+              <form  id="eliminarExpediente" method="POST" action="{% url 'eliminarExpediente' expediente.expediente %}">
+                {%csrf_token%}
+                <button type= "button" class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar Expediente</button>
+              </form>
+            </div>
+
+            <div id="muestras">
+              {%for muestra in muestras%}
+                <div class= "mt-3">
+                  <a href= "{%url 'verMuestra' muestra.id %}">
+                    <p class= "mb-0 fs-5">{{muestra.empresa.abreviatura}} - {{muestra.id_muestra}} </p>
+                    
+                  </a>
+                  <p> 
+                    Ensayos: {% for ensayo in muestra.listaEnsayos.all%} {{ensayo.ensayo}} | {%endfor%}
+                  </p>
+                </div>
+              {%endfor%}
+            </div>
           </div>
+          
       </div>
     </div>
 </div>
 
+<script>
+  console.log("hola");
+  function confirmarEliminacion(){
+    console.log("adios");
+    if (confirm("¿Está seguro de que desea eliminar esta muestra?")) {
+      document.getElementById('eliminarExpediente').submit();
+    }
+  }
+</script>
 
 {%endblock%}

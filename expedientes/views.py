@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from expedientes.forms import ExpedientesForm, EmpresaForm, EnsayosMuestras
 from django.http import JsonResponse
 from .models import Empresa, Expedientes
 from ensayos.models import *
 from muestras.models import Muestras
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.http import Http404
 
 #Seleccion Expediente
 def nuevoExpediente(request): 
@@ -132,9 +132,13 @@ def verExpedientes(request):
 
     #Sacamos los expedientes
     try:
-        expedientes= Expedientes.objects.all().order_by()
+        expedientes= Expedientes.objects.all().order_by('-fecha')
     except ObjectDoesNotExist:
         print("no hay expedientes")
+    
+    if request.POST:
+        filtro= request.POST["filtro"]
+        expedientes= Expedientes.objects.filter(expediente__icontains=filtro).order_by('-fecha')
 
     
     return render(request, "verExpedientes.html",{
@@ -145,14 +149,20 @@ def verExpedientes(request):
 def expediente (request, nExpediente):
 
     #Sacamos el expediente
-    try:
-        expediente= Expedientes.objects.get(expediente=nExpediente)
-    except ObjectDoesNotExist:
-        print("No existe expediente")
-    
+    expediente= get_object_or_404(Expedientes, expediente=nExpediente)
     #Sacamos las muestras asignadas a ese expediente
+    muestras= Muestras.objects.filter(expediente= expediente)
 
-
+        
     return render (request, "revisarExpediente.html", {
-        "expediente": expediente
+        "expediente": expediente,
+        'muestras': muestras, 
     })
+
+
+
+def eliminarExpediente (request, expediente):
+    if request.POST:
+        expediente= get_object_or_404(Expedientes, expediente=expediente)
+        expediente.delete()
+    return redirect("verExpedientes")

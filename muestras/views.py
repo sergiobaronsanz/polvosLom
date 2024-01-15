@@ -1,7 +1,7 @@
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from muestras.forms import DescripcionMuestraForm, MuestrasForm
-from .models import Muestras
+from .models import Muestras, DescripcionMuestra
 
 # Create your views here.
 
@@ -36,3 +36,17 @@ def recepcionMuestra(request):
 
     return render(request, 'recepcionMuestra.html', {'form': form})
     
+    
+def verMuestra(request, muestra_id):
+    
+    muestra= get_object_or_404(Muestras, id= muestra_id)
+    
+    #Sacamos la descripción de la muestra
+    descripcion= get_object_or_404(DescripcionMuestra, muestra=muestra)
+    
+    
+    
+    return render(request, 'verMuestra.html', {
+        "muestra": muestra,
+        "descripcion": descripcion
+    })

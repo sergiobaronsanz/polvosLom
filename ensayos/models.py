@@ -3,8 +3,20 @@ from muestras.models import Muestras, ListaEnsayos
 
 # Create your models here.
 
-
-
+#Resultados
+class Resultados (models.Model):
+    muestra= models.ForeignKey(Muestras, verbose_name= "Muestras", on_delete= models.CASCADE)
+    ensayo= models.ForeignKey(ListaEnsayos, verbose_name= "Lista ensayos", on_delete= models.CASCADE)
+    resultado= models.CharField(max_length= 100, verbose_name="Resultados")
+    unidades= models.CharField(max_length= 100, verbose_name="Unidades")
+    
+    class Meta():
+        verbose_name="Resultado"
+        verbose_name_plural="Resultados"
+    
+    def __str__(self):
+        return f"{self.muestra} | {self.ensayo} -> {self.resultado}"
+    
 class Equipos (models.Model):
     equipo= models.CharField(max_length=300, verbose_name="Equipo")
     controlado= models.BooleanField(verbose_name="Controlado")
