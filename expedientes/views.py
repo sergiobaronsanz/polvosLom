@@ -94,7 +94,6 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
     
     #Asignamos nombre
     abreviatura=empresa.abreviatura + "-" +str(id_muestra)
-    print(abreviatura)
     
     #mandamos el formulario
     form= EnsayosMuestras()
@@ -103,8 +102,6 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         if request.POST:
             listaEnsayos = request.POST.getlist('listaEnsayos')
             observaciones= request.POST.get('observaciones')
-            print('----------------------')
-            print(listaEnsayos)
             
             nuevaMuestra= Muestras(
                 id_muestra= id_muestra, 
@@ -112,9 +109,9 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
                 expediente= expediente, 
                 observaciones= observaciones)
             nuevaMuestra.save()
-            
-            nuevaMuestra.listaEnsayos.set(listaEnsayos) #Al ser una mny to many no se puede ingresar directamentec como las otras
-            
+
+             #Al ser una mny to many no se puede ingresar directamentec como las otras
+            nuevaMuestra.listaEnsayos.set(listaEnsayos)
             
             if nMuestras>1:
                 return redirect('ensayosMuestras', nMuestras=nMuestras-1, empresa= empresa, expediente=expediente) 
