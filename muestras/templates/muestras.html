@@ -1,0 +1,62 @@
+{% extends 'pages/layout.html'%}
+{%load static%}
+
+{%block style%} <link rel="stylesheet" href="{% static "css/muestras/estilos.css" %}"> {%endblock%}
+
+{%block content%}
+<div id="content-wrapper" class="d-flex flex-column">
+    <div class="container py-5">  
+      <div class="row justify-content-center">
+          <div class="card mb-4 col-lg-12">
+            <div id= "filtros" class="mt-2">
+              <form method="POST" class="col-11 d-flex justify-content-end align-items-center">
+                {% csrf_token %}
+                <div id= "búsqueda" >
+                  <label class= "mb-0 mr-3"> Buscar </label>
+                  <input name= "filtro"></input>
+                  <button type= "submit" class= "col-2 btn" >
+                    <img class= "img-fluid" src= {%static 'img/expedientes/search.png'%}>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="card-body table-responsive" style="max-height: 80vh;">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Muestra</th>
+                        <th scope="col">Nº</th>
+                        <th scope="col">Expediente</th>
+                        <th scope="col">Peso</th>
+                        <th scope="col">Empresa</th>
+                        <th scope="col">Procedencia</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for muestra in muestras%}
+                      <tr>
+                        <th scope="row"><a href= "{%url 'verMuestra' muestra.id%}">{{muestra.empresa.abreviatura}}</a></th>
+                        <td>{{muestra.id_muestra}}</a></td>
+                        <td>{{muestra.expediente }}</td>
+                        <td>
+                          {% for descripcion in muestra.descripcionmuestra.all %}
+                              {{ descripcion.peso }}
+                          {% endfor %}
+                        </td>
+                        <td>{{muestra.empresa.empresa}}</td>
+                        <td>
+                          {% for descripcion in muestra.descripcionmuestra.all %}
+                              {{ descripcion.procedencia }}
+                          {% endfor %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+{%endblock%}

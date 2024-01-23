@@ -3,11 +3,24 @@ from django.shortcuts import render, redirect, get_object_or_404, get_list_or_40
 from muestras.forms import DescripcionMuestraForm, MuestrasForm
 from .models import Muestras, DescripcionMuestra
 from ensayos.models import Resultados
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
 def muestras(request):
-    pass
+      #Sacamos las muestras
+    try:
+        muestras= Muestras.objects.all().order_by('-fecha')
+    except ObjectDoesNotExist:
+        print("no hay muestras")
+    
+    if request.POST:
+        filtro= request.POST["filtro"]
+        muestras= Muestras.objects.filter(empresa__abreviatura__icontains=filtro).order_by('-fecha')
+    
+    return render(request, 'muestras.html', {
+        'muestras': muestras
+    })
 
 def recepcionMuestra(request):
     if request.method == 'POST':

@@ -1,5 +1,6 @@
 from django.db import models
 from muestras.models import Muestras, ListaEnsayos
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
 # Create your models here.
 
@@ -32,8 +33,11 @@ class Equipos (models.Model):
 
 #Humedad
 class Humedad(models.Model):
+    #Obtenemos el valor del ensayo de humedad
+    ensayo_humedad = get_object_or_404(ListaEnsayos, ensayo="Humedad")
+
     muestra= models.ForeignKey( Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
-    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
+    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo", default=ensayo_humedad)
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")

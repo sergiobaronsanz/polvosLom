@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('', include('muestras.urls')),
     path('', include('expedientes.urls')),
+    path('', include('ensayos.urls')),
     
 ]
 
