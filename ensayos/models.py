@@ -34,23 +34,28 @@ class Equipos (models.Model):
 #Humedad
 class Humedad(models.Model):
     #Obtenemos el valor del ensayo de humedad
-    ensayo_humedad = get_object_or_404(ListaEnsayos, ensayo="Humedad")
 
     muestra= models.ForeignKey( Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
-    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo", default=ensayo_humedad)
+    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    criterio= models.IntegerField(default=5, verbose_name="Criterio")
-    manual=models.BooleanField(verbose_name="Manual")
+    criterio= models.CharField(default="5", max_length=50, verbose_name="Criterio")
     tDesecacion= models.IntegerField(default=105, verbose_name="Temperatura de Desecación")
     desviacion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Desviación")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
-    tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
+    tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo")
+    observacion=models.CharField(max_length=1000, verbose_name="Observación")
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
     
+    def save(self, *args, **kwargs):
+        # Obtener el objeto ListaEnsayos para "Humedad"
+        humedad = get_object_or_404(ListaEnsayos, ensayo="Humedad")
+        self.ensayo = humedad
+        super(Humedad, self).save(*args, **kwargs)
+
+
     class Meta():
         verbose_name="Humedad"
         verbose_name_plural="Humedades"
@@ -61,7 +66,7 @@ class Humedad(models.Model):
 class ResultadosHumedad(models.Model):
     ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
     resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
-    observacion=models.CharField(max_length=1000, verbose_name="Observación")
+
     
     class Meta():
         verbose_name="Resultado Humedad"
