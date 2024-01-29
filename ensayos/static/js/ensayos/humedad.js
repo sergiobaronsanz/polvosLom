@@ -23,8 +23,14 @@ function criterioValor(){
 }
 
 function calculoDesviacion(){
-    //Sacamos los campos de los resultados
-        // Iterar sobre los 10 campos y sumar sus valores
+    //Ocultamos los 7 campos
+    camposOcultos= document.getElementsByClassName("campoOculto");
+
+    for (let i=0; i < camposOcultos.length; i++){
+        camposOcultos[i].style.display="none";
+    }
+
+    function calculo(){
         let suma= 0;
         let valores=[];
         for (let i = 1; i <= 3; i++) {
@@ -33,13 +39,35 @@ function calculoDesviacion(){
                 valores.push(valorCampo);
                 suma+= valorCampo;
             }
+        }
+
+        //Calculamos la desviacion típica
+        let media= suma/valores.length;
+        let sumatorioCuadrados= valores.reduce((acumulador, valor) => acumulador + Math.pow(valor - media, 2), 0);
+        const desviacionEstandar = Math.sqrt(sumatorioCuadrados / (valores.length - 1));
+        
+        //Ponemos el valor en el campo desviacion
+        const desviacion= document.getElementById("id_desviacion");
+        desviacion.value= desviacionEstandar.toFixed(2);
+
+        //Mostramos o ocultamos los campos dependiendo de la desviación
+        if (desviacionEstandar>= 0.15){
+            for (let i=0; i < camposOcultos.length; i++){
+                camposOcultos[i].style.display="flex";
+            }
+        }else{
+            for (let i=0; i < camposOcultos.length; i++){
+                camposOcultos[i].style.display="none";
+            }
+        }
     }
-
-    //Calculamos la desviacion típica
-    let media= suma/valores.length;
-    let sumatorioCuadrados= valores.reduce((acumulador, valor) => acumulador + Math.pow(valor - media, 2), 0);
-    const desviacionEstandar = Math.sqrt(sumatorioCuadrados / (valores.length - 1));
-
+        
+    for (let i = 1; i <= 3; i++) {
+        const campo = document.getElementById(`id_resultado${i}`);
+    
+        // Agregar un evento de escucha para el evento de cambio (change)
+        campo.addEventListener('change', calculo);
+    }
 }
 
 
@@ -48,9 +76,4 @@ function calculoDesviacion(){
 criterioValor();  
 
 //Cada vez que se actualice algún campo se hace el cálculo
-for (let i = 1; i <= 3; i++) {
-    const campo = document.getElementById(`id_resultado${i}`);
-
-    // Agregar un evento de escucha para el evento de cambio (change)
-    campo.addEventListener('change', calculoDesviacion);
-}
+calculoDesviacion();

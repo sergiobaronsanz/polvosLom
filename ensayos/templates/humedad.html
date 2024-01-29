@@ -19,10 +19,17 @@
                       {{field}}
                     </div>
                   {%else%}
-                    <div class= "row">
-                      {{field.label}}
-                      {{field}}
-                    </div>
+                    {% if field.name in camposOcultos%}
+                      <div class= "row campoOculto">
+                        {{field.label}}
+                        {{field}}
+                      </div>
+                    {%else%}
+                      <div class= "row">
+                        {{field.label}}
+                        {{field}}
+                      </div>
+                    {%endif%}
                   {%endif%}
                 {%endfor%}
                 

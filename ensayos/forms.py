@@ -76,6 +76,13 @@ class HumedadForm(forms.Form):
         label="Temperatura de Desecación",
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
     )
+    
+    desviacion= forms.DecimalField(
+        decimal_places=2,  
+        label="Desviacion", 
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
+    )
+    
 
     resultado1= forms.DecimalField(
         decimal_places=2,  
