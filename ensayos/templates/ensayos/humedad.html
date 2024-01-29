@@ -1,0 +1,30 @@
+{% extends 'ensayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block ensayo%} Humedad {%endblock%}
+
+{%block form%}
+    {%for field in form %}
+
+    {%if field.name == "tiempoEnsayo"%}
+      <div class= "row" id= "tiempoEnsayo">
+        {{field.label}}
+        {{field}}
+      </div>
+    {%else%}
+      {% if field.name in camposOcultos%}
+        <div class= "row campoOculto">
+          {{field.label}}
+          {{field}}
+        </div>
+      {%else%}
+        <div class= "row">
+          {{field.label}}
+          {{field}}
+        </div>
+      {%endif%}
+    {%endif%}
+    {%endfor%}
+
+<script src="{%static 'js/ensayos/humedad.js'%}"></script>
+{%endblock%}

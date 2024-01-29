@@ -17,7 +17,7 @@ def humedad(request):
             print("El formulario es válido")
             # Realizar acciones con los datos del formulario si es válido
 
-    return render(request, 'humedad.html', {
+    return render(request, 'ensayos/humedad.html', {
         'form': form,
         'camposOcultos': camposOcultos,
     })
