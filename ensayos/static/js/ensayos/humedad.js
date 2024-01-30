@@ -4,17 +4,19 @@ function criterioValor(){
     criterio= document.getElementById("id_criterio");
     tiempoEnsayo= document.getElementById("tiempoEnsayo");
 
-    tiempoEnsayo.style.display= "none";
+    tiempoEnsayo.style.opacity= "0";
+    tiempoEnsayo.value= "";
 
     criterio.addEventListener("change", function() {
         var criterioValor = criterio.value;
         console.log(criterioValor);
         if (criterioValor === 'manual'){
-            tiempoEnsayo.style.display= "flex";
+            tiempoEnsayo.style.opacity= "1";
             console.log("holi");
         }
         else {
-            tiempoEnsayo.style.display= "none";
+            tiempoEnsayo.style.opacity= "0";
+            tiempoEnsayo.value= "";
             console.log("adios");
         }
 
