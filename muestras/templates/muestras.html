@@ -9,13 +9,13 @@
       <div class="row justify-content-center">
           <div class="card mb-4 col-lg-12">
             <div id= "filtros" class="mt-2">
-              <form method="POST" class="col-11 d-flex justify-content-end align-items-center">
+              <form method="POST" class=" d-flex justify-content-end align-items-center">
                 {% csrf_token %}
                 <div id= "búsqueda" >
                   <label class= "mb-0 mr-3"> Buscar </label>
                   <input name= "filtro"></input>
-                  <button type= "submit" class= "col-2 btn" >
-                    <img class= "img-fluid" src= {%static 'img/expedientes/search.png'%}>
+                  <button type= "submit" class= " btn" >
+                    <img class= "img-fluid" style="width:40px;" src= {%static 'img/expedientes/search.png'%}>
                   </button>
                 </div>
               </form>

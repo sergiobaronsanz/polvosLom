@@ -5,42 +5,49 @@
 
 {%block condiciones%} 
 
-    <div class= "d-flex flex-column align-items-start">
+  <div class= "row mt-3 mb-3">
+    <div class= "col d-flex flex-column align-items-start">
         {{form.muestra.label}}
         {{form.muestra}}
     </div>
 
-    <div class= "col-10 m-auto">
-        <div class= "d-flex justify-content-between align-items-center">
-            <div>
-                {{form.temperaturaAmbiente.label}}
-                {{form.temperaturaAmbiente}}
-            </div>
-            <div>
-                {{form.humedad.label}}
-                {{form.humedad}}
-            </div>
-        </div>
+    <div class= "col d-flex flex-column align-items-start">
+      {{form.fecha.label}}
+      {{form.fecha}}
+    </div>
 
-        <div class= "d-flex justify-content-between align-items-center ">
-            <div>
-                {{form.criterio.label}}
-                {{form.criterio}}
-            </div>
+  </div>
+  <div class= "col-10 m-auto ">
+      <div class= "d-flex justify-content-between align-items-center mt-3 mb-3">
+          <div>
+              {{form.temperaturaAmbiente.label}}
+              {{form.temperaturaAmbiente}}
+          </div>
+          <div>
+              {{form.humedad.label}}
+              {{form.humedad}}
+          </div>
+      </div>
 
-            <div class= "d-flex flex-column" id= "tiempoEnsayo">
-                {{form.tiempoEnsayo.label}}
-                {{form.tiempoEnsayo}}
-            </div>
-
-            <div>
-              {{form.tDesecacion.label}}
-              {{form.tDesecacion}}
+      <div class= "d-flex justify-content-between align-items-center mt-3 mb-3 ">
+          <div>
+              {{form.criterio.label}}
+              {{form.criterio}}
           </div>
 
+          <div class= "d-flex flex-column" id= "tiempoEnsayo">
+              {{form.tiempoEnsayo.label}}
+              {{form.tiempoEnsayo}}
+          </div>
+
+          <div>
+            {{form.tDesecacion.label}}
+            {{form.tDesecacion}}
         </div>
-    </div>
- 
+
+      </div>
+  </div>
+
 {%endblock%}
 
 {%block resultados%} 

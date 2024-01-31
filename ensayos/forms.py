@@ -1,6 +1,7 @@
 from django import forms
 from ensayos.models import Humedad
 from muestras.models import Muestras
+from .models import Equipos
 from django.db.models import Q
 from django.shortcuts import  get_object_or_404, get_list_or_404
 
@@ -18,6 +19,19 @@ class HumedadForm(forms.ModelForm):
             Q(humedad__isnull=True) & Q(listaEnsayos__ensayo__icontains="humedad")
         )
 """
+class EquiposForm(forms.ModelForm):
+    class Meta:
+        model = Equipos
+        fields = "__all__"
+        widgets = {
+            'codigo': forms.TextInput(attrs={'class': 'form-control'}),
+            'equipo': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control'}),
+            'ensayos': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'fechaCalibracion': forms.TextInput(attrs={'class': 'form-control'}),
+            'fechaCaducidadCalibracion': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 class HumedadForm(forms.Form):
     
@@ -40,6 +54,11 @@ class HumedadForm(forms.Form):
         label="Muestra",
         empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
         widget=forms.Select(attrs={'class': 'form-control', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    fecha= forms.DateField(
+        label="Fecha",
+        widget=forms.DateInput(attrs={'class': 'form-control', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
     )
 
 

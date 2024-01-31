@@ -19,8 +19,11 @@ class Resultados (models.Model):
         return f"{self.muestra} | {self.ensayo} -> {self.resultado}"
     
 class Equipos (models.Model):
+    codigo= models.CharField(max_length=300, verbose_name="Codigo")
     equipo= models.CharField(max_length=300, verbose_name="Equipo")
+    descripcion= models.TextField( verbose_name="Descripcion")
     controlado= models.BooleanField(verbose_name="Controlado")
+    ensayos= models.ManyToManyField(ListaEnsayos,verbose_name="Ensayos")
     fechaCalibracion= models.DateField(verbose_name="Fecha de Calibración")
     fechaCaducidadCalibracion= models.DateField(verbose_name="Fecha próxima calibración")
     
@@ -29,7 +32,7 @@ class Equipos (models.Model):
         verbose_name_plural="Equipos"
         
     def __str__(self):
-        return f"{self.equipo} | {self.controlado}"
+        return f"{self.equipo} | {self.codigo}"
 
 #Humedad
 class Humedad(models.Model):
@@ -43,7 +46,7 @@ class Humedad(models.Model):
     criterio= models.CharField(default="5", max_length=50, verbose_name="Criterio")
     tDesecacion= models.IntegerField(default=105, verbose_name="Temperatura de Desecación")
     desviacion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Desviación")
-    tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo")
+    tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", null= True, blank= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observación")
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
