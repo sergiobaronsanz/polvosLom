@@ -3,6 +3,7 @@
 function criterioValor(){
     criterio= document.getElementById("id_criterio");
     tiempoEnsayo= document.getElementById("tiempoEnsayo");
+    inputTiempoEnsayo= document.getElementById("id_tiempoEnsayo");
 
     tiempoEnsayo.style.opacity= "0";
     tiempoEnsayo.value= "";
@@ -16,7 +17,7 @@ function criterioValor(){
         }
         else {
             tiempoEnsayo.style.opacity= "0";
-            tiempoEnsayo.value= "";
+            inputTiempoEnsayo.value= "";
             console.log("adios");
         }
 
@@ -56,6 +57,7 @@ function calculoDesviacion(){
         if (desviacionEstandar>= 0.15){
             for (let i=0; i < camposOcultos.length; i++){
                 camposOcultos[i].style.display="flex";
+                camposOcultos[i].style.flexDirection = "column";
             }
         }else{
             for (let i=0; i < camposOcultos.length; i++){

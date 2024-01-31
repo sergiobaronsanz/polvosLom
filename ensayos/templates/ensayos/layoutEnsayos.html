@@ -10,7 +10,8 @@
               <h2> {%block tituloEnsayo%} {%endblock%}</h2>
             </div>
             <div class= "mb-3 d-flex align-items-center justify-content-center">
-              <form class= "form col-8 text-center p-0" method="POST">
+              <form class= "form col-8 text-center p-0" method="post">
+                {% csrf_token %}
 
                 <div id="titulo-ensayos" class= "d-flex justify-content-center align-items-center">
                   <h4 class= "text-nowrap mb-0 mr-2"> Condiciones </h4>
@@ -26,13 +27,14 @@
                 {%block resultados%}
                 {%endblock%}
 
-                <button class= "btn btn-primary mt-3"> Guardar</button>
+                <button type= "submit" class= "btn btn-primary mt-3"> Guardar</button>
               </form>
             </div>
           </div>
       </div>
     </div>
 </div>
+
   {%block script%} {%endblock%}
 
 {%endblock%}

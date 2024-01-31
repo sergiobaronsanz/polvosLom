@@ -39,7 +39,7 @@ class HumedadForm(forms.Form):
         queryset=muestras,
         label="Muestra",
         empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
-        widget=forms.Select(attrs={'class': 'form-control'})  # Agregar clases CSS si es necesario
+        widget=forms.Select(attrs={'class': 'form-control', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
     )
 
 
@@ -47,20 +47,20 @@ class HumedadForm(forms.Form):
         decimal_places=2,
         max_digits=5,
         label="Temperatura Ambiente",
-        widget=forms.NumberInput(attrs={'class': 'form-control'})  # Otras atributos del widget si es necesario
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
     )
 
     humedad= forms.DecimalField(
         decimal_places=2,
         max_digits=5,
         label="Humedad Ambiente",
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'})
     )
 
     criterio= forms.ChoiceField(
         choices=criterios,
         label="Criterio",  # Etiqueta para la opción vacía
-        widget=forms.Select(attrs={'class': 'form-control'}),
+        widget=forms.Select(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
         initial= "5"
     )
 
@@ -68,86 +68,95 @@ class HumedadForm(forms.Form):
     tiempoEnsayo= forms.DecimalField(
         decimal_places=2,  
         label="Tiempo de ensayo", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     tDesecacion= forms.IntegerField(
         initial=105, 
         label="Temperatura de Desecación",
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
     
     desviacion= forms.DecimalField(
         decimal_places=2,  
         label="Desviacion", 
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly', 'style': 'text-align: center;'}),
     )
     
 
     resultado1= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-1", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado2= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-2", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado3= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-3", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado4= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-4", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado5= forms.DecimalField(
         decimal_places=2,  
-        label="Resultado-5", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        label="Resultado-5",
+        required=False, 
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado6= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-6", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado7= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-7", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado8= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-8", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado9= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-9", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     resultado10= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-10", 
-        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
 
     observacion=forms.CharField(
         label= "Observación",
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'style': 'text-align: center;'}),
     )
 
     #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
