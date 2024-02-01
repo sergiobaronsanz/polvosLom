@@ -19,6 +19,8 @@ def nuevoEquipo (request):
         
         if form.is_valid():
             form.save()
+
+            return redirect ("equipos")
                
     else:
         form= EquiposForm()
