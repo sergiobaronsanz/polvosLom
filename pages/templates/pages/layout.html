@@ -126,8 +126,9 @@
                 <div id="collapseTest" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{%url 'listaEnsayos'%}">Ensayos</a>
                         <a class="collapse-item" href="{%url 'equipos'%}">Equipos</a>
-                        <a class="collapse-item" href="{%url 'humedad'%}">Humedad</a>
+                        <a class="collapse-item" href="{% url 'humedad' muestra_id='nueva' %}">Humedad</a>
                         <a class="collapse-item" href="utilities-color.html">Granulometría</a>
                         <a class="collapse-item" href="utilities-color.html">TMIc</a>
                         <a class="collapse-item" href="utilities-border.html">TMin</a>

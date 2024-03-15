@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404, get_list_or_40
 
 #Resultados
 class Resultados (models.Model):
+    #Hay que cambiar este nombre por lista ensayo y agregar una variable ensayo que seleccione el ensayo en concreto que ha sido, 
+    #de esta maner cuando se borre el ensayo se borrarar el resultado
     muestra= models.ForeignKey(Muestras, verbose_name= "Muestras", on_delete= models.CASCADE)
     ensayo= models.ForeignKey(ListaEnsayos, verbose_name= "Lista ensayos", on_delete= models.CASCADE)
     resultado= models.CharField(max_length= 100, verbose_name="Resultados")
@@ -64,7 +66,7 @@ class Humedad(models.Model):
         verbose_name_plural="Humedades"
         
     def __str__(self):
-        return f"{self.muestra} | {self.resultado}"
+        return f"{self.muestra}"
 
 class ResultadosHumedad(models.Model):
     ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")

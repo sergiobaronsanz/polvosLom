@@ -1,0 +1,56 @@
+{% extends 'pages/layout.html'%}
+{%load static%}
+
+{%block content%}
+<div id="content-wrapper" class="d-flex flex-column">
+    <div class="container py-5">  
+      <div class="row justify-content-center">
+          <div class="card mb-4 col-lg-12">
+            <div>
+              <div id= "filtros" class="mt-2 d-flex justify-content-between aling-items-center">
+                <form method="POST" class="">
+                  {% csrf_token %}
+                  <div id= "búsqueda" >
+                    <label class= "mb-0 mr-3"> Buscar </label>
+                    <input name= "filtro"></input>
+                    <button type= "submit" class= "btn" >
+                      <img class= "img-fluid" style="width:40px;" src= {%static 'img/expedientes/search.png'%}>
+                    </button>
+                  </div>
+                </form>
+
+                <div class="d-flex align-items-center justify-content-center">
+                  <a class="btn btn-primary" href="{% url 'nuevoEquipo' %}">Nuevo equipo</a>
+              </div>
+              
+              </div>
+              <div class="card-body table-responsive" style="max-height: 80vh;">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">muestra</th>
+                        <th scope="col">ensayo</th>
+                        <th scope="col">resultado</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for resultado in resultados%}
+                          <tr>
+                              <th scope="row"><a href= "{% url ensayo muestra_id=resultado.muestra.id %}">{{resultado.muestra}}</a></th>
+                              <td>{{resultado.ensayo}}</td>
+                              <td> {{resultado.resultado}} {{resultado.unidades}} </td>
+                          </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+  {%block script%} {%endblock%}
+
+{%endblock%}

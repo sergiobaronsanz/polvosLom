@@ -2,21 +2,21 @@
 
 function criterioValor(){
     criterio= document.getElementById("id_criterio");
-    tiempoEnsayo= document.getElementById("tiempoEnsayo");
+    tiempoEnsayo= document.getElementById("id_tiempoEnsayo");
     inputTiempoEnsayo= document.getElementById("id_tiempoEnsayo");
 
-    tiempoEnsayo.style.opacity= "0";
+    tiempoEnsayo.disabled= true;
     tiempoEnsayo.value= "";
 
     criterio.addEventListener("change", function() {
         var criterioValor = criterio.value;
         console.log(criterioValor);
         if (criterioValor === 'manual'){
-            tiempoEnsayo.style.opacity= "1";
+            tiempoEnsayo.disabled= false;
             console.log("holi");
         }
         else {
-            tiempoEnsayo.style.opacity= "0";
+            tiempoEnsayo.disabled= false;
             inputTiempoEnsayo.value= "";
             console.log("adios");
         }
@@ -31,6 +31,8 @@ function calculoDesviacion(){
 
     for (let i=0; i < camposOcultos.length; i++){
         camposOcultos[i].style.display="none";
+        var input = camposOcultos[i].querySelector('input');
+        input.removeAttribute("required");
     }
 
     function calculo(){
@@ -41,6 +43,7 @@ function calculoDesviacion(){
             if (!isNaN(valorCampo)){
                 valores.push(valorCampo);
                 suma+= valorCampo;
+                
             }
         }
 
@@ -55,13 +58,18 @@ function calculoDesviacion(){
 
         //Mostramos o ocultamos los campos dependiendo de la desviación
         if (desviacionEstandar>= 0.15){
+
             for (let i=0; i < camposOcultos.length; i++){
                 camposOcultos[i].style.display="flex";
                 camposOcultos[i].style.flexDirection = "column";
+                var input = camposOcultos[i].querySelector('input');
+                input.setAttribute("required", "required");
             }
         }else{
             for (let i=0; i < camposOcultos.length; i++){
                 camposOcultos[i].style.display="none";
+                var input = camposOcultos[i].querySelector('input');
+                input.removeAttribute("required");
             }
         }
     }

@@ -35,9 +35,10 @@ class EquiposForm(forms.ModelForm):
 
 class HumedadForm(forms.Form):
     
-    muestras= Muestras.objects.filter(
+    """muestras= Muestras.objects.filter(
             Q(humedad__isnull=True) & Q(listaEnsayos__ensayo__icontains="humedad")
-    )
+    )"""
+    muestras= Muestras.objects.all()
 
     criterios= [
         ('1', '1'),
@@ -107,18 +108,21 @@ class HumedadForm(forms.Form):
     resultado1= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-1", 
+        required=True,
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
 
     resultado2= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-2", 
+        required=True,
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
 
     resultado3= forms.DecimalField(
         decimal_places=2,  
         label="Resultado-3", 
+        required=True,
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
 
@@ -131,8 +135,8 @@ class HumedadForm(forms.Form):
 
     resultado5= forms.DecimalField(
         decimal_places=2,  
-        label="Resultado-5",
-        required=False, 
+        label="Resultado-5", 
+        required=False,
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
 

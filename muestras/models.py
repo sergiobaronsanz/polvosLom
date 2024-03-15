@@ -40,7 +40,7 @@ class Muestras(models.Model):
         verbose_name_plural="Muestras"
         
     def __str__(self):
-        return f"{self.empresa} | {self.expediente.empresa.abreviatura}- {self.id_muestra} | {self.expediente}"
+        return f" {self.expediente.empresa.abreviatura} - {self.id_muestra} | {self.empresa} | {self.expediente}"
 
 
 class DescripcionMuestra(models.Model):
