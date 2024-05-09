@@ -30,12 +30,15 @@
                         <th scope="col">Peso</th>
                         <th scope="col">Empresa</th>
                         <th scope="col">Procedencia</th>
+                        <th scope="col">Estado</th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for muestra in muestras%}
                       <tr>
-                        <th scope="row"><a href= "{%url 'verMuestra' muestra.id%}">{{muestra.empresa.abreviatura}}</a></th>
+                        
+                          <th scope="row"><a {%if muestra.estado != "1"%} href= "{%url 'verMuestra' muestra.id%}" {%endif%}>{{muestra.empresa.abreviatura}}</a></th>
+                        
                         <td>{{muestra.id_muestra}}</a></td>
                         <td>{{muestra.expediente }}</td>
                         <td>
@@ -48,6 +51,9 @@
                           {% for descripcion in muestra.descripcionmuestra.all %}
                               {{ descripcion.procedencia }}
                           {% endfor %}
+                        </td>
+                        <td>
+                          {{muestra.get_estado}}
                         </td>
                       </tr>
                     {% endfor %}

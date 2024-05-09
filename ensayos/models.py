@@ -2,15 +2,16 @@ from django.db import models
 from muestras.models import Muestras, ListaEnsayos
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
+
 # Create your models here.
 
 #Resultados
-class Resultados (models.Model):
+"""class Resultados (models.Model):
     #Hay que cambiar este nombre por lista ensayo y agregar una variable ensayo que seleccione el ensayo en concreto que ha sido, 
     #de esta maner cuando se borre el ensayo se borrarar el resultado
     muestra= models.ForeignKey(Muestras, verbose_name= "Muestras", on_delete= models.CASCADE)
     ensayo= models.ForeignKey(ListaEnsayos, verbose_name= "Lista ensayos", on_delete= models.CASCADE)
-    resultado= models.CharField(max_length= 100, verbose_name="Resultados")
+    resultado= models.CharField(max_length= 100, verbose_name="Resultado")
     unidades= models.CharField(max_length= 100, verbose_name="Unidades")
     
     class Meta():
@@ -18,7 +19,8 @@ class Resultados (models.Model):
         verbose_name_plural="Resultados"
     
     def __str__(self):
-        return f"{self.muestra} | {self.ensayo} -> {self.resultado}"
+        return f"{self.muestra} | {self.ensayo} -> {self.resultado}
+"""
     
 class Equipos (models.Model):
     codigo= models.CharField(max_length=300, verbose_name="Codigo")
@@ -40,10 +42,10 @@ class Equipos (models.Model):
 class Humedad(models.Model):
     #Obtenemos el valor del ensayo de humedad
 
-    muestra= models.ForeignKey( Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
+    muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
-    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
+    humedad=  models.DecimalField(decimal_places=2, max_digits=4, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     criterio= models.CharField(default="5", max_length=50, verbose_name="Criterio")
     tDesecacion= models.IntegerField(default=105, verbose_name="Temperatura de Desecación")
@@ -53,6 +55,8 @@ class Humedad(models.Model):
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    resultado= models.DecimalField(verbose_name="Resultado", max_digits=4, decimal_places=2, null=True) #99,99%
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="%")
     
     def save(self, *args, **kwargs):
         # Obtener el objeto ListaEnsayos para "Humedad"
@@ -87,11 +91,15 @@ class Granulometria(models.Model):
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    d10= models.DecimalField(verbose_name="d10", max_digits=7, decimal_places=3, null=True)#9999.999
+    d50= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3, null=True)#9999.999
+    d90= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3, null=True)#9999.999
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default= "um")
+
     
     class Meta():
         verbose_name="Humedad"
@@ -122,11 +130,13 @@ class TMIc (models.Model):
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    resultado= models.DecimalField(verbose_name="Resultado", max_digits=5, decimal_places=2, null=True) #399,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="ºC")
+
     
     class Meta():
         verbose_name="TMIc"
@@ -171,11 +181,12 @@ class TMIn (models.Model):
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    resultado= models.DecimalField(verbose_name="Resultado", max_digits=5, decimal_places=2, null=True) #999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="ºC")
     
     class Meta():
         verbose_name="TMIn"
@@ -226,12 +237,13 @@ class LIE (models.Model):
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas")
     boquilla= models.CharField(max_length=300, choices=seleccionBoquillas, verbose_name="Boquilla")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=2)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
-    
+    resultado= models.IntegerField(verbose_name="Resultado", null=True) #125, 250
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="g/m3")
+
     class Meta():
         verbose_name="LIE"
         verbose_name_plural="LIE"
@@ -271,11 +283,12 @@ class EMI (models.Model):
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     presion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Presión Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")
     
     class Meta():
         verbose_name="Emi"
@@ -326,13 +339,15 @@ class Pmax (models.Model):
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas")
     boquilla= models.CharField(max_length=300, choices=seleccionBoquillas, verbose_name="Boquilla")
-    resultadoPmax= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado Pmax")
-    resultadoDpdt= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado dpDt")   
-    resultadoKmax= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado kMax") 
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    pmax= models.DecimalField(verbose_name="Pmax", max_digits=4, decimal_places=2, null=True) #99,99
+    dpdt= models.IntegerField(verbose_name="dPdT", null=True) #999
+    kmax= models.IntegerField(verbose_name="kmax", null=True)
+    unidadPmax= models.CharField(verbose_name="Unidad", max_length=50, default="bar")
+    unidadDpdt= models.CharField(verbose_name="Unidad", max_length=50, default="bar/s")
     
     class Meta():
         verbose_name="Pmax"
@@ -364,7 +379,8 @@ class ResultadosPmax (models.Model):
         
     def __str__(self):
         return f"{self.ensayo} | Pmax: {self.pm}, Pex: {self.pex}, dP/dT: {self.dpdt} "
-    
+
+
 
 #clo
 class CLO (models.Model):
@@ -386,11 +402,12 @@ class CLO (models.Model):
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas")
     boquilla= models.CharField(max_length=300, choices=seleccionBoquillas, verbose_name="Boquilla")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    resultado= models.IntegerField(verbose_name="Resultado", null=True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="%")
     
     class Meta():
         verbose_name="LIE"
@@ -444,11 +461,12 @@ class N1 (models.Model):
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     tipoPolvo=models.CharField(max_length=300, choices= polvos, verbose_name="Tipo de polvo")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=3)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""
     
     class Meta():
         verbose_name="N1"
@@ -486,11 +504,12 @@ class N2 (models.Model):
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    resultado= models.CharField(max_length= 500,choices=resultadosPosibles, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""
     
     class Meta():
         verbose_name="N2"
@@ -535,11 +554,12 @@ class N4 (models.Model):
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     celda100= models.BooleanField(verbose_name="Celda 100 mm")
     celda25= models.BooleanField(verbose_name="Celda 25 mm")
-    resultado= models.CharField(max_length= 500, choices=resultadosPosibles, verbose_name="Resultado")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=4)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""
     
     class Meta():
         verbose_name="N4"
@@ -633,25 +653,28 @@ class ResultadosN4 (models.Model):
 """
 
 #O1
-class O1 (models.Model):   
+class O1 (models.Model): 
+    """  
     resultadosPosibles = [
         ("1", "No se clasifica"),
         ("2", "Grupo de embalaje/envasado I/Categoría 1"),
         ("3", "Grupo de embalaje/envasado II/Categoría 2"),
         ("4", "Grupo de embalaje/envasado III/Categoría 3")
     ]
+    """
     
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    resultado= models.CharField(max_length= 500, choices=resultadosPosibles, verbose_name="Resultado")
     ensayoHumedad= models.FileField(upload_to='ensayos/o1/humedad_celulosa/', verbose_name="Humedad Celulosa")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""
     
     
     class Meta():
@@ -695,12 +718,13 @@ class REC (models.Model):
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
     ensayoHumedad= models.FileField(upload_to='ensayos/o1/humedad_celulosa/', verbose_name="Humedad Celulosa")
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     fecha= models.DateField(verbose_name="Fecha")
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    resultado= models.DecimalField(verbose_name="Resultado", max_digits=12, decimal_places=2, null=True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="Mohm")
     
     
     class Meta():

@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from muestras.forms import DescripcionMuestraForm, MuestrasForm
 from .models import Muestras, DescripcionMuestra
-from ensayos.models import Resultados
+from ensayos.models import *
 from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
@@ -50,7 +50,9 @@ def verMuestra(request, muestra_id):
     descripcion= get_object_or_404(DescripcionMuestra, muestra=muestra)   
     
     #Sacamos los resultados 
-    resultados= get_list_or_404(Resultados, muestra= muestra)
+    listaEnsayos= muestra.listaEnsayos
+
+    resultados= get_list_or_404(Humedad, muestra= muestra)
     
     return render(request, 'verMuestra.html', {
         "muestra": muestra,

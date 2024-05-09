@@ -37,7 +37,7 @@
                     <tbody>
                       {% for resultado in resultados%}
                           <tr>
-                              <th scope="row"><a href= "{% url ensayo muestra_id=resultado.muestra.id %}">{{resultado.muestra}}</a></th>
+                              <th scope="row"><a {%if resultado.resultado != "" %} href= "{% url ensayo muestra_id=resultado.muestra.id %}" {%endif%}>{{resultado.muestra}}</a></th>
                               <td>{{resultado.ensayo}}</td>
                               <td> {{resultado.resultado}} {{resultado.unidades}} </td>
                           </tr>

@@ -1,5 +1,5 @@
 from muestras.models import Muestras, ListaEnsayos
-from ensayos.models import Resultados
+from ensayos.models import *
 from expedientes.models import Expedientes
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
@@ -31,13 +31,14 @@ def crear_ensayos(sender, instance, action, **kwargs):
         
         for ensayo in ensayos:
             if ensayo.ensayo in lista_humedades:
-                resultados= Resultados.objects.create(
+                resultados= Humedad.objects.create(
                     muestra= instance,
                     ensayo= ensayo,
-                    unidades= "%",
+                    unidad= "%",
                 )
                 
-            if ensayo.ensayo in lista_temperatura:
+        """
+           if ensayo.ensayo in lista_temperatura:
                 resultados= Resultados.objects.create(
                     muestra= instance,
                     ensayo= ensayo,
@@ -48,7 +49,7 @@ def crear_ensayos(sender, instance, action, **kwargs):
                     muestra= instance,
                     ensayo= ensayo,
                     unidades= "um",
-                )
+                )"""
         print("creado")
             
 

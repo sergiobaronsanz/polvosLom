@@ -13,7 +13,7 @@ class ListaEnsayos(models.Model):
         
     def __str__(self):
         return f"{self.ensayo}"
-    
+
         
 class Muestras(models.Model):
     estados=[
@@ -33,6 +33,10 @@ class Muestras(models.Model):
     fecha= models.DateField(auto_now_add=True, verbose_name="Fecha")
     fechaComienzo= models.DateField(verbose_name="Fecha comienzo ensayos",blank=True, null=True)
     fechaRevision= models.DateField(verbose_name="Fecha revisión", blank=True, null=True)
+
+    def get_estado(self):
+        # Obtiene el valor de estado correspondiente al código numérico
+        return dict(self.estados)[self.estado]
     
     
     class Meta():

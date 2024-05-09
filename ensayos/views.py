@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from .forms import HumedadForm, EquiposForm
 from .models import *
-from ensayos.models import ListaEnsayos
-from muestras.models import Muestras
+from muestras.models import ListaEnsayos, Muestras
+from ensayos.models import Resultados
 from django.db.models import Q
 
 # Create your views here.
@@ -18,6 +18,7 @@ def listaEnsayos(request):
 
 def ensayosRealizados(request, ensayo):
     ensayo_id= ListaEnsayos.objects.get(ensayo=ensayo)
+    print(ensayo_id)
     resultados= Resultados.objects.filter(ensayo= ensayo_id)
     
     return render(request, "ensayos/listaEnsayos/ensayosRealizados.html",{
@@ -53,11 +54,11 @@ def nuevoEquipo (request):
     })
 
 #Ensayos
-def humedad(request, muestra_id):
+def humedad(request, muestra_id): #################################### Hay que cambiar muestras_id por humedad_id para así poder tener varias humedades en una misma muestra
     
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(humedad__isnull=True) & Q(listaEnsayos__ensayo__icontains="humedad")
+        Q(humedad__isnull=True) & Q(listaEnsayos__ensayo__icontains="humedad") & ~Q(estado=1)
     )
     
     if request.method == 'POST':
@@ -67,6 +68,15 @@ def humedad(request, muestra_id):
 
         if form.is_valid():
             muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
+            ensayo= get_object_or_404(ListaEnsayos, ensayo= "humedad")
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)
+
+            #Comprobamos que exista un resultado sin valor para poder asignar el valor
+            resultadoAsignado= Resultados.objects.get(muestra=muestra, ensayo=ensayo)
+            print (resultadoAsignado)
+            
+
+            #Agregamos los campos
             fecha= request.POST.get('fecha')
             temperaturaAmbiente= float(request.POST.get('temperaturaAmbiente'))
             humedad= float(request.POST.get('humedad'))
@@ -86,17 +96,12 @@ def humedad(request, muestra_id):
             resultado10= request.POST.get('resultado10')
             observacion= request.POST.get("observacion")
             
-            ensayo= get_object_or_404(ListaEnsayos, ensayo= "humedad")
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)
-            print(desviacion)
             
-            #Comprobamos si hay un ensayo creado
-            humedad_existente= Humedad.objects.filter (muestra=muestra)
+            #Comprobamos que no exista un ensayo de humedad previo
+            humedad_instancia= Humedad.objects.filter(muestra= muestra)
+            humedad_instancia.delete()
             
-            if humedad_existente.exists():
-                mensaje_error = "Ya existe una humedad para esta muestra"
-                humedad_existente.delete()
-                return render(request, 'ensayos/nuevosEnsayos/humedad.html', {'form': form, 'mensaje_error': mensaje_error})
+            #Guardamos los datos en el servidor
             
             humedad= Humedad.objects.create(
                     muestra= muestra,
@@ -108,6 +113,7 @@ def humedad(request, muestra_id):
                     criterio= criterio,
                     desviacion=desviacion,
                     observacion= observacion,
+                    resultado= resultadoAsignado
             )
             
             #Añadimos los equipos
@@ -148,16 +154,13 @@ def humedad(request, muestra_id):
                     sumatorio += valor
                     resultado= sumatorio/longitud_lista
             
-            print(listaResultados)
-                            
+            #Guardamos los valores en la tabla resultados                
             resultado= round(resultado, 2)             
-            #Guardamos los valores en la tabla resultados
-            resultados= Resultados.objects.create(
-                muestra= muestra,
-                ensayo= ensayo,
-                resultado= resultado,
-                unidades= "%",
-            )
+            
+            resultadoAsignado.resultado= resultado
+            resultadoAsignado.save()
+
+
             
             #Guardamos los resultados en la base de datos      
             for valor in listaResultados:
