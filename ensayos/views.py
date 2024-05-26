@@ -2,7 +2,6 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from .forms import HumedadForm, EquiposForm
 from .models import *
 from muestras.models import ListaEnsayos, Muestras
-from ensayos.models import Resultados
 from django.db.models import Q
 
 # Create your views here.
@@ -18,8 +17,16 @@ def listaEnsayos(request):
 
 def ensayosRealizados(request, ensayo):
     ensayo_id= ListaEnsayos.objects.get(ensayo=ensayo)
-    print(ensayo_id)
-    resultados= Resultados.objects.filter(ensayo= ensayo_id)
+    print(ensayo_id.ensayo)
+
+    #filtramos por tipo de ensayo
+
+    if ensayo_id.ensayo == "Humedad":
+        resultados= Humedad.objects.all()
+    else:
+        resultados= None
+    
+    #resultados= Resultados.objects.filter(ensayo= ensayo_id)
     
     return render(request, "ensayos/listaEnsayos/ensayosRealizados.html",{
         'resultados': resultados,

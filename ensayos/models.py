@@ -44,19 +44,19 @@ class Humedad(models.Model):
 
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
-    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
-    humedad=  models.DecimalField(decimal_places=2, max_digits=4, verbose_name="Humedad Ambiente")
-    equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    criterio= models.CharField(default="5", max_length=50, verbose_name="Criterio")
-    tDesecacion= models.IntegerField(default=105, verbose_name="Temperatura de Desecación")
-    desviacion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Desviación")
+    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", null=True, blank=True)
+    humedad=  models.DecimalField(decimal_places=2, max_digits=4, verbose_name="Humedad Ambiente", null=True, blank=True)
+    equipos= models.ManyToManyField("Equipos", verbose_name="Equipos", null=True, blank=True)
+    criterio= models.CharField(default="5", max_length=50, verbose_name="Criterio", null=True, blank=True)
+    tDesecacion= models.IntegerField(default=105, verbose_name="Temperatura de Desecación", null=True, blank=True)
+    desviacion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Desviación", null=True, blank=True)
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", null= True, blank= True)
-    observacion=models.CharField(max_length=1000, verbose_name="Observación")
-    fecha= models.DateField(verbose_name="Fecha")
-    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
-    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
-    resultado= models.DecimalField(verbose_name="Resultado", max_digits=4, decimal_places=2, null=True) #99,99%
-    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="%")
+    observacion=models.CharField(max_length=1000, verbose_name="Observación", null=True, blank=True)
+    fecha= models.DateField(verbose_name="Fecha", null=True, blank=True)
+    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True, null=True, blank=True)
+    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True, null=True, blank=True)
+    resultado= models.DecimalField(verbose_name="Resultado", max_digits=4, decimal_places=2, null=True, blank=True) #99,99%
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="%", null=True, blank=True)
     
     def save(self, *args, **kwargs):
         # Obtener el objeto ListaEnsayos para "Humedad"
