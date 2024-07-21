@@ -34,6 +34,8 @@ def recepcionMuestra(request):
             muestra= Muestras.objects.get(id= id_muestra)
             muestra.estado= "3"
             muestra.save()
+
+            redirect('muestras')
             
             
     else:
@@ -50,9 +52,19 @@ def verMuestra(request, muestra_id):
     descripcion= get_object_or_404(DescripcionMuestra, muestra=muestra)   
     
     #Sacamos los resultados 
-    listaEnsayos= muestra.listaEnsayos
+    listaEnsayos= muestra.listaEnsayos.all()
+    resultados= []
 
-    resultados= get_list_or_404(Humedad, muestra= muestra)
+    if listaEnsayos.filter(ensayo= "humedad").exists():
+        resultado= Humedad.objects.filter(muestra= muestra)
+        resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo= "granulometria").exists():
+        resultado= Granulometria.objects.filter(muestra= muestra)
+        resultados.extend(resultado)
+        
+
+    print (resultados)
+    
     
     return render(request, 'verMuestra.html', {
         "muestra": muestra,

@@ -1,0 +1,81 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} Granulometria ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{form.muestra.label}}
+          {{form.muestra}}
+      </div>
+
+      <div class= "col d-flex flex-column align-items-start">
+        {{form.fecha.label}}
+        {{form.fecha}}
+      </div>
+  </div>
+
+  <div class= "row">
+      <div class= "col text-nowrap">
+        {{form.temperaturaAmbiente.label}}
+        {{form.temperaturaAmbiente}}
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{form.humedad.label}}
+        {{form.humedad}}
+      </div>
+      
+      <div class= "col ">
+        {{form.tiempoEnsayo.label}}
+        {{form.tiempoEnsayo}}
+      </div>
+  </div>
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3 col m-auto">
+
+    <table id= "tabla" class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>{{form.tPlato.label}}</th>
+                <th>{{form.tMax.label}}</th>
+                <th>{{form.resultadoPrueba.label}}</th>
+                <th>{{form.tipoIgnicion.label}}</th>
+                <th>{{form.tiempoPrueba.label}}</th>
+                <th>{{form.tiempoMax.label}}</th>
+
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            {% for i in "012345678"%}
+                <tr id="templateRow">
+                    <td>{{form.tPlato}}</td>
+                    <td>{{form.tMax}}</td>
+                    <td>{{form.resultadoPrueba}}</td>
+                    <td>{{form.tipoIgnicion}}</td>
+                    <td>{{form.tiempoPrueba}}</td>
+                    <td>{{form.tiempoMax}}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    <button type= "button" id= "añadir-fila" class= "col-1 border-0"> + </button>
+
+</div>
+
+{%endblock%}
+
+
+
+{%block script%}  
+    <script> tplato= ""</script>
+    <script src="{%static 'js/ensayos/general.js'%}"></script> 
+{%endblock%}

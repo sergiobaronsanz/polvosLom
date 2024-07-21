@@ -71,7 +71,7 @@
                 <div id="resultados" class= "mt-3">
                   {% for resultado in resultados%}
                     <p class= "col-4"> 
-                      <a href= {% url 'inicio' %}>{{resultado.ensayo}} = </a> 
+                      <a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
                       {%if resultado.resultado != "" %}
                         {{resultado.resultado}} {{resultado.unidades}}
                       {%else%}

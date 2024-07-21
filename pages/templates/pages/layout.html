@@ -129,8 +129,8 @@
                         <a class="collapse-item" href="{%url 'listaEnsayos'%}">Ensayos</a>
                         <a class="collapse-item" href="{%url 'equipos'%}">Equipos</a>
                         <a class="collapse-item" href="{% url 'humedad' muestra_id='nueva' %}">Humedad</a>
-                        <a class="collapse-item" href="utilities-color.html">Granulometría</a>
-                        <a class="collapse-item" href="utilities-color.html">TMIc</a>
+                        <a class="collapse-item" href="{% url 'granulometria' muestra_id='nueva' %}">Granulometría</a>
+                        <a class="collapse-item" href="{% url 'tmic' muestra_id='nueva' %}">TMIc</a>
                         <a class="collapse-item" href="utilities-border.html">TMin</a>
                         <a class="collapse-item" href="utilities-color.html">LIE</a>
                         <a class="collapse-item" href="utilities-border.html">EMI</a>

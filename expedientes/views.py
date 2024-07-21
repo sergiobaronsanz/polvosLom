@@ -116,7 +116,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
             if nMuestras>1:
                 return redirect('ensayosMuestras', nMuestras=nMuestras-1, empresa= empresa, expediente=expediente) 
             else:
-                return redirect('inicio')    
+                return redirect('verExpedientes')    
     
     return render(request, 'ensayosMuestras.html',{
         'abreviatura': abreviatura,

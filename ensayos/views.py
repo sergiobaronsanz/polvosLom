@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
-from .forms import HumedadForm, EquiposForm
+from .forms import *
 from .models import *
 from muestras.models import ListaEnsayos, Muestras
 from django.db.models import Q
@@ -23,6 +23,8 @@ def ensayosRealizados(request, ensayo):
 
     if ensayo_id.ensayo == "Humedad":
         resultados= Humedad.objects.all()
+    if ensayo_id.ensayo== "Granulometria":
+        resultados= Granulometria.objects.all()
     else:
         resultados= None
     
@@ -62,10 +64,12 @@ def nuevoEquipo (request):
 
 #Ensayos
 def humedad(request, muestra_id): #################################### Hay que cambiar muestras_id por humedad_id para así poder tener varias humedades en una misma muestra
-    
+    #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "humedad")
+
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(humedad__isnull=True) & Q(listaEnsayos__ensayo__icontains="humedad") & ~Q(estado=1)
+        Q(humedad__isnull=False) & Q(listaEnsayos__ensayo__icontains="humedad") & ~Q(estado=1)
     )
     
     if request.method == 'POST':
@@ -75,13 +79,7 @@ def humedad(request, muestra_id): #################################### Hay que c
 
         if form.is_valid():
             muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
-            ensayo= get_object_or_404(ListaEnsayos, ensayo= "humedad")
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)
-
-            #Comprobamos que exista un resultado sin valor para poder asignar el valor
-            resultadoAsignado= Resultados.objects.get(muestra=muestra, ensayo=ensayo)
-            print (resultadoAsignado)
-            
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)            
 
             #Agregamos los campos
             fecha= request.POST.get('fecha')
@@ -108,23 +106,6 @@ def humedad(request, muestra_id): #################################### Hay que c
             humedad_instancia= Humedad.objects.filter(muestra= muestra)
             humedad_instancia.delete()
             
-            #Guardamos los datos en el servidor
-            
-            humedad= Humedad.objects.create(
-                    muestra= muestra,
-                    fecha= fecha, 
-                    ensayo= ensayo,
-                    temperaturaAmbiente= temperaturaAmbiente,
-                    humedad= humedad,
-                    tDesecacion= tDesecacion,
-                    criterio= criterio,
-                    desviacion=desviacion,
-                    observacion= observacion,
-                    resultado= resultadoAsignado
-            )
-            
-            #Añadimos los equipos
-            humedad.equipos.set(equipos)
             
             #Si tiempo desecacion no es "" lo añadimos
             if tiempoEnsayo:
@@ -162,12 +143,25 @@ def humedad(request, muestra_id): #################################### Hay que c
                     resultado= sumatorio/longitud_lista
             
             #Guardamos los valores en la tabla resultados                
-            resultado= round(resultado, 2)             
+            resultado= round(resultado, 2)  
+
+            #Guardamos los datos en el servidor
             
-            resultadoAsignado.resultado= resultado
-            resultadoAsignado.save()
-
-
+            humedad= Humedad.objects.create(
+                    muestra= muestra,
+                    fecha= fecha, 
+                    ensayo= ensayo,
+                    temperaturaAmbiente= temperaturaAmbiente,
+                    humedad= humedad,
+                    tDesecacion= tDesecacion,
+                    criterio= criterio,
+                    desviacion=desviacion,
+                    observacion= observacion,
+                    resultado= resultado
+            )
+            
+            #Añadimos los equipos
+            humedad.equipos.set(equipos)           
             
             #Guardamos los resultados en la base de datos      
             for valor in listaResultados:
@@ -175,6 +169,9 @@ def humedad(request, muestra_id): #################################### Hay que c
                     ensayo= humedad,
                     resultado= valor,
                 )
+            
+            
+
             
             ############################################################################################
             #POSIBILIDAD DE ELIMINAR LOS ENSAYOS QUE HAYA DE HUM PARA DICHA MUESTRA ANTES DE GUADAR OTRO,
@@ -252,5 +249,180 @@ def humedad(request, muestra_id): #################################### Hay que c
             form = HumedadForm()
             form.fields['muestra'].queryset = muestras_queryset
 
-    return render(request, 'ensayos/nuevosEnsayos/humedad.html', {'form': form})
+    return render(request, 'ensayos/nuevosEnsayos/humedad.html', {
+        'form': form, 
+        'ensayo': ensayo,
+        })
 
+
+def granulometria(request, muestra_id):
+    #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "granulometria")
+
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(granulometria__isnull=False) & Q(listaEnsayos__ensayo__icontains="granulometria") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        form= GranulometriaForm(request.POST)
+
+        if form.is_valid:
+            #Recogemos los datos para guardarlos
+            muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)            
+
+            #Agregamos los campos
+            fecha= request.POST.get('fecha')
+            temperaturaAmbiente= float(request.POST.get('temperaturaAmbiente'))
+            humedad= float(request.POST.get('humedad'))
+            via= float(request.POST.get('via'))
+            d10= float(request.POST.get('d10'))
+            d50= float(request.POST.get('d50'))
+            d90= float(request.POST.get('d90'))
+
+            #Comprobamos que no exista un ensayo de humedad previo
+            granulometria_instancia= Granulometria.objects.filter(muestra= muestra)
+            granulometria_instancia.delete()
+
+            granulometria= Granulometria.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fecha= fecha,
+                via= via,
+                d10=d10,
+                d50= d50,
+                d90= d90,
+                resultado= d50,
+            )        
+
+            granulometria.equipos.set (equipos)
+
+            return redirect ("inicio")
+    
+    else:
+        if muestra_id != 'nueva':
+            ensayo= Granulometria.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo.fecha)
+            temperaturaAmbiente= ensayo.temperaturaAmbiente
+            humedad=ensayo.humedad
+            via= ensayo.via
+            d10= ensayo.d10
+            d50= ensayo.d50
+            d90= ensayo.d90
+            
+            
+            form = GranulometriaForm(initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'via':via,
+                'd10': d10,
+                'd50': d50,
+                'd90': d90,
+                })
+            
+            form.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+        else:
+            form= GranulometriaForm()
+            form.fields['muestra'].queryset = muestras_queryset
+
+
+    return render(request, 'ensayos/nuevosEnsayos/granulometria.html', {
+        'ensayo': ensayo,
+        'form': form,
+    })
+
+def tmic(request, muestra_id):
+    #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIc")
+
+    muestras= Muestras.objects.filter(tmic__isnull=False)
+    print(muestras)
+
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(tmic__isnull=True) & Q(listaEnsayos__ensayo__icontains="tmic") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        form= TmicForm(request.POST)
+
+        if form.is_valid:
+            #Recogemos los datos para guardarlos
+            muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)
+           
+
+            #Agregamos los campos
+            """fecha= request.POST.get('fecha')
+            temperaturaAmbiente= float(request.POST.get('temperaturaAmbiente'))
+            humedad= float(request.POST.get('humedad'))
+            via= float(request.POST.get('via'))
+            d10= float(request.POST.get('d10'))
+            d50= float(request.POST.get('d50'))
+            d90= float(request.POST.get('d90'))
+
+            #Comprobamos que no exista un ensayo de humedad previo
+            granulometria_instancia= Granulometria.objects.filter(muestra= muestra)
+            granulometria_instancia.delete()
+
+            granulometria= Granulometria.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fecha= fecha,
+                via= via,
+                d10=d10,
+                d50= d50,
+                d90= d90,
+                resultado= d50,
+            )        
+
+            granulometria.equipos.set (equipos)
+
+            return redirect ("inicio")"""
+    
+    else:
+        if muestra_id != 'nueva':
+            ensayo= TMIc.objects.get(muestra__id= muestra_id)            
+            
+            """muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo.fecha)
+            temperaturaAmbiente= ensayo.temperaturaAmbiente
+            humedad=ensayo.humedad
+            via= ensayo.via
+            d10= ensayo.d10
+            d50= ensayo.d50
+            d90= ensayo.d90
+            
+            
+            form = GranulometriaForm(initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'via':via,
+                'd10': d10,
+                'd50': d50,
+                'd90': d90,
+                })
+            
+            form.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)"""
+
+        else:
+            form= TmicForm()
+            form.fields['muestra'].queryset = muestras_queryset
+
+
+    return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
+        'ensayo': ensayo,
+        'form': form,
+    })

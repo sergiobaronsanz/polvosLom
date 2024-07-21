@@ -1,0 +1,84 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} Granulometria ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{form.muestra.label}}
+          {{form.muestra}}
+      </div>
+
+      <div class= "col d-flex flex-column align-items-start">
+        {{form.fecha.label}}
+        {{form.fecha}}
+      </div>
+  </div>
+
+  <div class= "row">
+      <div class= "col text-nowrap">
+        {{form.temperaturaAmbiente.label}}
+        {{form.temperaturaAmbiente}}
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{form.humedad.label}}
+        {{form.humedad}}
+      </div>
+      
+      <div class= "col ">
+        {{form.via.label}}
+        {{form.via}}
+      </div>
+  </div>
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3">
+
+  <div class= "col">
+    {{form.d10.label}}
+    {{form.d10}}
+  </div>
+
+  <div class= "col">
+    {{form.d50.label}}
+    {{form.d50}}
+  </div>
+
+  <div class= "col">
+    {{form.d90.label}}
+    {{form.d90}}
+  </div>
+
+</div>
+
+
+<div class= "row mt-3 mb-3 col-12 p-0">
+
+  <div id="titulo-ensayos" class= "mt-5 mb-3 d-flex justify-content-center align-items-center col-12 p-0">
+    <h4 class= "text-nowrap mb-0 mr-2"> También puedes seleccionar un archivo </h4>
+    <div class= "col" style="width:100%; height:2px; background: #A9B2BB"></div>
+  </div> 
+
+  <h3 class= "col-12">  </h4>
+  <div class= "col">
+    {{form.archivo}}
+  </div>
+  <p id="result"></p>
+</div>
+
+{%endblock%}
+
+
+
+{%block script%} 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>   
+  <script src="{%static 'js/ensayos/granulometria.js'%}"></script> 
+{%endblock%}

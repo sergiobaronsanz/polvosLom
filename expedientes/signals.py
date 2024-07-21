@@ -36,6 +36,23 @@ def crear_ensayos(sender, instance, action, **kwargs):
                     ensayo= ensayo,
                     unidad= "%",
                 )
+
+            if ensayo.ensayo in lista_granulo:
+                resultados= Granulometria.objects.create(
+                    muestra= instance,
+                    ensayo= ensayo,
+                    unidad= "um",
+                )
+            
+            if ensayo.ensayo in lista_temperatura:
+                if ensayo.ensayo == "TMIc":
+                    resultados= TMIc.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "ºC",
+                    )
+                
+            
                 
         """
            if ensayo.ensayo in lista_temperatura:

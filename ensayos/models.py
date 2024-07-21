@@ -46,7 +46,7 @@ class Humedad(models.Model):
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", null=True, blank=True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=4, verbose_name="Humedad Ambiente", null=True, blank=True)
-    equipos= models.ManyToManyField("Equipos", verbose_name="Equipos", null=True, blank=True)
+    equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     criterio= models.CharField(default="5", max_length=50, verbose_name="Criterio", null=True, blank=True)
     tDesecacion= models.IntegerField(default=105, verbose_name="Temperatura de Desecación", null=True, blank=True)
     desviacion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Desviación", null=True, blank=True)
@@ -86,19 +86,26 @@ class ResultadosHumedad(models.Model):
 
 #Granulometría
 class Granulometria(models.Model):
+    vias=[
+        ("1", "Seca"),
+        ("2", "Húmeda"),
+    ]
+
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
-    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
-    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
+    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente",null= True, blank= True)
+    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente",null= True, blank= True)
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
-    fecha= models.DateField(verbose_name="Fecha")
-    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
-    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
-    d10= models.DecimalField(verbose_name="d10", max_digits=7, decimal_places=3, null=True)#9999.999
-    d50= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3, null=True)#9999.999
-    d90= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3, null=True)#9999.999
-    unidad= models.CharField(verbose_name="Unidad", max_length=50, default= "um")
+    tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1,null= True, blank= True)
+    fecha= models.DateField(verbose_name="Fecha",null= True, blank= True)
+    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True,null= True, blank= True)
+    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True,null= True, blank= True)
+    via= models.CharField(choices=vias, verbose_name="Vía", null= True, blank= True, max_length=100)
+    d10= models.DecimalField(verbose_name="d10", max_digits=7, decimal_places=3,null= True, blank= True)#9999.999
+    d50= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3,null= True, blank= True)#9999.999
+    d90= models.DecimalField(verbose_name="d90", max_digits=7, decimal_places=3,null= True, blank= True)#9999.999
+    resultado= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3,null= True, blank= True)#9999.999 es diempre la d50
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default= "um",null= True, blank= True)
 
     
     class Meta():
@@ -108,7 +115,7 @@ class Granulometria(models.Model):
     def __str__(self):
         return f"{self.muestra} | {self.resultado}" 
 
-class ResultadosGranulometria(models.Model):
+"""class ResultadosGranulometria(models.Model):
     ensayo= models.ForeignKey("Granulometria", on_delete=models.CASCADE, verbose_name="Ensayo Granulometría")
     d10= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="d10")
     d50= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="d50")
@@ -120,7 +127,7 @@ class ResultadosGranulometria(models.Model):
         verbose_name_plural="Resultados Granulometria"
         
     def __str__(self):
-        return f"{self.ensayo} | {self.resultado}"
+        return f"{self.ensayo} | {self.resultado}"""
     
 
 #TMIc
@@ -164,6 +171,8 @@ class ResultadosTMIc (models.Model):
     tMaxima= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura máxima")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
     tipoIgnicion= models.CharField(max_length=300, choices=ignicionesPosibles, verbose_name="Tipo ignición")
+    tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo ensayo")
+    tiempoTmax= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo a temperatura máxima")
     observacion=models.CharField(max_length=1000, verbose_name="Observacion")
     
     class Meta():
