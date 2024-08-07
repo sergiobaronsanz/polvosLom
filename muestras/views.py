@@ -61,6 +61,10 @@ def verMuestra(request, muestra_id):
     if listaEnsayos.filter(ensayo= "granulometria").exists():
         resultado= Granulometria.objects.filter(muestra= muestra)
         resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo= "tmic").exists():
+        resultado= TMIc.objects.filter(muestra= muestra)
+        print(resultado)
+        resultados.extend(resultado)
         
 
     print (resultados)

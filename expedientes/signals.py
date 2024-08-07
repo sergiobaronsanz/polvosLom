@@ -52,7 +52,13 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         unidad= "ºC",
                     )
                 
-            
+            if ensayo.ensayo in lista_temperatura:
+                if ensayo.ensayo == "TMIn":
+                    resultados= TMIn.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "ºC",
+                    )
                 
         """
            if ensayo.ensayo in lista_temperatura:

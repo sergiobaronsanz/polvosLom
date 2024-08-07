@@ -1,7 +1,7 @@
 {% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
 {%load static%}
 
-{%block tituloEnsayo%} TMIc ({{ensayo.normativa}})  {%endblock%}
+{%block tituloEnsayo%} TMIn ({{ensayo.normativa}})  {%endblock%}
 
 
 
@@ -9,32 +9,28 @@
 
   <div class= "row mt-3 mb-3">
       <div class= "col d-flex flex-column align-items-start">
-          {{formTmic.muestra.label}}
-          {{formTmic.muestra}}
+          {{formTmin.muestra.label}}
+          {{formTmin.muestra}}
       </div>
 
       <div class= "col d-flex flex-column align-items-start">
-        {{formTmic.fecha.label}}
-        {{formTmic.fecha}}
+        {{formTmin.fecha.label}}
+        {{formTmin.fecha}}
       </div>
   </div>
 
   <div class= "row">
       <div class= "col text-nowrap">
-        {{formTmic.temperaturaAmbiente.label}}
-        {{formTmic.temperaturaAmbiente}}
+        {{formTmin.temperaturaAmbiente.label}}
+        {{formTmin.temperaturaAmbiente}}
 
       </div>
       
       <div class= "col text-nowrap">
-        {{formTmic.humedad.label}}
-        {{formTmic.humedad}}
+        {{formTmin.humedad.label}}
+        {{formTmin.humedad}}
       </div>
 
-      <div class= "col ">
-        {{formTmic.tiempoMaxEnsayo.label}}
-        {{formTmic.tiempoMaxEnsayo}}
-      </div>
   </div>
 
 {%endblock%}
@@ -44,9 +40,9 @@
 {%block resultados%} 
 <div class= "row mt-3 mb-3 col m-auto">
     
-    {% if formTmic.non_field_errors %}
+    {% if formTmin.non_field_errors %}
             <div>
-                {% for error in formTmic.non_field_errors %}
+                {% for error in formTmin.non_field_errors %}
                     <p class= "text-danger">{{ error }}</p>
                 {% endfor %}
             </div>
@@ -56,22 +52,20 @@
     <table id= "tabla" class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
-                {%for form in formTmicResultados.forms.0%}
+                {%for form in formTminResultados.forms.0%}
                     <th class="align-middle">{{form.label}}</th>
                 {%endfor%}
 
             </tr>
         </thead>
         <tbody id="tbody">
-            {{ formTmicResultados.management_form }}
-            {%for form in formTmicResultados%}
+            {{ formTminResultados.management_form }}
+            {%for form in formTminResultados%}
                 <tr class="templateRow">
-                    <td>{{form.tPlato}}</td>
-                    <td>{{form.tMax}}</td>
+                    <td>{{form.tHorno}}</td>
+                    <td>{{form.peso}}</td>
+                    <td>{{form.presion}}</td>
                     <td>{{form.resultadoPrueba}}</td>
-                    <td>{{form.tipoIgnicion}}</td>
-                    <td>{{form.tiempoPrueba}}</td>
-                    <td>{{form.tiempoMax}}</td>
                 </tr>
             {%endfor%}
         </tbody>
@@ -82,8 +76,8 @@
     </div>
 
     <div class= "col-12 mt-3 mb-3">
-        {{formTmic.observacion.label}}
-        {{formTmic.observacion}}
+        {{formTmin.observacion.label}}
+        {{formTmin.observacion}}
     </div>
     
 </div>
@@ -93,6 +87,6 @@
 
 
 {%block script%}  
-    <script> ensayo= "tmic"</script>
+    <script> ensayo= "tmin" </script>
     <script src="{%static 'js/ensayos/general.js'%}"></script> 
 {%endblock%}

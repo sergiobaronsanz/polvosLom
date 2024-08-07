@@ -25,6 +25,8 @@ def ensayosRealizados(request, ensayo):
         resultados= Humedad.objects.all()
     if ensayo_id.ensayo== "Granulometria":
         resultados= Granulometria.objects.all()
+    if ensayo_id.ensayo== "TMIc":
+        resultados= TMIc.objects.all()
     else:
         resultados= None
     
@@ -69,7 +71,7 @@ def humedad(request, muestra_id): #################################### Hay que c
 
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(humedad__isnull=False) & Q(listaEnsayos__ensayo__icontains="humedad") & ~Q(estado=1)
+        Q(humedad__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="humedad") & ~Q(estado=1)
     )
     
     if request.method == 'POST':
@@ -261,7 +263,7 @@ def granulometria(request, muestra_id):
 
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(granulometria__isnull=False) & Q(listaEnsayos__ensayo__icontains="granulometria") & ~Q(estado=1)
+        Q(granulometria__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="granulometria") & ~Q(estado=1)
     )
 
     if request.method == 'POST':
@@ -280,6 +282,7 @@ def granulometria(request, muestra_id):
             d10= float(request.POST.get('d10'))
             d50= float(request.POST.get('d50'))
             d90= float(request.POST.get('d90'))
+            observacion= request.POST.get("observacion")
 
             #Comprobamos que no exista un ensayo de humedad previo
             granulometria_instancia= Granulometria.objects.filter(muestra= muestra)
@@ -296,6 +299,7 @@ def granulometria(request, muestra_id):
                 d50= d50,
                 d90= d90,
                 resultado= d50,
+                observacion=observacion
             )        
 
             granulometria.equipos.set (equipos)
@@ -339,90 +343,312 @@ def granulometria(request, muestra_id):
         'form': form,
     })
 
+
 def tmic(request, muestra_id):
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIc")
-
-    muestras= Muestras.objects.filter(tmic__isnull=False)
-    print(muestras)
-
+  
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(tmic__isnull=True) & Q(listaEnsayos__ensayo__icontains="tmic") & ~Q(estado=1)
+        Q(tmic__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="tmic") & ~Q(estado=1)
     )
 
     if request.method == 'POST':
-        form= TmicForm(request.POST)
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formTmic= TmicForm(request.POST, prefix='tmic')
+        formTmicResultados= tmicResultadosFormSet(request.POST, prefix='tmicResultados')  
+        
+        if formTmic.is_valid() and formTmicResultados.is_valid():
 
-        if form.is_valid:
-            #Recogemos los datos para guardarlos
-            muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)
-           
-
-            #Agregamos los campos
-            """fecha= request.POST.get('fecha')
-            temperaturaAmbiente= float(request.POST.get('temperaturaAmbiente'))
-            humedad= float(request.POST.get('humedad'))
-            via= float(request.POST.get('via'))
-            d10= float(request.POST.get('d10'))
-            d50= float(request.POST.get('d50'))
-            d90= float(request.POST.get('d90'))
-
+            muestra= get_object_or_404(Muestras, id= request.POST.get('tmic-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
             #Comprobamos que no exista un ensayo de humedad previo
-            granulometria_instancia= Granulometria.objects.filter(muestra= muestra)
-            granulometria_instancia.delete()
+            tmic_instancia= TMIc.objects.filter(muestra= muestra)
+            tmic_instancia.delete()
 
-            granulometria= Granulometria.objects.create(
+            
+            #Guardamos el formulario de la capa a falta del resultado final
+            fecha= formTmic.cleaned_data['fecha']
+            temperaturaAmbiente= formTmic.cleaned_data['temperaturaAmbiente']
+            humedad= formTmic.cleaned_data['humedad']
+            tiempoMaxEnsayo= formTmic.cleaned_data['tiempoMaxEnsayo']
+            observacion=formTmic.cleaned_data['observacion']
+
+            tmic= TMIc.objects.create(
                 muestra=muestra,
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
                 fecha= fecha,
-                via= via,
-                d10=d10,
-                d50= d50,
-                d90= d90,
-                resultado= d50,
-            )        
+                tiempoMaxEnsayo=tiempoMaxEnsayo,
+                observacion= observacion,
+            )
+            tmic.equipos.set (equipos)
 
-            granulometria.equipos.set (equipos)
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosTMIc.objects.filter(ensayo= tmic)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
 
-            return redirect ("inicio")"""
-    
+            
+            #Guardamos los resultados en la tabla de resultados TMIc 
+            listaResultados= []  
+
+            for form in formTmicResultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    tPlato = form.cleaned_data['tPlato']
+                    tMax = form.cleaned_data['tMax']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+                    tipoIgnicion= form.cleaned_data['tipoIgnicion']
+                    tiempoPrueba= form.cleaned_data['tiempoPrueba']
+                    tiempoMax= form.cleaned_data['tiempoMax']
+
+
+
+                    resultadosTmic=ResultadosTMIc.objects.create(
+                        ensayo=tmic,
+                        tPlato=tPlato,
+                        tMaxima=tMax,
+                        resultado=resultadoPrueba,
+                        tipoIgnicion= tipoIgnicion,
+                        tiempoPrueba=tiempoPrueba,
+                        tiempoTmax=tiempoMax,
+                    )
+
+                    if resultadoPrueba == "1" or resultadoPrueba== "3":
+                        listaResultados.append(tPlato)
+                    
+                    if resultadoPrueba == "3":
+                        tmic.funde= "1"
+
+            #Guardamos en el modelo TMIc el resultado del ensayo
+            if listaResultados:
+                resultado= min(listaResultados)
+                tmic.resultado= resultado
+                tmic.save()
+            else:
+                formTmic.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
+                return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
+                    'ensayo': ensayo,
+                    'formTmic': formTmic,
+                    'formTmicResultados': formTmicResultados,
+                })
+                        
+        else:
+            print (formTmic.errors)
+            formTmic.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
+                'ensayo': ensayo,
+                'formTmic': formTmic,
+                'formTmicResultados': formTmicResultados,
+            })
     else:
         if muestra_id != 'nueva':
-            ensayo= TMIc.objects.get(muestra__id= muestra_id)            
+            ensayo_TMIc= TMIc.objects.get(muestra__id= muestra_id)            
             
-            """muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo.fecha)
-            temperaturaAmbiente= ensayo.temperaturaAmbiente
-            humedad=ensayo.humedad
-            via= ensayo.via
-            d10= ensayo.d10
-            d50= ensayo.d50
-            d90= ensayo.d90
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_TMIc.fecha)
+            temperaturaAmbiente= ensayo_TMIc.temperaturaAmbiente
+            humedad=ensayo_TMIc.humedad
+            tiempoMaxEnsayo= ensayo_TMIc.tiempoMaxEnsayo
+            observacion= ensayo_TMIc.observacion
             
             
-            form = GranulometriaForm(initial={
+            formTmic = TmicForm(prefix='tmic', initial={
                 'muestra': muestra,
                 'fecha': fecha,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
-                'via':via,
-                'd10': d10,
-                'd50': d50,
-                'd90': d90,
+                'tiempoMaxEnsayo': tiempoMaxEnsayo,
+                'observacion': observacion,
                 })
             
-            form.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)"""
+            formTmic.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
 
+            resultados= ResultadosTMIc.objects.filter(ensayo=ensayo_TMIc).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'tPlato': resultado.tPlato,
+                    'tMax': resultado.tMaxima,
+                    'resultadoPrueba': resultado.resultado,
+                    'tipoIgnicion': resultado.tipoIgnicion,
+                    'tiempoPrueba': resultado.tiempoPrueba,
+                    'tiempoMax': resultado.tiempoTmax,
+                })
+            
+            # Crear el formset con los datos iniciales
+            TmicResultadosFormSet = formset_factory(TmicResultadosForm, extra=0)
+            formTmicResultados = TmicResultadosFormSet(prefix='tmicResultados',initial=initial_data)
+
+        
         else:
-            form= TmicForm()
-            form.fields['muestra'].queryset = muestras_queryset
+            formTmic= TmicForm(prefix='tmic')
+            formTmic.fields['muestra'].queryset = muestras_queryset
+
+            formTmicResultados=tmicResultadosFormSet(prefix='tmicResultados')            
 
 
     return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
         'ensayo': ensayo,
-        'form': form,
+        'formTmic': formTmic,
+        'formTmicResultados': formTmicResultados,
+    })
+
+
+def tmin (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIn")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(tmin__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="tmin") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formTmin= TminForm(request.POST, prefix='tmin')
+        formTminResultados= tminResultadosFormSet(request.POST, prefix='tminResultados')  
+        
+        if formTmin.is_valid() and formTminResultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('tmin-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo de humedad previo
+            tmin_instancia= TMIn.objects.filter(muestra= muestra)
+            tmin_instancia.delete()
+
+            
+            #Guardamos el formulario de la capa a falta del resultado final
+            fecha= formTmin.cleaned_data['fecha']
+            temperaturaAmbiente= formTmin.cleaned_data['temperaturaAmbiente']
+            humedad= formTmin.cleaned_data['humedad']
+            tiempoMaxEnsayo= formTmin.cleaned_data['tiempoMaxEnsayo']
+            observacion=formTmin.cleaned_data['observacion']
+
+            tmin= TMIn.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fecha= fecha,
+                tiempoMaxEnsayo=tiempoMaxEnsayo,
+                observacion= observacion,
+            )
+            tmin.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosTMIn.objects.filter(ensayo= tmin)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados TMIn 
+            listaResultados= []  
+
+            for form in formTminResultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    tPlato = form.cleaned_data['tPlato']
+                    tMax = form.cleaned_data['tMax']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+                    tipoIgnicion= form.cleaned_data['tipoIgnicion']
+                    tiempoPrueba= form.cleaned_data['tiempoPrueba']
+                    tiempoMax= form.cleaned_data['tiempoMax']
+
+
+
+                    resultadosTmin=ResultadosTMIn.objects.create(
+                        ensayo=tmin,
+                        tPlato=tPlato,
+                        tMaxima=tMax,
+                        resultado=resultadoPrueba,
+                        tipoIgnicion= tipoIgnicion,
+                        tiempoPrueba=tiempoPrueba,
+                        tiempoTmax=tiempoMax,
+                    )
+
+                    if resultadoPrueba == "1" or resultadoPrueba== "3":
+                        listaResultados.append(tPlato)
+                    
+                    if resultadoPrueba == "3":
+                        tmin.funde= "1"
+
+            #Guardamos en el modelo TMIn el resultado del ensayo
+            if listaResultados:
+                resultado= min(listaResultados)
+                tmin.resultado= resultado
+                tmin.save()
+            else:
+                formTmin.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
+                return render(request, 'ensayos/nuevosEnsayos/tmin.html', {
+                    'ensayo': ensayo,
+                    'formTmin': formTmin,
+                    'formTminResultados': formTminResultados,
+                })
+                        
+        else:
+            print (formTmin.errors)
+            formTmin.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/tmin.html', {
+                'ensayo': ensayo,
+                'formTmin': formTmin,
+                'formTminResultados': formTminResultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_TMIn= TMIn.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_TMIn.fecha)
+            temperaturaAmbiente= ensayo_TMIn.temperaturaAmbiente
+            humedad=ensayo_TMIn.humedad
+            tiempoMaxEnsayo= ensayo_TMIn.tiempoMaxEnsayo
+            observacion= ensayo_TMIn.observacion
+            
+            
+            formTmin = TminForm(prefix='tmin', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'tiempoMaxEnsayo': tiempoMaxEnsayo,
+                'observacion': observacion,
+                })
+            
+            formTmin.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosTMIn.objects.filter(ensayo=ensayo_TMIn).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'tPlato': resultado.tPlato,
+                    'tMax': resultado.tMaxima,
+                    'resultadoPrueba': resultado.resultado,
+                    'tipoIgnicion': resultado.tipoIgnicion,
+                    'tiempoPrueba': resultado.tiempoPrueba,
+                    'tiempoMax': resultado.tiempoTmax,
+                })
+            
+            # Crear el formset con los datos iniciales
+            TminResultadosFormSet = formset_factory(TminResultadosForm, extra=0)
+            formTminResultados = TminResultadosFormSet(prefix='tminResultados',initial=initial_data)
+
+        
+        else:
+            formTmin= TminForm(prefix='tmin')
+            formTmin.fields['muestra'].queryset = muestras_queryset
+
+            formTminResultados=tminResultadosFormSet(prefix='tminResultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/tmin.html', {
+        'ensayo': ensayo,
+        'formTmin': formTmin,
+        'formTminResultados': formTminResultados,
     })

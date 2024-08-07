@@ -97,6 +97,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
     
     #mandamos el formulario
     form= EnsayosMuestras()
+
     
     if form.is_valid:
         if request.POST:
