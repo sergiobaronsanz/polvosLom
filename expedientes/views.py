@@ -93,7 +93,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         id_muestra=1
     
     #Asignamos nombre
-    abreviatura=empresa.abreviatura + "-" +str(id_muestra)
+    abreviaturaCompleta=empresa.abreviatura + "-" +str(id_muestra)
     
     #mandamos el formulario
     form= EnsayosMuestras()
@@ -120,10 +120,39 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
                 return redirect('verExpedientes')    
     
     return render(request, 'ensayosMuestras.html',{
-        'abreviatura': abreviatura,
+        'abreviaturaCompleta': abreviaturaCompleta,
         'form': form
     })
 
+def ensayosMuestrasSimple(request, muestra):
+    muestra= Muestras.objects.get(id= muestra)
+    expediente= muestra.expediente
+    abreviatura= expediente.empresa.abreviatura
+    numero_id= muestra.id_muestra
+    abreviaturaCompleta= abreviatura + "-" + str(numero_id)
+    
+    if request.method == "POST":
+        form= EnsayosMuestras(request.POST)
+        if form.is_valid():
+            listaEnsayos = request.POST.getlist('listaEnsayos')
+            observaciones= request.POST.get('observaciones')
+            
+            muestra.observaciones= observaciones
+            muestra.listaEnsayos.set(listaEnsayos)
+
+
+    else:
+        form= EnsayosMuestras(initial={
+            'listaEnsayos': muestra.listaEnsayos.all(),
+            'observaciones': muestra.observaciones
+        })
+
+
+
+    return render(request, 'ensayosMuestras.html',{
+        'abreviaturaCompleta': abreviaturaCompleta,
+        'form': form
+    })
 
 #Ver expedientes
 def verExpedientes(request):

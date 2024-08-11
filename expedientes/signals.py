@@ -17,12 +17,13 @@ def actualizar_estado_expediente(sender, instance, created, **kwargs):
         expediente.estado = '3'  # Actualiza el estado del expediente a "Terminado"
         expediente.save()
 
-
+#Creamos los ensayos
 @receiver(m2m_changed, sender=Muestras.listaEnsayos.through)
 def crear_ensayos(sender, instance, action, **kwargs):
     if action == "post_add":
         #Sacamos los ensayos asignados a la muestra
         ensayos=instance.listaEnsayos.all()
+        print(ensayos)
         
         #Hacemos los grupos de la unidades
         lista_temperatura= ["TMIc", "TMIn"]
@@ -31,34 +32,40 @@ def crear_ensayos(sender, instance, action, **kwargs):
         
         for ensayo in ensayos:
             if ensayo.ensayo in lista_humedades:
-                resultados= Humedad.objects.create(
-                    muestra= instance,
-                    ensayo= ensayo,
-                    unidad= "%",
-                )
+                if not Humedad.objects.exists():
+                    resultados= Humedad.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "%",
+                    )
 
             if ensayo.ensayo in lista_granulo:
-                resultados= Granulometria.objects.create(
-                    muestra= instance,
-                    ensayo= ensayo,
-                    unidad= "um",
-                )
+                if not Granulometria.objects.exists():
+                    resultados= Granulometria.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "um",
+                    )
             
             if ensayo.ensayo in lista_temperatura:
                 if ensayo.ensayo == "TMIc":
-                    resultados= TMIc.objects.create(
-                        muestra= instance,
-                        ensayo= ensayo,
-                        unidad= "ºC",
-                    )
+                    if not TMIc.objects.exists():
+                        resultados= TMIc.objects.create(
+                            muestra= instance,
+                            ensayo= ensayo,
+                            unidad= "ºC",
+                        )
                 
             if ensayo.ensayo in lista_temperatura:
                 if ensayo.ensayo == "TMIn":
-                    resultados= TMIn.objects.create(
-                        muestra= instance,
-                        ensayo= ensayo,
-                        unidad= "ºC",
-                    )
+                    print("hola como estas")
+                    if not TMIn.objects.exists():
+                        print("estoy bien")
+                        resultados= TMIn.objects.create(
+                            muestra= instance,
+                            ensayo= ensayo,
+                            unidad= "ºC",
+                        )
                 
         """
            if ensayo.ensayo in lista_temperatura:

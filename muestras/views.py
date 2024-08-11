@@ -4,6 +4,7 @@ from muestras.forms import DescripcionMuestraForm, MuestrasForm
 from .models import Muestras, DescripcionMuestra
 from ensayos.models import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.urls import reverse
 
 # Create your views here.
 
@@ -65,13 +66,21 @@ def verMuestra(request, muestra_id):
         resultado= TMIc.objects.filter(muestra= muestra)
         print(resultado)
         resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo= "tmin").exists():
+        resultado= TMIn.objects.filter(muestra= muestra)
+        print(resultado)
+        resultados.extend(resultado)
+    
         
 
-    print (resultados)
+    #Sacamos las url
+    url_ensayosMuestras= reverse('ensayosMuestrasSimple', kwargs={'muestra': muestra_id})
+
     
     
     return render(request, 'verMuestra.html', {
         "muestra": muestra,
         "descripcion": descripcion,
-        "resultados": resultados
+        "resultados": resultados,
+        "url_ensayosMuestras": url_ensayosMuestras,
     })

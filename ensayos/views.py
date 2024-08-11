@@ -501,7 +501,7 @@ def tmic(request, muestra_id):
 
 def tmin (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIn")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "LIE")
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -518,70 +518,62 @@ def tmin (request, muestra_id):
             muestra= get_object_or_404(Muestras, id= request.POST.get('tmin-muestra'))
             equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
-            #Comprobamos que no exista un ensayo de humedad previo
-            tmin_instancia= TMIn.objects.filter(muestra= muestra)
+            #Comprobamos que no exista un ensayo  previo
+            tmin_instancia= LIE.objects.filter(muestra= muestra)
             tmin_instancia.delete()
 
             
-            #Guardamos el formulario de la capa a falta del resultado final
+            #Guardamos el formulario  a falta del resultado final
             fecha= formTmin.cleaned_data['fecha']
             temperaturaAmbiente= formTmin.cleaned_data['temperaturaAmbiente']
             humedad= formTmin.cleaned_data['humedad']
-            tiempoMaxEnsayo= formTmin.cleaned_data['tiempoMaxEnsayo']
             observacion=formTmin.cleaned_data['observacion']
 
-            tmin= TMIn.objects.create(
+            tmin= LIE.objects.create(
                 muestra=muestra,
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
                 fecha= fecha,
-                tiempoMaxEnsayo=tiempoMaxEnsayo,
                 observacion= observacion,
             )
             tmin.equipos.set (equipos)
 
             #Eliminamos los resultados
-            resultadosAnteriores= ResultadosTMIn.objects.filter(ensayo= tmin)
+            resultadosAnteriores= ResultadosLIE.objects.filter(ensayo= tmin)
             if resultadosAnteriores:
                 for resultado in resultadosAnteriores:
                     resultado.delete()
 
             
-            #Guardamos los resultados en la tabla de resultados TMIn 
+            #Guardamos los resultados en la tabla de resultados LIE 
             listaResultados= []  
 
             for form in formTminResultados:
                 if form.cleaned_data:  # Para evitar formularios vacíos
-                    tPlato = form.cleaned_data['tPlato']
-                    tMax = form.cleaned_data['tMax']
+                    tHorno = form.cleaned_data['tHorno']
+                    peso = form.cleaned_data['peso']
+                    presion= form.cleaned_data['presion']
                     resultadoPrueba= form.cleaned_data['resultadoPrueba']
-                    tipoIgnicion= form.cleaned_data['tipoIgnicion']
-                    tiempoPrueba= form.cleaned_data['tiempoPrueba']
-                    tiempoMax= form.cleaned_data['tiempoMax']
 
 
 
-                    resultadosTmin=ResultadosTMIn.objects.create(
-                        ensayo=tmin,
-                        tPlato=tPlato,
-                        tMaxima=tMax,
+                    resultadosTmin=ResultadosLIE.objects.create(
+                        ensayo= tmin,
+                        tHorno=tHorno,
+                        peso= peso,
+                        presion=presion,
                         resultado=resultadoPrueba,
-                        tipoIgnicion= tipoIgnicion,
-                        tiempoPrueba=tiempoPrueba,
-                        tiempoTmax=tiempoMax,
                     )
 
-                    if resultadoPrueba == "1" or resultadoPrueba== "3":
-                        listaResultados.append(tPlato)
+                    if resultadoPrueba == "1":
+                        listaResultados.append(tHorno)
                     
-                    if resultadoPrueba == "3":
-                        tmin.funde= "1"
 
-            #Guardamos en el modelo TMIn el resultado del ensayo
+            #Guardamos en el modelo LIE el resultado del ensayo
             if listaResultados:
                 resultado= min(listaResultados)
-                tmin.resultado= resultado
+                tmin.resultado= resultado - 20
                 tmin.save()
             else:
                 formTmin.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
@@ -601,14 +593,14 @@ def tmin (request, muestra_id):
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_TMIn= TMIn.objects.get(muestra__id= muestra_id)            
+            ensayo_LIE= LIE.objects.get(muestra__id= muestra_id)            
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_TMIn.fecha)
-            temperaturaAmbiente= ensayo_TMIn.temperaturaAmbiente
-            humedad=ensayo_TMIn.humedad
-            tiempoMaxEnsayo= ensayo_TMIn.tiempoMaxEnsayo
-            observacion= ensayo_TMIn.observacion
+            fecha= str(ensayo_LIE.fecha)
+            temperaturaAmbiente= ensayo_LIE.temperaturaAmbiente
+            humedad=ensayo_LIE.humedad
+            tiempoMaxEnsayo= ensayo_LIE.tiempoMaxEnsayo
+            observacion= ensayo_LIE.observacion
             
             
             formTmin = TminForm(prefix='tmin', initial={
@@ -622,7 +614,7 @@ def tmin (request, muestra_id):
             
             formTmin.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
 
-            resultados= ResultadosTMIn.objects.filter(ensayo=ensayo_TMIn).order_by("id")
+            resultados= ResultadosLIE.objects.filter(ensayo=ensayo_LIE).order_by("id")
 
             initial_data = []
             for resultado in resultados:
@@ -651,4 +643,151 @@ def tmin (request, muestra_id):
         'ensayo': ensayo,
         'formTmin': formTmin,
         'formTminResultados': formTminResultados,
+    })
+
+
+def lie (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "LIE")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(lie__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="lie") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formLie= LieForm(request.POST, prefix='lie')
+        formLieResultados= lieResultadosFormSet(request.POST, prefix='lieResultados')  
+        
+        if formLie.is_valid() and formLieResultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('lie-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            lie_instancia= LIE.objects.filter(muestra= muestra)
+            lie_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formLie.cleaned_data['fecha']
+            temperaturaAmbiente= formLie.cleaned_data['temperaturaAmbiente']
+            humedad= formLie.cleaned_data['humedad']
+            observacion=formLie.cleaned_data['observacion']
+
+            lie= LIE.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fecha= fecha,
+                observacion= observacion,
+            )
+            lie.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosLIE.objects.filter(ensayo= lie)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados LIE 
+            listaResultados= []  
+
+            for form in formLieResultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    tHorno = form.cleaned_data['tHorno']
+                    peso = form.cleaned_data['peso']
+                    presion= form.cleaned_data['presion']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+
+
+
+                    resultadosLie=ResultadosLIE.objects.create(
+                        ensayo= lie,
+                        tHorno=tHorno,
+                        peso= peso,
+                        presion=presion,
+                        resultado=resultadoPrueba,
+                    )
+
+                    if resultadoPrueba == "1":
+                        listaResultados.append(tHorno)
+                    
+
+            #Guardamos en el modelo LIE el resultado del ensayo
+            if listaResultados:
+                resultado= min(listaResultados)
+                lie.resultado= resultado - 20
+                lie.save()
+            else:
+                formLie.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
+                return render(request, 'ensayos/nuevosEnsayos/lie.html', {
+                    'ensayo': ensayo,
+                    'formLie': formLie,
+                    'formLieResultados': formLieResultados,
+                })
+                        
+        else:
+            print (formLie.errors)
+            formLie.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/lie.html', {
+                'ensayo': ensayo,
+                'formLie': formLie,
+                'formLieResultados': formLieResultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_LIE= LIE.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_LIE.fecha)
+            temperaturaAmbiente= ensayo_LIE.temperaturaAmbiente
+            humedad=ensayo_LIE.humedad
+            tiempoMaxEnsayo= ensayo_LIE.tiempoMaxEnsayo
+            observacion= ensayo_LIE.observacion
+            
+            
+            formLie = LieForm(prefix='lie', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'tiempoMaxEnsayo': tiempoMaxEnsayo,
+                'observacion': observacion,
+                })
+            
+            formLie.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosLIE.objects.filter(ensayo=ensayo_LIE).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'tPlato': resultado.tPlato,
+                    'tMax': resultado.tMaxima,
+                    'resultadoPrueba': resultado.resultado,
+                    'tipoIgnicion': resultado.tipoIgnicion,
+                    'tiempoPrueba': resultado.tiempoPrueba,
+                    'tiempoMax': resultado.tiempoTmax,
+                })
+            
+            # Crear el formset con los datos iniciales
+            LieResultadosFormSet = formset_factory(LieResultadosForm, extra=0)
+            formLieResultados = LieResultadosFormSet(prefix='lieResultados',initial=initial_data)
+
+        
+        else:
+            formLie= LieForm(prefix='lie')
+            formLie.fields['muestra'].queryset = muestras_queryset
+
+            formLieResultados=lieResultadosFormSet(prefix='lieResultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/lie.html', {
+        'ensayo': ensayo,
+        'formLie': formLie,
+        'formLieResultados': formLieResultados,
     })

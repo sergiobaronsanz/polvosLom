@@ -1,0 +1,92 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} LIE ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{formTmin.muestra.label}}
+          {{formTmin.muestra}}
+      </div>
+
+      <div class= "col d-flex flex-column align-items-start">
+        {{formTmin.fecha.label}}
+        {{formTmin.fecha}}
+      </div>
+  </div>
+
+  <div class= "row">
+      <div class= "col text-nowrap">
+        {{formTmin.temperaturaAmbiente.label}}
+        {{formTmin.temperaturaAmbiente}}
+
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{formTmin.humedad.label}}
+        {{formTmin.humedad}}
+      </div>
+
+  </div>
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3 col m-auto">
+    
+    {% if formTmin.non_field_errors %}
+            <div>
+                {% for error in formTmin.non_field_errors %}
+                    <p class= "text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+      
+    <table id= "tabla" class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                {%for form in formTminResultados.forms.0%}
+                    <th class="align-middle">{{form.label}}</th>
+                {%endfor%}
+
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            {{ formTminResultados.management_form }}
+            {%for form in formTminResultados%}
+                <tr class="templateRow">
+                    <td>{{form.tHorno}}</td>
+                    <td>{{form.peso}}</td>
+                    <td>{{form.presion}}</td>
+                    <td>{{form.resultadoPrueba}}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    <div class= "col-2 d-flex justify-content-between">
+        <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
+        <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+    </div>
+
+    <div class= "col-12 mt-3 mb-3">
+        {{formTmin.observacion.label}}
+        {{formTmin.observacion}}
+    </div>
+    
+</div>
+
+{%endblock%}
+
+
+
+{%block script%}  
+    <script> ensayo= "tmin" </script>
+    <script src="{%static 'js/ensayos/general.js'%}"></script> 
+{%endblock%}

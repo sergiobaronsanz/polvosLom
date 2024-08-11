@@ -463,3 +463,128 @@ class TminResultadosForm(forms.Form):
     
 
 tminResultadosFormSet= formset_factory(TminResultadosForm, extra=7)
+
+#TMIn
+class LieForm(forms.Form):
+    #Todos los campos # se deben establecer en la view
+    #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
+    #resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
+    #equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
+    #tiempoEnsayo 
+
+    seleccionCerillas = [
+        ("1", "sobbe"),
+        ("2", "simex"),
+    ]
+
+    
+    seleccionBoquillas = [
+        ("1", "rebote"),
+        ("2", "tubular"),
+    ]
+
+
+    muestras= Muestras.objects.all()
+
+    
+    muestra = forms.ModelChoiceField(
+        queryset=muestras,
+        label="Muestra",
+        empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    fecha= forms.DateField(
+        label="Fecha",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+
+    temperaturaAmbiente = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    humedad= forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Humedad Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
+
+    cerillas= forms.ChoiceField(
+            choices= seleccionCerillas,
+            label= "Cerillas",
+            widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+            required=False,
+
+    )
+
+    boquilla= forms.ChoiceField(
+            choices= seleccionBoquillas,
+            label= "Boquilla",
+            widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+            required=False,
+
+    )
+
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
+
+class LieResultadosForm(forms.Form):
+    resultadosPosibles=[
+        ('', 'Selecciona'),
+        ("1", "SI"),
+        ("2", "NO"),
+    ]
+
+    concentracion= forms.DecimalField(
+        decimal_places=2,  
+        label="Concentración (g/m3)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    peso= forms.DecimalField(
+        decimal_places=2,  
+        label="Peso (g)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    pex= forms.DecimalField(
+        decimal_places=2,  
+        label= "Pex (bar)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    pm= forms.DecimalField(
+        decimal_places=2,  
+        label= "Pm (bar)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    dpdt= forms.DecimalField(
+        decimal_places=2,  
+        label= "dP/dT (bar/s)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    resultadoPrueba= forms.ChoiceField(
+        choices=resultadosPosibles,
+        label= "Resultado",
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+
+    )
+    
+
+tminResultadosFormSet= formset_factory(LieResultadosForm, extra=7)
