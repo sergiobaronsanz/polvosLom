@@ -299,18 +299,24 @@ class ResultadosLIE (models.Model):
 
 #Emi
 class EMI (models.Model):
+    selecionInductancia= [
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
-    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
-    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
-    presion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Presión Ambiente")
+    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
+    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
+    presion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Presión Ambiente", blank= True, null= True)
+    inductancia= models.CharField(max_length=100, choices=selecionInductancia, verbose_name="Inductancia", blank= True, null= True)
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    fecha= models.DateField(verbose_name="Fecha")
-    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
-    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
-    resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
-    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")
-    observacion=models.CharField(max_length=1000, verbose_name="Observacion")
+    fecha= models.DateField(verbose_name="Fecha", blank= True, null= True)
+    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True, blank= True, null= True)
+    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True, blank= True, null= True)
+    resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, blank= True, null= True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ", blank= True, null= True)
+    observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
 
@@ -358,20 +364,20 @@ class Pmax (models.Model):
     
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
-    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente")
-    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente")
+    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
+    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
-    cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas")
-    boquilla= models.CharField(max_length=300, choices=seleccionBoquillas, verbose_name="Boquilla")
-    fecha= models.DateField(verbose_name="Fecha")
+    cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas", blank= True, null= True)
+    boquilla= models.CharField(max_length=300, choices=seleccionBoquillas, verbose_name="Boquilla", blank= True, null= True)
+    fecha= models.DateField(verbose_name="Fecha", blank= True, null= True)
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
-    pmax= models.DecimalField(verbose_name="Pmax", max_digits=4, decimal_places=2, null=True) #99,99
-    dpdt= models.IntegerField(verbose_name="dPdT", null=True) #999
-    kmax= models.IntegerField(verbose_name="kmax", null=True)
-    unidadPmax= models.CharField(verbose_name="Unidad", max_length=50, default="bar")
-    unidadDpdt= models.CharField(verbose_name="Unidad", max_length=50, default="bar/s")
-    observacion=models.CharField(max_length=1000, verbose_name="Observacion")
+    pmax= models.DecimalField(verbose_name="Pmax", max_digits=4, decimal_places=2, blank= True, null= True) #99,99
+    dpdt= models.IntegerField(verbose_name="dPdT", blank= True, null= True) #999
+    kmax= models.IntegerField(verbose_name="kmax", blank= True, null= True)
+    unidadPmax= models.CharField(verbose_name="Unidad", max_length=50, default="bar", blank= True, null= True)
+    unidadDpdt= models.CharField(verbose_name="Unidad", max_length=50, default="bar/s", blank= True, null= True)
+    observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
 
@@ -380,7 +386,7 @@ class Pmax (models.Model):
         verbose_name_plural="Pmaxs"
         
     def __str__(self):
-        return f"{self.muestra} | Pmax: {self.resultadoPmax}, dP/dT: {self.resultadoDpdt}, kmax: {self.resultadoKmax}" 
+        return f"{self.muestra} | Pmax: {self.pmax}, dP/dT: {self.dpdt}, kmax: {self.kmax}" 
 
 class ResultadosPmax (models.Model):
     seriesPosibles = [
@@ -394,9 +400,8 @@ class ResultadosPmax (models.Model):
     concentracion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Concentración")
     peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso equivalente")
     serie= models.CharField(max_length=300, choices=seriesPosibles, verbose_name= "Serie")
-    pex= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PEX")
     pm= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PM")
-    dpdt= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="dP/dT")
+    dpdt= models.IntegerField( verbose_name="dP/dT")
     
     class Meta():
         verbose_name="Resultado Pmax"

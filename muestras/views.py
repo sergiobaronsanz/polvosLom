@@ -64,14 +64,25 @@ def verMuestra(request, muestra_id):
         resultados.extend(resultado)
     if listaEnsayos.filter(ensayo= "tmic").exists():
         resultado= TMIc.objects.filter(muestra= muestra)
-        print(resultado)
         resultados.extend(resultado)
     if listaEnsayos.filter(ensayo= "tmin").exists():
         resultado= TMIn.objects.filter(muestra= muestra)
-        print(resultado)
         resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo= "LIE").exists():
+        resultado= LIE.objects.filter(muestra= muestra)
+        print(resultado)
+        resultados.extend(resultado)     
+    if listaEnsayos.filter(ensayo= "EMI").exists():
+        resultado= EMI.objects.filter(muestra= muestra)
+        print(resultado)
+        resultados.extend(resultado)   
+    if listaEnsayos.filter(ensayo= "Pmax").exists():
+        resultado= Pmax.objects.filter(muestra= muestra)
+        print(resultado)
+        resultados.extend(resultado) 
     
         
+    print (resultados)
 
     #Sacamos las url
     url_ensayosMuestras= reverse('ensayosMuestrasSimple', kwargs={'muestra': muestra_id})

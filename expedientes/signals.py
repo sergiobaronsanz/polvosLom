@@ -22,50 +22,65 @@ def actualizar_estado_expediente(sender, instance, created, **kwargs):
 def crear_ensayos(sender, instance, action, **kwargs):
     if action == "post_add":
         #Sacamos los ensayos asignados a la muestra
-        ensayos=instance.listaEnsayos.all()
-        print(ensayos)
-        
-        #Hacemos los grupos de la unidades
-        lista_temperatura= ["TMIc", "TMIn"]
-        lista_humedades= ["Humedad"]
-        lista_granulo= ["Granulometria"]
+        ensayos=instance.listaEnsayos.all()        
         
         for ensayo in ensayos:
-            if ensayo.ensayo in lista_humedades:
-                if not Humedad.objects.exists():
+            if ensayo.ensayo == "Humedad":
+                if not Humedad.objects.filter(muestra= instance).exists():
                     resultados= Humedad.objects.create(
                         muestra= instance,
                         ensayo= ensayo,
                         unidad= "%",
                     )
 
-            if ensayo.ensayo in lista_granulo:
-                if not Granulometria.objects.exists():
+            if ensayo.ensayo == "Granulometria":
+                if not Granulometria.objects.filter(muestra= instance).exists():
                     resultados= Granulometria.objects.create(
                         muestra= instance,
                         ensayo= ensayo,
                         unidad= "um",
                     )
             
-            if ensayo.ensayo in lista_temperatura:
-                if ensayo.ensayo == "TMIc":
-                    if not TMIc.objects.exists():
-                        resultados= TMIc.objects.create(
-                            muestra= instance,
-                            ensayo= ensayo,
-                            unidad= "ºC",
-                        )
+            if ensayo.ensayo == "TMIc":
+                if not TMIc.objects.filter(muestra= instance).exists():
+                    resultados= TMIc.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "ºC",
+                    )
                 
-            if ensayo.ensayo in lista_temperatura:
-                if ensayo.ensayo == "TMIn":
-                    print("hola como estas")
-                    if not TMIn.objects.exists():
-                        print("estoy bien")
-                        resultados= TMIn.objects.create(
-                            muestra= instance,
-                            ensayo= ensayo,
-                            unidad= "ºC",
-                        )
+            if ensayo.ensayo == "TMIn":
+                if not TMIn.objects.filter(muestra= instance).exists():
+                    resultados= TMIn.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "ºC",
+                    )
+
+            if ensayo.ensayo == "LIE":
+                if not LIE.objects.filter(muestra= instance).exists():
+                    resultados= LIE.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "g/m3",
+                    )
+
+            if ensayo.ensayo == "EMI":
+                if not EMI.objects.filter(muestra= instance).exists():
+                    resultados= EMI.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "mJ",
+                    )
+
+            if ensayo.ensayo == "Pmax":
+                if not Pmax.objects.filter(muestra= instance).exists():
+                    resultados= Pmax.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidadPmax= "g/m3",
+                        unidadDpdt= "bar/s",
+                    )
                 
         """
            if ensayo.ensayo in lista_temperatura:

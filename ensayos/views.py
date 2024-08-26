@@ -501,7 +501,7 @@ def tmic(request, muestra_id):
 
 def tmin (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "LIE")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIn")
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -519,7 +519,7 @@ def tmin (request, muestra_id):
             equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
             #Comprobamos que no exista un ensayo  previo
-            tmin_instancia= LIE.objects.filter(muestra= muestra)
+            tmin_instancia= TMIn.objects.filter(muestra= muestra)
             tmin_instancia.delete()
 
             
@@ -529,7 +529,7 @@ def tmin (request, muestra_id):
             humedad= formTmin.cleaned_data['humedad']
             observacion=formTmin.cleaned_data['observacion']
 
-            tmin= LIE.objects.create(
+            tmin= TMIn.objects.create(
                 muestra=muestra,
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
@@ -540,13 +540,13 @@ def tmin (request, muestra_id):
             tmin.equipos.set (equipos)
 
             #Eliminamos los resultados
-            resultadosAnteriores= ResultadosLIE.objects.filter(ensayo= tmin)
+            resultadosAnteriores= ResultadosTMIn.objects.filter(ensayo= tmin)
             if resultadosAnteriores:
                 for resultado in resultadosAnteriores:
                     resultado.delete()
 
             
-            #Guardamos los resultados en la tabla de resultados LIE 
+            #Guardamos los resultados en la tabla de resultados TMIn 
             listaResultados= []  
 
             for form in formTminResultados:
@@ -558,7 +558,7 @@ def tmin (request, muestra_id):
 
 
 
-                    resultadosTmin=ResultadosLIE.objects.create(
+                    resultadosTmin=ResultadosTMIn.objects.create(
                         ensayo= tmin,
                         tHorno=tHorno,
                         peso= peso,
@@ -570,7 +570,7 @@ def tmin (request, muestra_id):
                         listaResultados.append(tHorno)
                     
 
-            #Guardamos en el modelo LIE el resultado del ensayo
+            #Guardamos en el modelo TMIn el resultado del ensayo
             if listaResultados:
                 resultado= min(listaResultados)
                 tmin.resultado= resultado - 20
@@ -593,14 +593,14 @@ def tmin (request, muestra_id):
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_LIE= LIE.objects.get(muestra__id= muestra_id)            
+            ensayo_TMIn= TMIn.objects.get(muestra__id= muestra_id)            
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_LIE.fecha)
-            temperaturaAmbiente= ensayo_LIE.temperaturaAmbiente
-            humedad=ensayo_LIE.humedad
-            tiempoMaxEnsayo= ensayo_LIE.tiempoMaxEnsayo
-            observacion= ensayo_LIE.observacion
+            fecha= str(ensayo_TMIn.fecha)
+            temperaturaAmbiente= ensayo_TMIn.temperaturaAmbiente
+            humedad=ensayo_TMIn.humedad
+            tiempoMaxEnsayo= ensayo_TMIn.tiempoMaxEnsayo
+            observacion= ensayo_TMIn.observacion
             
             
             formTmin = TminForm(prefix='tmin', initial={
@@ -614,7 +614,7 @@ def tmin (request, muestra_id):
             
             formTmin.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
 
-            resultados= ResultadosLIE.objects.filter(ensayo=ensayo_LIE).order_by("id")
+            resultados= ResultadosTMIn.objects.filter(ensayo=ensayo_TMIn).order_by("id")
 
             initial_data = []
             for resultado in resultados:
@@ -674,6 +674,8 @@ def lie (request, muestra_id):
             fecha= formLie.cleaned_data['fecha']
             temperaturaAmbiente= formLie.cleaned_data['temperaturaAmbiente']
             humedad= formLie.cleaned_data['humedad']
+            cerillas= formLie.cleaned_data['cerillas']
+            boquilla= formLie.cleaned_data['boquilla']
             observacion=formLie.cleaned_data['observacion']
 
             lie= LIE.objects.create(
@@ -681,6 +683,8 @@ def lie (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
+                cerillas= cerillas,
+                boquilla= boquilla,
                 fecha= fecha,
                 observacion= observacion,
             )
@@ -698,29 +702,49 @@ def lie (request, muestra_id):
 
             for form in formLieResultados:
                 if form.cleaned_data:  # Para evitar formularios vacíos
-                    tHorno = form.cleaned_data['tHorno']
+                    concentracion = form.cleaned_data['concentracion']
                     peso = form.cleaned_data['peso']
-                    presion= form.cleaned_data['presion']
+                    pex= form.cleaned_data['pex']
+                    pm= form.cleaned_data['pm']
+                    dpdt= form.cleaned_data['dpdt']
                     resultadoPrueba= form.cleaned_data['resultadoPrueba']
-
-
 
                     resultadosLie=ResultadosLIE.objects.create(
                         ensayo= lie,
-                        tHorno=tHorno,
-                        peso= peso,
-                        presion=presion,
+                        concentracion= concentracion,
+                        peso=peso,
+                        pex= pex,
+                        pm= pm,
+                        dpdt=dpdt,
                         resultado=resultadoPrueba,
                     )
 
                     if resultadoPrueba == "1":
-                        listaResultados.append(tHorno)
+                        listaResultados.append(concentracion)
                     
 
             #Guardamos en el modelo LIE el resultado del ensayo
             if listaResultados:
-                resultado= min(listaResultados)
-                lie.resultado= resultado - 20
+                
+                listaConcentraciones = [10, 20, 30, 60, 125, 250, 500, 750, 1000]
+
+                def encontrar_valor_inferior(lista, valor):
+                    # Ordenamos la lista para asegurarnos de que esté en orden ascendente
+                    lista_ordenada = sorted(lista)
+                    
+                    # Verificamos si el valor está en la lista y buscamos el valor inferior
+                    for i in range(len(lista_ordenada)):
+                        if lista_ordenada[i] == valor:
+                            if i > 0:  
+                                return lista_ordenada[i - 1]
+                            else:
+                                return None 
+                    return None 
+
+                valor_buscado = min(listaResultados)
+                resultado = encontrar_valor_inferior(listaConcentraciones, valor_buscado)
+
+                lie.resultado= resultado
                 lie.save()
             else:
                 formLie.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
@@ -746,8 +770,9 @@ def lie (request, muestra_id):
             fecha= str(ensayo_LIE.fecha)
             temperaturaAmbiente= ensayo_LIE.temperaturaAmbiente
             humedad=ensayo_LIE.humedad
-            tiempoMaxEnsayo= ensayo_LIE.tiempoMaxEnsayo
-            observacion= ensayo_LIE.observacion
+            cerillas=ensayo_LIE.cerillas,
+            boquilla=ensayo_LIE.boquilla,
+            observacion= ensayo_LIE.observacion,
             
             
             formLie = LieForm(prefix='lie', initial={
@@ -755,7 +780,8 @@ def lie (request, muestra_id):
                 'fecha': fecha,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
-                'tiempoMaxEnsayo': tiempoMaxEnsayo,
+                'cerillas': cerillas,
+                'boquilla': boquilla,
                 'observacion': observacion,
                 })
             
@@ -766,18 +792,17 @@ def lie (request, muestra_id):
             initial_data = []
             for resultado in resultados:
                 initial_data.append({
-                    'tPlato': resultado.tPlato,
-                    'tMax': resultado.tMaxima,
+                    'concentracion': resultado.concentracion,
+                    'peso': resultado.peso,
+                    'pex': resultado.pex,
+                    'pm': resultado.pm,
+                    'dpdt': resultado.dpdt,
                     'resultadoPrueba': resultado.resultado,
-                    'tipoIgnicion': resultado.tipoIgnicion,
-                    'tiempoPrueba': resultado.tiempoPrueba,
-                    'tiempoMax': resultado.tiempoTmax,
                 })
             
             # Crear el formset con los datos iniciales
             LieResultadosFormSet = formset_factory(LieResultadosForm, extra=0)
             formLieResultados = LieResultadosFormSet(prefix='lieResultados',initial=initial_data)
-
         
         else:
             formLie= LieForm(prefix='lie')
@@ -790,4 +815,304 @@ def lie (request, muestra_id):
         'ensayo': ensayo,
         'formLie': formLie,
         'formLieResultados': formLieResultados,
+    })
+
+
+def emi (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMI")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(emi__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="emi") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formEmi= EmiForm(request.POST, prefix='emi')
+        formEmiResultados= emiResultadosFormSet(request.POST, prefix='emiResultados')  
+        
+        if formEmi.is_valid() and formEmiResultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('emi-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            emi_instancia= EMI.objects.filter(muestra= muestra)
+            emi_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formEmi.cleaned_data['fecha']
+            temperaturaAmbiente= formEmi.cleaned_data['temperaturaAmbiente']
+            humedad= formEmi.cleaned_data['humedad']
+            inductancia= formEmi.cleaned_data['inductancia']
+            observacion=formEmi.cleaned_data['observacion']
+
+            emi= EMI.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                inductancia= inductancia,
+                fecha= fecha,
+                observacion= observacion,
+            )
+            emi.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosEMI.objects.filter(ensayo= emi)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados EMI 
+            listaResultados= []  
+
+            for form in formEmiResultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    concentracion = form.cleaned_data['concentracion']
+                    energia= form.cleaned_data['energia']
+                    retardo= form.cleaned_data['retardo']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+
+                    resultadosEmi=ResultadosEMI.objects.create(
+                        ensayo= emi,
+                        concentracion= concentracion,
+                        energia= energia,
+                        retardo= retardo,
+                        resultado=resultadoPrueba,
+                    )
+
+                    if resultadoPrueba == "1":
+                        listaResultados.append(concentracion)
+                    
+
+            #Guardamos en el modelo EMI el resultado del ensayo
+            if listaResultados:
+                resultado= min(listaResultados)
+                
+                emi.resultado= resultado
+                emi.save()
+            else:
+                formEmi.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
+                return render(request, 'ensayos/nuevosEnsayos/emi.html', {
+                    'ensayo': ensayo,
+                    'formEmi': formEmi,
+                    'formEmiResultados': formEmiResultados,
+                })
+                        
+        else:
+            print (formEmi.errors)
+            formEmi.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/emi.html', {
+                'ensayo': ensayo,
+                'formEmi': formEmi,
+                'formEmiResultados': formEmiResultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_EMI= EMI.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_EMI.fecha)
+            temperaturaAmbiente= ensayo_EMI.temperaturaAmbiente
+            humedad=ensayo_EMI.humedad
+            inductancia= ensayo_EMI.inductancia
+            observacion= ensayo_EMI.observacion,
+            
+            
+            formEmi = EmiForm(prefix='emi', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'inductancia': inductancia,
+                'observacion': observacion,
+                })
+            
+            formEmi.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosEMI.objects.filter(ensayo=ensayo_EMI).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'concentracion': resultado.concentracion,
+                    'energia': resultado.energia,
+                    'retardo': resultado.resultado,
+                    'resultadoPrueba': resultado.resultado,
+                })
+            
+            # Crear el formset con los datos iniciales
+            EmiResultadosFormSet = formset_factory(EmiResultadosForm, extra=0)
+            formEmiResultados = EmiResultadosFormSet(prefix='emiResultados',initial=initial_data)
+        
+        else:
+            formEmi= EmiForm(prefix='emi')
+            formEmi.fields['muestra'].queryset = muestras_queryset
+
+            formEmiResultados=emiResultadosFormSet(prefix='emiResultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/emi.html', {
+        'ensayo': ensayo,
+        'formEmi': formEmi,
+        'formEmiResultados': formEmiResultados,
+    })
+
+
+def pmax (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "Pmax")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(pmax__pmax__isnull=True) & Q(pmax__dpdt__isnull=True) & Q(pmax__kmax__isnull=True) & Q(listaEnsayos__ensayo__icontains="pmax") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formPmax= PmaxForm(request.POST, prefix='pmax')
+        formPmaxResultados= pmaxResultadosFormSet(request.POST, prefix='pmaxResultados')  
+        
+        if formPmax.is_valid() and formPmaxResultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('pmax-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            pmax_instancia= Pmax.objects.filter(muestra= muestra)
+            pmax_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formPmax.cleaned_data['fecha']
+            temperaturaAmbiente= formPmax.cleaned_data['temperaturaAmbiente']
+            humedad= formPmax.cleaned_data['humedad']
+            cerillas= formPmax.cleaned_data['cerillas']
+            boquilla= formPmax.cleaned_data['boquilla']
+            pmax= formPmax.cleaned_data['pm_media']
+            dpdt= formPmax.cleaned_data['dpdt_media']
+            kmax= formPmax.cleaned_data['kmax']
+            observacion=formPmax.cleaned_data['observacion']
+
+            pmax= Pmax.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                cerillas= cerillas,
+                boquilla= boquilla,
+                pmax= pmax,
+                dpdt= dpdt,
+                kmax= kmax,
+                fecha= fecha,
+                observacion= observacion,
+            )
+
+            pmax.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosPmax.objects.filter(ensayo= pmax)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+            
+            #Guadramos la lista de resultados
+
+            for form in formPmaxResultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    concentracion = form.cleaned_data['concentracion']
+                    peso = form.cleaned_data['peso']
+                    serie= form.cleaned_data['serie']
+                    pm= form.cleaned_data['pm_serie']
+                    dpdt= form.cleaned_data['dpdt_serie']
+
+                    print(form.cleaned_data)
+
+                    resultadosPmax=ResultadosPmax.objects.create(
+                        ensayo= pmax,
+                        concentracion= concentracion,
+                        peso=peso,
+                        serie= serie,
+                        pm= pm,
+                        dpdt=dpdt,
+                    )
+                    
+                else:
+                    formPmax.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
+                    return render(request, 'ensayos/nuevosEnsayos/pmax.html', {
+                        'ensayo': ensayo,
+                        'formPmax': formPmax,
+                        'formPmaxResultados': formPmaxResultados,
+                    })
+                        
+        else:
+            print (formPmax.errors)
+            formPmax.add_error(None, f'Error en el formulario, revisa los datos {formPmax.errors}')
+            return render(request, 'ensayos/nuevosEnsayos/pmax.html', {
+                'ensayo': ensayo,
+                'formPmax': formPmax,
+                'formPmaxResultados': formPmaxResultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_Pmax= Pmax.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_Pmax.fecha)
+            temperaturaAmbiente= ensayo_Pmax.temperaturaAmbiente
+            humedad=ensayo_Pmax.humedad
+            cerillas=ensayo_Pmax.cerillas
+            boquilla=ensayo_Pmax.boquilla
+            pmax= ensayo_Pmax.pmax
+            dpdt= ensayo_Pmax.dpdt
+            kmax= ensayo_Pmax.kmax
+            observacion= ensayo_Pmax.observacion
+            
+            
+            formPmax = PmaxForm(prefix='pmax', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'cerillas': cerillas,
+                'boquilla': boquilla,
+                'pm_media': pmax,
+                'dpdt_media': dpdt,
+                'kmax': kmax,
+                'observacion': observacion,
+                })
+            
+            formPmax.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosPmax.objects.filter(ensayo=ensayo_Pmax).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'concentracion': resultado.concentracion,
+                    'peso': resultado.peso,
+                    'serie': resultado.serie,
+                    'pm_serie': resultado.pm,
+                    'dpdt_serie': resultado.dpdt,
+                })
+            
+            # Crear el formset con los datos iniciales
+            PmaxResultadosFormSet = formset_factory(PmaxResultadosForm, extra=0)
+            formPmaxResultados = PmaxResultadosFormSet(prefix='pmaxResultados',initial=initial_data)
+        
+        else:
+            formPmax= PmaxForm(prefix='pmax')
+            formPmax.fields['muestra'].queryset = muestras_queryset
+
+            formPmaxResultados=pmaxResultadosFormSet(prefix='pmaxResultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/pmax.html', {
+        'ensayo': ensayo,
+        'formPmax': formPmax,
+        'formPmaxResultados': formPmaxResultados,
     })
