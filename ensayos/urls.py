@@ -19,6 +19,9 @@ urlpatterns = [
     path('ensayos/lie/<str:muestra_id>/', views.lie, name="lie"),
     path('ensayos/emi/<str:muestra_id>/', views.emi, name="emi"),
     path('ensayos/pmax/<str:muestra_id>/', views.pmax, name="pmax"),
+    path('ensayos/clo/<str:muestra_id>/', views.clo, name="clo"),
+    path('ensayos/rec/<str:muestra_id>/', views.rec, name="rec"),
+
 
     
 ]

@@ -1,0 +1,110 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} CLO ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{formClo.muestra.label}}
+          {{formClo.muestra}}
+      </div>
+
+      <div class= "col d-flex flex-column align-items-start">
+        {{formClo.fecha.label}}
+        {{formClo.fecha}}
+      </div>
+  </div>
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col text-nowrap">
+        {{formClo.temperaturaAmbiente.label}}
+        {{formClo.temperaturaAmbiente}}
+
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{formClo.humedad.label}}
+        {{formClo.humedad}}
+      </div>
+
+  </div>
+
+  <div class= "row mt-3 mb-3">
+    <div class= "col text-nowrap">
+      {{formClo.cerillas.label}}
+      {{formClo.cerillas}}
+
+    </div>
+    
+    <div class= "col text-nowrap">
+      {{formClo.boquilla.label}}
+      {{formClo.boquilla}}
+    </div>
+
+</div>
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3 col m-auto">
+    
+    {% if formClo.non_field_errors %}
+            <div>
+                {% for error in formClo.non_field_errors %}
+                    <p class= "text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+      
+    <table id= "tabla" class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                {%for form in formCloResultados.forms.0%}
+                    <th class="align-middle">{{form.label}}</th>
+                {%endfor%}
+
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            {{ formCloResultados.management_form }}
+            {%for form in formCloResultados%}
+                <tr class="templateRow">
+                    <td class="concentracion">{{form.concentracion}}</td>
+                    <td>{{form.peso}}</td>
+                    <td class= "pex">{{form.pex}}</td>
+                    <td>{{form.pm}}</td>
+                    <td>{{form.dpdt}}</td>
+                    <td>{{form.oxigeno}}</td>
+                    <td>{{form.resultadoPrueba}}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    <div class= "col-2 d-flex justify-content-between">
+        <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
+        <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+    </div>
+
+    <div class= "col-12 mt-3 mb-3">
+        {{formClo.observacion.label}}
+        {{formClo.observacion}}
+    </div>
+    
+</div>
+
+{%endblock%}
+
+
+
+{%block script%}  
+    <script> ensayo= "clo" </script>
+    <script src="{%static 'js/ensayos/general.js'%}"></script> 
+    <script src="{%static 'js/ensayos/lie.js'%}"></script> 
+{%endblock%}

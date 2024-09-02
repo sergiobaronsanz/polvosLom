@@ -82,10 +82,26 @@ function calculoDesviacion(){
     }
 }
 
+function resultadoNoDeterminado(){
+    var botonND= document.getElementById("boton-nd");
+    var desviacion= document.getElementById("id_desviacion");
+    var resultado1= document.getElementById("id_resultado1");
+    var resultado2= document.getElementById("id_resultado2");
+    var resultado3= document.getElementById("id_resultado3");
 
+    botonND.addEventListener("click", function(){
+        desviacion.value= 0;
+        resultado1.value= "N/D";
+        resultado2.value= "N/D";
+        resultado3.value= "N/D";
+    });
+
+}
 //LLAMADAS A FUNCIONES//
 
 criterioValor();  
 
 //Cada vez que se actualice algún campo se hace el cálculo
 calculoDesviacion();
+
+resultadoNoDeterminado();

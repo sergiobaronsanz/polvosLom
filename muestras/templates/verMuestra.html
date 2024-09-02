@@ -73,29 +73,28 @@
                     <p class= "col-8"> 
                     {%if resultado.ensayo|lower != 'pmax'%}
                         <a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
-                        {%if resultado.resultado != "" %}
+                        {%if resultado.resultado|lower != "none" %}
                           {{resultado.resultado}} {{resultado.unidad}} 
                         {%else%}
                           Sin ensayar 
                         {%endif%}
-                         
                     {%else%} 
                         <a href= {% url resultado.ensayo|lower muestra.id %}>Pmax = </a> 
-                          {%if resultado.resultado != "" %}
+                          {%if resultado.pmax|lower != "none" %}
                             {{resultado.pmax}} {{resultado.unidadPmax}} |
                           {%else%}
-                            Sin ensayar |
+                            Sin ensayar
                           {%endif%}
 
                         <a href= {% url resultado.ensayo|lower muestra.id %}>dPdT = </a> 
-                          {%if resultado.resultado != "" %}
+                          {%if resultado.dpdt|lower != "none" %}
                             {{resultado.dpdt}} {{resultado.unidadDpdt}} |
                           {%else%}
-                            Sin ensayar |
+                            Sin ensayar
                           {%endif%}
 
                           <a href= {% url resultado.ensayo|lower muestra.id %}>kmax = </a> 
-                          {%if resultado.resultado != "" %}
+                          {%if resultado.kmax != "none" %}
                             {{resultado.kmax}}
                           {%else%}
                             Sin ensayar

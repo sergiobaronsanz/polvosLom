@@ -81,6 +81,14 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         unidadPmax= "g/m3",
                         unidadDpdt= "bar/s",
                     )
+
+            if ensayo.ensayo == "CLO":
+                if not CLO.objects.filter(muestra= instance).exists():
+                    resultados= CLO.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "%"
+                    )
                 
         """
            if ensayo.ensayo in lista_temperatura:

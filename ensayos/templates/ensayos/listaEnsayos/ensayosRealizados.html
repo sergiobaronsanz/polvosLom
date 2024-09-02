@@ -39,7 +39,13 @@
                           <tr>
                               <th scope="row"><a {%if resultado.resultado != "" %} href= "{% url ensayo muestra_id=resultado.muestra.id %}" {%endif%}>{{resultado.muestra}}</a></th>
                               <td>{{resultado.ensayo}}</td>
-                              <td> {{resultado.resultado}} {{resultado.unidades}} </td>
+                              <td>{%if resultado.ensayo|lower != "pmax"%}
+                                    {{resultado.resultado}} {{resultado.unidades}} 
+                                  {% else %}
+                                    {{resultado.pmax}} | {{resultado.dpdt}}  |  {{resultado.kmax}}
+                                  {%endif%}
+
+                              </td>
                           </tr>
                       {% endfor %}
                     </tbody>

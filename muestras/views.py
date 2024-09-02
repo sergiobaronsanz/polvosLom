@@ -43,8 +43,7 @@ def recepcionMuestra(request):
         form = DescripcionMuestraForm()
 
     return render(request, 'recepcionMuestra.html', {'form': form})
-    
-    
+       
 def verMuestra(request, muestra_id):
     
     muestra= get_object_or_404(Muestras, id= muestra_id)
@@ -80,6 +79,10 @@ def verMuestra(request, muestra_id):
         resultado= Pmax.objects.filter(muestra= muestra)
         print(resultado)
         resultados.extend(resultado) 
+    if listaEnsayos.filter(ensayo= "CLO").exists():
+        resultado= CLO.objects.filter(muestra= muestra)
+        print("CLO")
+        resultados.extend(resultado)   
     
         
     print (resultados)

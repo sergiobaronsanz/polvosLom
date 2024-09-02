@@ -18,18 +18,26 @@ def listaEnsayos(request):
 def ensayosRealizados(request, ensayo):
     ensayo_id= ListaEnsayos.objects.get(ensayo=ensayo)
     print(ensayo_id.ensayo)
-
     #filtramos por tipo de ensayo
 
     if ensayo_id.ensayo == "Humedad":
         resultados= Humedad.objects.all()
-    if ensayo_id.ensayo== "Granulometria":
+    elif ensayo_id.ensayo== "Granulometria":
         resultados= Granulometria.objects.all()
-    if ensayo_id.ensayo== "TMIc":
+    elif ensayo_id.ensayo== "TMIc":
         resultados= TMIc.objects.all()
+    elif ensayo_id.ensayo== "TMIn":
+        resultados= TMIn.objects.all()
+    elif ensayo_id.ensayo== "LIE":
+        resultados= LIE.objects.all()
+    elif ensayo_id.ensayo== "EMI":
+        resultados= EMI.objects.all()
+    elif ensayo_id.ensayo== "Pmax":
+        resultados= Pmax.objects.all()
     else:
         resultados= None
     
+    print(resultados)
     #resultados= Resultados.objects.filter(ensayo= ensayo_id)
     
     return render(request, "ensayos/listaEnsayos/ensayosRealizados.html",{
@@ -91,9 +99,9 @@ def humedad(request, muestra_id): #################################### Hay que c
             tiempoEnsayo= request.POST.get('tiempoEnsayo')
             tDesecacion= float(request.POST.get('tDesecacion'))
             desviacion= float(request.POST.get('desviacion'))
-            resultado1= float(request.POST.get('resultado1'))
-            resultado2= float(request.POST.get('resultado2'))
-            resultado3= float(request.POST.get('resultado3'))
+            resultado1= request.POST.get('resultado1')
+            resultado2= request.POST.get('resultado2')
+            resultado3= request.POST.get('resultado3')
             resultado4= request.POST.get('resultado4')
             resultado5= request.POST.get('resultado5')
             resultado6= request.POST.get('resultado6')
@@ -114,39 +122,48 @@ def humedad(request, muestra_id): #################################### Hay que c
                 tiempoEnsayo= float(tiempoEnsayo)
                 humedad.tiempoEnsayo=tiempoEnsayo
             
-            #Sacamos la media del resultado     
-            resultado= 0
-            listaResultados=[]
-            
-            if float(desviacion) >= 0.15:
-                listaResultados = [
-                    resultado1, resultado2, resultado3,
-                    float(resultado4), float(resultado5), float(resultado6),
-                    float(resultado7), float(resultado8), float(resultado9),
-                    float(resultado10),
-                ]
+            #Sacamos la media del resultado 
+            if resultado1 != "N/D":  
+                resultado= 0
+                listaResultados=[]
                 
-                longitud_lista= len(listaResultados)
+                if float(desviacion) >= 0.15:
+                    listaResultados = [
+                        resultado1, resultado2, resultado3,
+                        resultado4, resultado5, resultado6,
+                        resultado7, resultado8, resultado9,
+                        resultado10,
+                    ]
+                    
+                    longitud_lista= len(listaResultados)
+                    
+                    sumatorio=0
+                    for valor in listaResultados:
+                        sumatorio += valor
+                        resultado= sumatorio/longitud_lista
+                else:
+                    listaResultados = [
+                        resultado1, resultado2, resultado3,
+                    ]
+                    
+                    longitud_lista= len(listaResultados)
+                    
+                    sumatorio=0
+                    for valor in listaResultados:
+                        sumatorio += valor
+                        resultado= sumatorio/longitud_lista
                 
-                sumatorio=0
-                for valor in listaResultados:
-                    sumatorio += valor
-                    resultado= sumatorio/longitud_lista
-            else:
-                listaResultados = [
-                    resultado1, resultado2, resultado3,
-                ]
-                
-                longitud_lista= len(listaResultados)
-                
-                sumatorio=0
-                for valor in listaResultados:
-                    sumatorio += valor
-                    resultado= sumatorio/longitud_lista
-            
-            #Guardamos los valores en la tabla resultados                
-            resultado= round(resultado, 2)  
+                #Guardamos los valores en la tabla resultados                
+                resultado= round(resultado, 2)  
 
+                for valor in listaResultados:
+                    resultado= ResultadosHumedad.objects.create(
+                        ensayo= humedad,
+                        resultado= valor,
+                    )
+
+            else:
+                resultado = "N/D"
             #Guardamos los datos en el servidor
             
             humedad= Humedad.objects.create(
@@ -164,13 +181,6 @@ def humedad(request, muestra_id): #################################### Hay que c
             
             #Añadimos los equipos
             humedad.equipos.set(equipos)           
-            
-            #Guardamos los resultados en la base de datos      
-            for valor in listaResultados:
-                resultado= ResultadosHumedad.objects.create(
-                    ensayo= humedad,
-                    resultado= valor,
-                )
             
             
 
@@ -429,12 +439,9 @@ def tmic(request, muestra_id):
                 tmic.resultado= resultado
                 tmic.save()
             else:
-                formTmic.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
-                return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
-                    'ensayo': ensayo,
-                    'formTmic': formTmic,
-                    'formTmicResultados': formTmicResultados,
-                })
+                resultado= ">400"
+                tmic.resultado= resultado
+                tmic.save()
                         
         else:
             print (formTmic.errors)
@@ -556,8 +563,6 @@ def tmin (request, muestra_id):
                     presion= form.cleaned_data['presion']
                     resultadoPrueba= form.cleaned_data['resultadoPrueba']
 
-
-
                     resultadosTmin=ResultadosTMIn.objects.create(
                         ensayo= tmin,
                         tHorno=tHorno,
@@ -576,12 +581,10 @@ def tmin (request, muestra_id):
                 tmin.resultado= resultado - 20
                 tmin.save()
             else:
-                formTmin.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
-                return render(request, 'ensayos/nuevosEnsayos/tmin.html', {
-                    'ensayo': ensayo,
-                    'formTmin': formTmin,
-                    'formTminResultados': formTminResultados,
-                })
+                resultado= ">800"
+                tmin.resultado= resultado
+                tmin.save()
+
                         
         else:
             print (formTmin.errors)
@@ -599,7 +602,6 @@ def tmin (request, muestra_id):
             fecha= str(ensayo_TMIn.fecha)
             temperaturaAmbiente= ensayo_TMIn.temperaturaAmbiente
             humedad=ensayo_TMIn.humedad
-            tiempoMaxEnsayo= ensayo_TMIn.tiempoMaxEnsayo
             observacion= ensayo_TMIn.observacion
             
             
@@ -608,7 +610,6 @@ def tmin (request, muestra_id):
                 'fecha': fecha,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
-                'tiempoMaxEnsayo': tiempoMaxEnsayo,
                 'observacion': observacion,
                 })
             
@@ -619,12 +620,10 @@ def tmin (request, muestra_id):
             initial_data = []
             for resultado in resultados:
                 initial_data.append({
-                    'tPlato': resultado.tPlato,
-                    'tMax': resultado.tMaxima,
+                    'tHorno': resultado.tHorno,
+                    'peso': resultado.peso,
+                    'presion': resultado.presion,
                     'resultadoPrueba': resultado.resultado,
-                    'tipoIgnicion': resultado.tipoIgnicion,
-                    'tiempoPrueba': resultado.tiempoPrueba,
-                    'tiempoMax': resultado.tiempoTmax,
                 })
             
             # Crear el formset con los datos iniciales
@@ -725,7 +724,6 @@ def lie (request, muestra_id):
 
             #Guardamos en el modelo LIE el resultado del ensayo
             if listaResultados:
-                
                 listaConcentraciones = [10, 20, 30, 60, 125, 250, 500, 750, 1000]
 
                 def encontrar_valor_inferior(lista, valor):
@@ -747,12 +745,10 @@ def lie (request, muestra_id):
                 lie.resultado= resultado
                 lie.save()
             else:
-                formLie.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
-                return render(request, 'ensayos/nuevosEnsayos/lie.html', {
-                    'ensayo': ensayo,
-                    'formLie': formLie,
-                    'formLieResultados': formLieResultados,
-                })
+                print("adios")
+                resultado= "N/D"
+                lie.resultado= resultado
+                lie.save()
                         
         else:
             print (formLie.errors)
@@ -896,12 +892,10 @@ def emi (request, muestra_id):
                 emi.resultado= resultado
                 emi.save()
             else:
-                formEmi.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
-                return render(request, 'ensayos/nuevosEnsayos/emi.html', {
-                    'ensayo': ensayo,
-                    'formEmi': formEmi,
-                    'formEmiResultados': formEmiResultados,
-                })
+                resultado= ">1000"
+                emi.resultado= resultado
+                emi.save()
+                
                         
         else:
             print (formEmi.errors)
@@ -1115,4 +1109,304 @@ def pmax (request, muestra_id):
         'ensayo': ensayo,
         'formPmax': formPmax,
         'formPmaxResultados': formPmaxResultados,
+    })
+
+
+def clo (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "CLO")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(clo__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="clo") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formClo= CloForm(request.POST, prefix='clo')
+        formCloResultados= cloResultadosFormSet(request.POST, prefix='cloResultados')  
+        
+        if formClo.is_valid() and formCloResultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('clo-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            clo_instancia= CLO.objects.filter(muestra= muestra)
+            clo_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formClo.cleaned_data['fecha']
+            temperaturaAmbiente= formClo.cleaned_data['temperaturaAmbiente']
+            humedad= formClo.cleaned_data['humedad']
+            cerillas= formClo.cleaned_data['cerillas']
+            boquilla= formClo.cleaned_data['boquilla']
+            observacion=formClo.cleaned_data['observacion']
+
+            clo= CLO.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                cerillas= cerillas,
+                boquilla= boquilla,
+                fecha= fecha,
+                observacion= observacion,
+            )
+            clo.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosCLO.objects.filter(ensayo= clo)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados CLO 
+            listaResultados= []  
+
+            for form in formCloResultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    concentracion = form.cleaned_data['concentracion']
+                    peso = form.cleaned_data['peso']
+                    pex= form.cleaned_data['pex']
+                    pm= form.cleaned_data['pm']
+                    dpdt= form.cleaned_data['dpdt']
+                    oxigeno= form.cleaned_data['oxigeno']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+
+                    resultadosClo=ResultadosCLO.objects.create(
+                        ensayo= clo,
+                        concentracion= concentracion,
+                        peso=peso,
+                        pex= pex,
+                        pm= pm,
+                        dpdt=dpdt,
+                        oxigeno= oxigeno,
+                        resultado=resultadoPrueba,
+                    )
+
+                    if resultadoPrueba == "1":
+                        listaResultados.append(concentracion)
+                    
+
+            #Guardamos en el modelo CLO el resultado del ensayo
+            if listaResultados:
+                valor_buscado = min(listaResultados)
+
+                clo.resultado= valor_buscado
+                clo.save()
+            else:
+                resultado= "N/D"
+                clo.resultado= resultado
+                clo.save()
+
+                        
+        else:
+            print (formClo.errors)
+            formClo.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/clo.html', {
+                'ensayo': ensayo,
+                'formClo': formClo,
+                'formCloResultados': formCloResultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_CLO= CLO.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_CLO.fecha)
+            temperaturaAmbiente= ensayo_CLO.temperaturaAmbiente
+            humedad=ensayo_CLO.humedad
+            cerillas=ensayo_CLO.cerillas,
+            boquilla=ensayo_CLO.boquilla,
+            observacion= ensayo_CLO.observacion,
+            
+            
+            formClo = CloForm(prefix='clo', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'cerillas': cerillas,
+                'boquilla': boquilla,
+                'observacion': observacion,
+                })
+            
+            formClo.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosCLO.objects.filter(ensayo=ensayo_CLO).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'concentracion': resultado.concentracion,
+                    'peso': resultado.peso,
+                    'pex': resultado.pex,
+                    'pm': resultado.pm,
+                    'dpdt': resultado.dpdt,
+                    'oxigeno': resultado.oxigeno,
+                    'resultadoPrueba': resultado.resultado,
+                })
+            
+            # Crear el formset con los datos iniciales
+            CloResultadosFormSet = formset_factory(CloResultadosForm, extra=0)
+            formCloResultados = CloResultadosFormSet(prefix='cloResultados',initial=initial_data)
+        
+        else:
+            formClo= CloForm(prefix='clo')
+            formClo.fields['muestra'].queryset = muestras_queryset
+
+            formCloResultados=cloResultadosFormSet(prefix='cloResultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/clo.html', {
+        'ensayo': ensayo,
+        'formClo': formClo,
+        'formCloResultados': formCloResultados,
+    })
+
+
+def rec (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "REC")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(rec__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="rec") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formRec= RecForm(request.POST, prefix='rec')
+        formRecResultados= recResultadosFormSet(request.POST, prefix='recResultados')  
+        
+        if formRec.is_valid() and formRecResultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('rec-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            rec_instancia= REC.objects.filter(muestra= muestra)
+            rec_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formRec.cleaned_data['fecha']
+            temperaturaAmbiente= formRec.cleaned_data['temperaturaAmbiente']
+            humedad= formRec.cleaned_data['humedad']
+            observacion=formRec.cleaned_data['observacion']
+
+            rec= REC.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fecha= fecha,
+                observacion= observacion,
+            )
+            rec.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosREC.objects.filter(ensayo= rec)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados REC 
+            listaResultados= []  
+
+            for form in formRecResultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    tension= form.cleaned_data['tension']
+                    tiempo= form.cleaned_data['tiempo']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+
+                    resultadosRec=ResultadosREC.objects.create(
+                        ensayo= rec,
+                        tension= tension,
+                        tiempo= tiempo,
+                        resultado=resultadoPrueba,
+                    )
+
+                    if resultadoPrueba == "1":
+                        listaResultados.append(concentracion)
+                    
+
+            #Guardamos en el modelo REC el resultado del ensayo
+            if listaResultados:
+                valor_buscado = min(listaResultados)
+
+                rec.resultado= valor_buscado
+                rec.save()
+            else:
+                resultado= "N/D"
+                rec.resultado= resultado
+                rec.save()
+
+                        
+        else:
+            print (formRec.errors)
+            formRec.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/rec.html', {
+                'ensayo': ensayo,
+                'formRec': formRec,
+                'formRecResultados': formRecResultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_REC= REC.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_REC.fecha)
+            temperaturaAmbiente= ensayo_REC.temperaturaAmbiente
+            humedad=ensayo_REC.humedad
+            cerillas=ensayo_REC.cerillas,
+            boquilla=ensayo_REC.boquilla,
+            observacion= ensayo_REC.observacion,
+            
+            
+            formRec = RecForm(prefix='rec', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'cerillas': cerillas,
+                'boquilla': boquilla,
+                'observacion': observacion,
+                })
+            
+            formRec.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosREC.objects.filter(ensayo=ensayo_REC).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'concentracion': resultado.concentracion,
+                    'peso': resultado.peso,
+                    'pex': resultado.pex,
+                    'pm': resultado.pm,
+                    'dpdt': resultado.dpdt,
+                    'oxigeno': resultado.oxigeno,
+                    'resultadoPrueba': resultado.resultado,
+                })
+            
+            # Crear el formset con los datos iniciales
+            RecResultadosFormSet = formset_factory(RecResultadosForm, extra=0)
+            formRecResultados = RecResultadosFormSet(prefix='recResultados',initial=initial_data)
+        
+        else:
+            formRec= RecForm(prefix='rec')
+            formRec.fields['muestra'].queryset = muestras_queryset
+
+            formRecResultados=recResultadosFormSet(prefix='recResultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/rec.html', {
+        'ensayo': ensayo,
+        'formRec': formRec,
+        'formRecResultados': formRecResultados,
     })
