@@ -1,7 +1,7 @@
 {% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
 {%load static%}
 
-{%block tituloEnsayo%} REC ({{ensayo.normativa}})  {%endblock%}
+{%block tituloEnsayo%} N1 ({{ensayo.normativa}})  {%endblock%}
 
 
 
@@ -9,30 +9,40 @@
 
   <div class= "row mt-3 mb-3">
       <div class= "col d-flex flex-column align-items-start">
-          {{formRec.muestra.label}}
-          {{formRec.muestra}}
+          {{formN1.muestra.label}}
+          {{formN1.muestra}}
       </div>
 
       <div class= "col d-flex flex-column align-items-start">
-        {{formRec.fecha.label}}
-        {{formRec.fecha}}
+        {{formN1.fecha.label}}
+        {{formN1.fecha}}
       </div>
   </div>
 
   <div class= "row mt-3 mb-3">
       <div class= "col text-nowrap">
-        {{formRec.temperaturaAmbiente.label}}
-        {{formRec.temperaturaAmbiente}}
+        {{formN1.temperaturaAmbiente.label}}
+        {{formN1.temperaturaAmbiente}}
 
       </div>
       
       <div class= "col text-nowrap">
-        {{formRec.humedad.label}}
-        {{formRec.humedad}}
+        {{formN1.humedad.label}}
+        {{formN1.humedad}}
       </div>
-
   </div>
 
+  <div class= "row">
+    <div class= "col text-nowrap">
+        {{formN1.tipoPolvo.label}}
+        {{formN1.tipoPolvo}}
+      </div>
+    
+      <div class= "col text-nowrap">
+        {{formN1.pruebaPreseleccion.label}}
+        {{formN1.pruebaPreseleccion}}
+      </div>
+</div>
 
 {%endblock%}
 
@@ -41,9 +51,9 @@
 {%block resultados%} 
 <div class= "row mt-3 mb-3 col m-auto">
     
-    {% if formRec.non_field_errors %}
+    {% if formN1.non_field_errors %}
             <div>
-                {% for error in formRec.non_field_errors %}
+                {% for error in formN1.non_field_errors %}
                     <p class= "text-danger">{{ error }}</p>
                 {% endfor %}
             </div>
@@ -53,19 +63,18 @@
     <table id= "tabla" class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
-                {%for form in formRecResultados.forms.0%}
+                {%for form in formN1Resultados.forms.0%}
                     <th class="align-middle">{{form.label}}</th>
                 {%endfor%}
 
             </tr>
         </thead>
         <tbody id="tbody">
-            {{ formRecResultados.management_form }}
-            {%for form in formRecResultados%}
+            {{ formN1Resultados.management_form }}
+            {%for form in formN1Resultados%}
                 <tr class="templateRow">
-                    <td> {{form.tension}}</td>
-                    <td> {{form.tiempo}}</td>
-                    <td>{{form.resultadoPrueba}}</td>
+                    <td>{{form.tiempo}}</td>
+                    <td>{{form.zonaHumeda}}</td>
                 </tr>
             {%endfor%}
         </tbody>
@@ -76,8 +85,8 @@
     </div>
 
     <div class= "col-12 mt-3 mb-3">
-        {{formRec.observacion.label}}
-        {{formRec.observacion}}
+        {{formN1.observacion.label}}
+        {{formN1.observacion}}
     </div>
     
 </div>
@@ -87,7 +96,7 @@
 
 
 {%block script%}  
-    <script> ensayo= "clo" </script>
+    <script> ensayo= "n1" </script>
     <script src="{%static 'js/ensayos/general.js'%}"></script> 
-    <script src="{%static 'js/ensayos/lie.js'%}"></script> 
+    <script src="{%static 'js/ensayos/n1.js'%}"></script> 
 {%endblock%}

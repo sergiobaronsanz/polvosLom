@@ -1,0 +1,113 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} N4 ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{formN4.muestra.label}}
+          {{formN4.muestra}}
+      </div>
+
+      <div class= "col d-flex flex-column align-items-start">
+        {{formN4.fecha.label}}
+        {{formN4.fecha}}
+      </div>
+  </div>
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col text-nowrap">
+        {{formN4.temperaturaAmbiente.label}}
+        {{formN4.temperaturaAmbiente}}
+
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{formN4.humedad.label}}
+        {{formN4.humedad}}
+      </div>
+  </div>
+
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3 col m-auto">
+    
+    {% if formN4.non_field_errors %}
+            <div>
+                {% for error in formN4.non_field_errors %}
+                    <p class= "text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+      
+    <table id= "tabla" class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                {%for form in formN4Resultados.forms.0%}
+                    <th class="align-middle">{{form.label}}</th>
+                {%endfor%}
+
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            {{ formN4Resultados.management_form }}
+            <tr class="templateRow" id="ensayo1">
+                <td>{{formN4Resultados.0.celda}}</td>
+                <td>{{formN4Resultados.0.tConsigna}}</td>
+                <td>{{formN4Resultados.0.tMax}}</td>
+                <td>{{formN4Resultados.0.tiempo}}</td>
+                <td>{{formN4Resultados.0.resultado}}</td>
+            </tr>
+            <tr class="templateRow" id="ensayo2">
+                <td>{{formN4Resultados.1.celda}}</td>
+                <td>{{formN4Resultados.1.tConsigna}}</td>
+                <td>{{formN4Resultados.1.tMax}}</td>
+                <td>{{formN4Resultados.1.tiempo}}</td>
+                <td>{{formN4Resultados.1.resultado}}</td>
+            </tr>
+            <tr class="templateRow" id="ensayo3">
+                <td>{{formN4Resultados.2.celda}}</td>
+                <td>{{formN4Resultados.2.tConsigna}}</td>
+                <td>{{formN4Resultados.2.tMax}}</td>
+                <td>{{formN4Resultados.2.tiempo}}</td>
+                <td>{{formN4Resultados.2.resultado}}</td>
+            </tr>
+            <tr class="templateRow" id="ensayo4">
+                <td>{{formN4Resultados.3.celda}}</td>
+                <td>{{formN4Resultados.3.tConsigna}}</td>
+                <td>{{formN4Resultados.3.tMax}}</td>
+                <td>{{formN4Resultados.3.tiempo}}</td>
+                <td>{{formN4Resultados.3.resultado}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class= "col-2 d-flex justify-content-between">
+        <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
+        <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+    </div>
+    
+
+    <div class= "col-12 mt-3 mb-3">
+        {{formN4.observacion.label}}
+        {{formN4.observacion}}
+    </div>
+    
+</div>
+
+{%endblock%}
+
+
+
+{%block script%}  
+    <script> ensayo= "n4" </script>
+    <script src="{%static 'js/ensayos/n4.js'%}"></script> 
+{%endblock%}

@@ -21,6 +21,9 @@ urlpatterns = [
     path('ensayos/pmax/<str:muestra_id>/', views.pmax, name="pmax"),
     path('ensayos/clo/<str:muestra_id>/', views.clo, name="clo"),
     path('ensayos/rec/<str:muestra_id>/', views.rec, name="rec"),
+    path('ensayos/n1/<str:muestra_id>/', views.n1, name="n1"),
+    path('ensayos/n2/<str:muestra_id>/', views.n2, name="n2"),
+    path('ensayos/n4/<str:muestra_id>/', views.n4, name="n4"),
 
 
     

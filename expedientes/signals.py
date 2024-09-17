@@ -89,6 +89,28 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "%"
                     )
+
+            if ensayo.ensayo == "REC":
+                if not REC.objects.filter(muestra= instance).exists():
+                    resultados= REC.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "Mohm"
+                    )
+            
+            if ensayo.ensayo == "N1":
+                if not N1.objects.filter(muestra= instance).exists():
+                    resultados= N1.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                    )
+
+            if ensayo.ensayo == "N2":
+                if not N2.objects.filter(muestra= instance).exists():
+                    resultados= N2.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                    )
                 
         """
            if ensayo.ensayo in lista_temperatura:

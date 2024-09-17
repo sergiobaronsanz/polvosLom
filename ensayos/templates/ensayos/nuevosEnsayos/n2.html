@@ -1,7 +1,7 @@
 {% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
 {%load static%}
 
-{%block tituloEnsayo%} REC ({{ensayo.normativa}})  {%endblock%}
+{%block tituloEnsayo%} N2 ({{ensayo.normativa}})  {%endblock%}
 
 
 
@@ -9,30 +9,40 @@
 
   <div class= "row mt-3 mb-3">
       <div class= "col d-flex flex-column align-items-start">
-          {{formRec.muestra.label}}
-          {{formRec.muestra}}
+          {{formN2.muestra.label}}
+          {{formN2.muestra}}
       </div>
 
       <div class= "col d-flex flex-column align-items-start">
-        {{formRec.fecha.label}}
-        {{formRec.fecha}}
+        {{formN2.fecha.label}}
+        {{formN2.fecha}}
       </div>
   </div>
 
   <div class= "row mt-3 mb-3">
       <div class= "col text-nowrap">
-        {{formRec.temperaturaAmbiente.label}}
-        {{formRec.temperaturaAmbiente}}
+        {{formN2.temperaturaAmbiente.label}}
+        {{formN2.temperaturaAmbiente}}
 
       </div>
       
       <div class= "col text-nowrap">
-        {{formRec.humedad.label}}
-        {{formRec.humedad}}
+        {{formN2.humedad.label}}
+        {{formN2.humedad}}
       </div>
-
   </div>
 
+  <div class= "row">
+    <div class= "col text-nowrap">
+        {{formN2.tipoPolvo.label}}
+        {{formN2.tipoPolvo}}
+      </div>
+    
+      <div class= "col text-nowrap">
+        {{formN2.pruebaPreseleccion.label}}
+        {{formN2.pruebaPreseleccion}}
+      </div>
+</div>
 
 {%endblock%}
 
@@ -41,31 +51,33 @@
 {%block resultados%} 
 <div class= "row mt-3 mb-3 col m-auto">
     
-    {% if formRec.non_field_errors %}
+    {% if formN2.non_field_errors %}
             <div>
-                {% for error in formRec.non_field_errors %}
+                {% for error in formN2.non_field_errors %}
                     <p class= "text-danger">{{ error }}</p>
                 {% endfor %}
             </div>
     {% endif %}
 
+    <div>
+        <p> Si todo es negativo pulsa  <button type= "button" id= "todoNegativo" class= "btn btn-sm btn-secondary"> aqui </button></p>
+    </div>
+
       
     <table id= "tabla" class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
-                {%for form in formRecResultados.forms.0%}
+                {%for form in formN2Resultados.forms.0%}
                     <th class="align-middle">{{form.label}}</th>
                 {%endfor%}
 
             </tr>
         </thead>
         <tbody id="tbody">
-            {{ formRecResultados.management_form }}
-            {%for form in formRecResultados%}
+            {{ formN2Resultados.management_form }}
+            {%for form in formN2Resultados%}
                 <tr class="templateRow">
-                    <td> {{form.tension}}</td>
-                    <td> {{form.tiempo}}</td>
-                    <td>{{form.resultadoPrueba}}</td>
+                    <td>{{form.resultado}}</td>
                 </tr>
             {%endfor%}
         </tbody>
@@ -74,10 +86,11 @@
         <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
         <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
     </div>
+    
 
     <div class= "col-12 mt-3 mb-3">
-        {{formRec.observacion.label}}
-        {{formRec.observacion}}
+        {{formN2.observacion.label}}
+        {{formN2.observacion}}
     </div>
     
 </div>
@@ -87,7 +100,7 @@
 
 
 {%block script%}  
-    <script> ensayo= "clo" </script>
+    <script> ensayo= "n2" </script>
     <script src="{%static 'js/ensayos/general.js'%}"></script> 
-    <script src="{%static 'js/ensayos/lie.js'%}"></script> 
+    <script src="{%static 'js/ensayos/n2.js'%}"></script> 
 {%endblock%}

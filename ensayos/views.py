@@ -1331,8 +1331,7 @@ def rec (request, muestra_id):
                         resultado=resultadoPrueba,
                     )
 
-                    if resultadoPrueba == "1":
-                        listaResultados.append(concentracion)
+                    listaResultados.append(resultado)
                     
 
             #Guardamos en el modelo REC el resultado del ensayo
@@ -1363,8 +1362,6 @@ def rec (request, muestra_id):
             fecha= str(ensayo_REC.fecha)
             temperaturaAmbiente= ensayo_REC.temperaturaAmbiente
             humedad=ensayo_REC.humedad
-            cerillas=ensayo_REC.cerillas,
-            boquilla=ensayo_REC.boquilla,
             observacion= ensayo_REC.observacion,
             
             
@@ -1373,8 +1370,6 @@ def rec (request, muestra_id):
                 'fecha': fecha,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
-                'cerillas': cerillas,
-                'boquilla': boquilla,
                 'observacion': observacion,
                 })
             
@@ -1385,12 +1380,8 @@ def rec (request, muestra_id):
             initial_data = []
             for resultado in resultados:
                 initial_data.append({
-                    'concentracion': resultado.concentracion,
-                    'peso': resultado.peso,
-                    'pex': resultado.pex,
-                    'pm': resultado.pm,
-                    'dpdt': resultado.dpdt,
-                    'oxigeno': resultado.oxigeno,
+                    'tension': resultado.tension,
+                    'tiempo': resultado.tiempo,
                     'resultadoPrueba': resultado.resultado,
                 })
             
@@ -1409,4 +1400,431 @@ def rec (request, muestra_id):
         'ensayo': ensayo,
         'formRec': formRec,
         'formRecResultados': formRecResultados,
+    })
+
+
+def n1 (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "N1")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(n1__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="n1") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #N1ibimos los formularios diferenciándolos con el prefijo
+        formN1= N1Form(request.POST, prefix='n1')
+        formN1Resultados= n1ResultadosFormSet(request.POST, prefix='n1Resultados')  
+        
+        if formN1.is_valid() and formN1Resultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('n1-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            n1_instancia= N1.objects.filter(muestra= muestra)
+            n1_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formN1.cleaned_data['fecha']
+            temperaturaAmbiente= formN1.cleaned_data['temperaturaAmbiente']
+            humedad= formN1.cleaned_data['humedad']
+            tipoPolvo= formN1.cleaned_data['tipoPolvo']
+            pruebaPreseleccion= formN1.cleaned_data['pruebaPreseleccion']
+            observacion=formN1.cleaned_data['observacion']
+
+            n1= N1.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                tipoPolvo= tipoPolvo,
+                pruebaPreseleccion= pruebaPreseleccion,
+                fecha= fecha,
+                observacion= observacion,
+            )
+            n1.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosN1.objects.filter(ensayo= n1)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados N1 
+            listaResultados= []  
+            listaRebasaHumedad= []
+
+            for form in formN1Resultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    tiempo= form.cleaned_data['tiempo']
+                    zonaHumeda= form.cleaned_data['zonaHumeda']
+
+                    print(tiempo)
+                    resultadosN1=ResultadosN1.objects.create(
+                        ensayo= n1,
+                        tiempo= tiempo,
+                        zonaHumeda=zonaHumeda,
+                    )
+
+                    listaResultados.append(tiempo)
+                    listaRebasaHumedad.append(zonaHumeda)
+                    
+
+            #Guardamos en el modelo N1 el resultado del ensayo
+            if listaResultados:
+                if len(listaResultados) == len(listaRebasaHumedad):
+                    #Polvos no metálicos
+                    if tipoPolvo == "1":
+                        for i in range(len(listaResultados)):
+                            if listaResultados[i] < 45:
+                                if listaRebasaHumedad[i] == "1":
+                                    resultado="2"
+                                    break
+                                else:
+                                    resultado= "3"
+                            else:
+                                resultado= "1"
+                                break
+                    
+                    #Polvos metálicos
+                    else:
+                        valor_buscado = min(listaResultados)
+                        if valor_buscado < 600:
+                            if valor_buscado <= 300:
+                                resultado="2"
+                            else:
+                                resultado="3"
+                        else:
+                            resultado= "1"
+
+                n1.resultado= resultado
+                n1.save()
+            else:
+                resultado= "1"
+                n1.resultado= resultado
+                n1.save()
+
+                        
+        else:
+            print (formN1.errors)
+            formN1.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/n1.html', {
+                'ensayo': ensayo,
+                'formN1': formN1,
+                'formN1Resultados': formN1Resultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_N1= N1.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_N1.fecha)
+            temperaturaAmbiente= ensayo_N1.temperaturaAmbiente
+            humedad=ensayo_N1.humedad
+            tipoPolvo= ensayo_N1.tipoPolvo
+            pruebaPreseleccion= ensayo_N1.pruebaPreseleccion
+            observacion= ensayo_N1.observacion
+            
+            
+            formN1 = N1Form(prefix='n1', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'tipoPolvo': tipoPolvo,
+                'pruebaPreseleccion': pruebaPreseleccion,
+                'observacion': observacion,
+                })
+            
+            formN1.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosN1.objects.filter(ensayo=ensayo_N1).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'tiempo': resultado.tiempo,
+                    'zonaHumeda': resultado.zonaHumeda,
+                })
+            
+            # Crear el formset con los datos iniciales
+            N1ResultadosFormSet = formset_factory(N1ResultadosForm, extra=0)
+            formN1Resultados = N1ResultadosFormSet(prefix='n1Resultados',initial=initial_data)
+        
+        else:
+            formN1= N1Form(prefix='n1')
+            formN1.fields['muestra'].queryset = muestras_queryset
+
+            formN1Resultados=n1ResultadosFormSet(prefix='n1Resultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/n1.html', {
+        'ensayo': ensayo,
+        'formN1': formN1,
+        'formN1Resultados': formN1Resultados,
+    })
+
+
+def n2 (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "N2")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(n2__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="n2") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #N2ibimos los formularios diferenciándolos con el prefijo
+        formN2= N2Form(request.POST, prefix='n2')
+        formN2Resultados= n2ResultadosFormSet(request.POST, prefix='n2Resultados')  
+        
+        if formN2.is_valid() and formN2Resultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('n2-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            n2_instancia= N2.objects.filter(muestra= muestra)
+            n2_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formN2.cleaned_data['fecha']
+            temperaturaAmbiente= formN2.cleaned_data['temperaturaAmbiente']
+            humedad= formN2.cleaned_data['humedad']
+            observacion=formN2.cleaned_data['observacion']
+
+            n2= N2.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fecha= fecha,
+                observacion= observacion,
+            )
+            n2.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosN2.objects.filter(ensayo= n2)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados N2 
+            listaResultados= []  
+
+            for form in formN2Resultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    resultado= form.cleaned_data['resultado']
+
+                    resultadosN2=ResultadosN2.objects.create(
+                        ensayo= n2,
+                        resultado= resultado
+                    )
+                    if resultado == "1":
+                        listaResultados.append(resultado)
+                    
+
+            #Guardamos en el modelo N2 el resultado del ensayo
+            if listaResultados:
+                print("HOLA")
+                resultado= "2"
+                n2.resultado= resultado
+                n2.save()
+            else:
+                print("adiossssss")
+                resultado= "1"
+                n2.resultado= resultado
+                n2.save()
+
+                        
+        else:
+            print (formN2.errors)
+            formN2.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/n2.html', {
+                'ensayo': ensayo,
+                'formN2': formN2,
+                'formN2Resultados': formN2Resultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_N2= N2.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_N2.fecha)
+            temperaturaAmbiente= ensayo_N2.temperaturaAmbiente
+            humedad=ensayo_N2.humedad
+            observacion= ensayo_N2.observacion
+            
+            
+            formN2 = N2Form(prefix='n2', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'observacion': observacion,
+                })
+            
+            formN2.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosN2.objects.filter(ensayo=ensayo_N2).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'resultado': resultado.resultado,
+                })
+            
+            # Crear el formset con los datos iniciales
+            N2ResultadosFormSet = formset_factory(N2ResultadosForm, extra=0)
+            formN2Resultados = N2ResultadosFormSet(prefix='n2Resultados',initial=initial_data)
+        
+        else:
+            formN2= N2Form(prefix='n2')
+            formN2.fields['muestra'].queryset = muestras_queryset
+
+            formN2Resultados=n2ResultadosFormSet(prefix='n2Resultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/n2.html', {
+        'ensayo': ensayo,
+        'formN2': formN2,
+        'formN2Resultados': formN2Resultados,
+    })
+
+
+def n4 (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "N4")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(n4__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="n4") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #N4ibimos los formularios diferenciándolos con el prefijo
+        formN4= N4Form(request.POST, prefix='n4')
+        formN4Resultados= n4ResultadosFormSet(request.POST, prefix='n4Resultados')  
+        
+        if formN4.is_valid() and formN4Resultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('n4-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            n4_instancia= N4.objects.filter(muestra= muestra)
+            n4_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formN4.cleaned_data['fecha']
+            temperaturaAmbiente= formN4.cleaned_data['temperaturaAmbiente']
+            humedad= formN4.cleaned_data['humedad']
+            observacion=formN4.cleaned_data['observacion']
+
+            n4= N4.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fecha= fecha,
+                observacion= observacion,
+            )
+            n4.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosN4.objects.filter(ensayo= n4)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados N4 
+            listaResultados= []  
+
+            for form in formN4Resultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    resultado= form.cleaned_data['resultado']
+
+                    resultadosN4=ResultadosN4.objects.create(
+                        ensayo= n4,
+                        resultado= resultado
+                    )
+                    if resultado == "1":
+                        listaResultados.append(resultado)
+                    
+
+            #Guardamos en el modelo N4 el resultado del ensayo
+            if listaResultados:
+                print("HOLA")
+                resultado= "2"
+                n4.resultado= resultado
+                n4.save()
+            else:
+                print("adiossssss")
+                resultado= "1"
+                n4.resultado= resultado
+                n4.save()
+
+                        
+        else:
+            print (formN4.errors)
+            formN4.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/n4.html', {
+                'ensayo': ensayo,
+                'formN4': formN4,
+                'formN4Resultados': formN4Resultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_N4= N4.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_N4.fecha)
+            temperaturaAmbiente= ensayo_N4.temperaturaAmbiente
+            humedad=ensayo_N4.humedad
+            observacion= ensayo_N4.observacion
+            
+            
+            formN4 = N4Form(prefix='n4', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'observacion': observacion,
+                })
+            
+            formN4.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosN4.objects.filter(ensayo=ensayo_N4).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    
+                    'resultado': resultado.resultado,
+                })
+            
+            # Crear el formset con los datos iniciales
+            N4ResultadosFormSet = formset_factory(N4ResultadosForm, extra=0)
+            formN4Resultados = N4ResultadosFormSet(prefix='n4Resultados',initial=initial_data)
+        
+        else:
+            formN4= N4Form(prefix='n4')
+            formN4.fields['muestra'].queryset = muestras_queryset
+
+            formN4Resultados=n4ResultadosFormSet(prefix='n4Resultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/n4.html', {
+        'ensayo': ensayo,
+        'formN4': formN4,
+        'formN4Resultados': formN4Resultados,
     })

@@ -82,7 +82,23 @@ def verMuestra(request, muestra_id):
     if listaEnsayos.filter(ensayo= "CLO").exists():
         resultado= CLO.objects.filter(muestra= muestra)
         print("CLO")
-        resultados.extend(resultado)   
+        resultados.extend(resultado)  
+    if listaEnsayos.filter(ensayo= "REC").exists():
+        resultado= REC.objects.filter(muestra= muestra)
+        print("REC")
+        resultados.extend(resultado) 
+    if listaEnsayos.filter(ensayo= "N1").exists():
+        resultado= N1.objects.filter(muestra= muestra)
+        print("N1")
+        resultados.extend(resultado) 
+    if listaEnsayos.filter(ensayo= "N2").exists():
+        resultado= N2.objects.filter(muestra= muestra)
+        print("N2")
+        resultados.extend(resultado) 
+    if listaEnsayos.filter(ensayo= "N4").exists():
+        resultado= N4.objects.filter(muestra= muestra)
+        print("N4")
+        resultados.extend(resultado)
     
         
     print (resultados)

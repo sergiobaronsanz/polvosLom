@@ -1025,3 +1025,280 @@ class RecResultadosForm(forms.Form):
     
 
 recResultadosFormSet= formset_factory(RecResultadosForm, extra=7)
+
+
+#N1
+class N1Form(forms.Form):
+    #Todos los campos # se deben establecer en la view
+    #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
+    #resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
+    #equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
+    #tiempoEnsayo 
+
+    polvos = [
+        ("1", "No metalico"),
+        ("2", "Metalico"),
+        
+    ]
+
+    preseleccion= [
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+
+    muestras= Muestras.objects.all()
+
+    
+    muestra = forms.ModelChoiceField(
+        queryset=muestras,
+        label="Muestra",
+        empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    fecha= forms.DateField(
+        label="Fecha",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+
+    temperaturaAmbiente = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    humedad= forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Humedad Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
+    
+    tipoPolvo= forms.ChoiceField(
+        choices= polvos,
+        label= "Tipo de polvo",
+        widget= forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )
+
+    pruebaPreseleccion= forms.ChoiceField(
+        choices= preseleccion,
+        label= "Prueba de preselección",
+        widget= forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )
+
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
+
+class N1ResultadosForm(forms.Form):
+
+    rebasa= [
+        ("0", "Selecciona"),
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+
+    tiempo= forms.DecimalField(
+        decimal_places=2,  
+        label="Tiempo (s)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    zonaHumeda= forms.ChoiceField(
+        choices=rebasa,
+        label="¿Rebasa zona humedecida?", 
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+    
+
+n1ResultadosFormSet= formset_factory(N1ResultadosForm, extra=7)
+
+
+#N2
+class N2Form(forms.Form):
+    #Todos los campos # se deben establecer en la view
+    #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
+    #resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
+    #equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
+    #tiempoEnsayo 
+
+    polvos = [
+        ("1", "No metalico"),
+        ("2", "Metalico"),
+        
+    ]
+
+    preseleccion= [
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+
+    muestras= Muestras.objects.all()
+
+    
+    muestra = forms.ModelChoiceField(
+        queryset=muestras,
+        label="Muestra",
+        empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    fecha= forms.DateField(
+        label="Fecha",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+
+    temperaturaAmbiente = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    humedad= forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Humedad Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
+    
+
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
+
+class N2ResultadosForm(forms.Form):
+
+    resultadosPosibles = [
+        ("0", "Seleccione"),
+        ("1", "SI"),
+        ("2", "NO"),
+    ]
+
+    resultado= forms.ChoiceField(
+        choices=resultadosPosibles,
+        label="Resultado", 
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+    
+
+n2ResultadosFormSet= formset_factory(N2ResultadosForm, extra=6)
+
+
+
+#N4
+class N4Form(forms.Form):
+    #Todos los campos # se deben establecer en la view
+    #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
+    #resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
+    #equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
+    #tiempoEnsayo 
+
+    preseleccion= [
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+
+    muestras= Muestras.objects.all()
+
+    
+    muestra = forms.ModelChoiceField(
+        queryset=muestras,
+        label="Muestra",
+        empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    fecha= forms.DateField(
+        label="Fecha",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+
+    temperaturaAmbiente = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    humedad= forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Humedad Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
+    
+
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
+
+class N4ResultadosForm(forms.Form):
+
+    resultadosPosibles = [
+        ("0", "Selecciona"),
+        ("1", "SI"),
+        ("2", "NO"),
+    ]
+
+    celdasDisponibles=[
+        ("0", "Selecciona"),
+        ("1", "25 mm"),
+        ("2", "100 mm"),
+    ]
+
+    temperaturasDisponibles=[
+        ("0", "Selecciona"),
+        ("1", 100),
+        ("2", 120),
+        ("1", 140),
+    ]
+
+    celda= forms.ChoiceField(
+        choices=celdasDisponibles,
+        label="Celda", 
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    tConsigna= forms.ChoiceField(
+        choices=temperaturasDisponibles,
+        label="Temperatura", 
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    tMax= forms.DecimalField(
+        label="Temperatura máxima", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    tiempo= forms.IntegerField(
+        label="Tiempo", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    resultado= forms.ChoiceField(
+        choices=resultadosPosibles,
+        label="Resultado", 
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+    
+
+n4ResultadosFormSet= formset_factory(N4ResultadosForm, extra=4)
