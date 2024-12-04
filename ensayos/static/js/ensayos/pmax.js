@@ -1,33 +1,21 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     /////Automatización columna Concentración-Peso/////
-    console.log("hola");
     var botonEliminar= document.getElementById("borrar-fila")
     var botonAñadir= document.getElementById("añadir-fila")
-    concentracion= document.querySelectorAll(".concentracion input");
-
-    concentracion.forEach(item => {
-        item.addEventListener('change', function(){
-            var id_item= item.id;
-            var id_peso= id_item.replace("concentracion", "peso");
-            var valor = parseFloat(item.value);
-            var peso= document.getElementById(id_peso);
-
-            var valorPeso= valor/ 50;
-            peso.value= valorPeso;
-        })
-    });
+        
 
         /////Cálculo de Presión media, dp/dt media y kmax/////
     var pm_media= document.getElementById("id_pmax-pm_media");
     var dpdt_media= document.getElementById("id_pmax-dpdt_media");
     var kmax_media= document.getElementById("id_pmax-kmax");
 
-    var pms= document.querySelectorAll(".pm input")
-    var dpdt= document.querySelectorAll(".dpdt input")
-    var series= document.querySelectorAll(".serie select")
+    
 
     //Automatizamos las presiones
     function presionMedia(){
+        var pms= document.querySelectorAll(".pm input")
+
         //Sacamos las variables necesarias
         var sumaPresiones= 0;
         var numPresiones= 0;
@@ -41,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         pms.forEach(item =>{
             var id_item= item.id;
             var id_serie= id_item.replace("pm_serie", "serie");
-            console.log(id_serie)
             var serie= document.getElementById(id_serie);
             var valor_serie= serie.value;
+            console.log(id_serie)
 
             if(valor_serie=== "1"){
                 
@@ -82,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
             listaValoresMaximos[2]= Math.max(...listaValores3);
         }
 
-        console.log(listaValoresMaximos);
 
         valor_maximo= listaValoresMaximos[0] + listaValoresMaximos[1] + listaValoresMaximos[2];
 
@@ -99,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //Automatizamos las dPdT
     function dpdtMedia(){
+        var dpdt= document.querySelectorAll(".dpdt input")
+
         //Sacamos las variables necesarias
         var sumaPresiones= 0;
         var numPresiones= 0;
@@ -152,8 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
             listaValoresMaximos[2]= Math.max(...listaValores3);
         }
 
-        console.log(listaValoresMaximos);
-
         valor_maximo= listaValoresMaximos[0] + listaValoresMaximos[1] + listaValoresMaximos[2];
 
         //Hacemos la media con el numero de valores que haya
@@ -169,46 +156,80 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //Automatizacion kmax
     function kmax(){
+        var dpdt= document.querySelectorAll(".dpdt input")
         //Hay que aplicar una fórmula que es...
         kmax_media.value= 44;
     };
 
     //Declaramos los listener
 
-    function listener(){
-        console.log("gola");
-        pms= document.querySelectorAll(".pm input")
-        dpdt= document.querySelectorAll(".dpdt input")
-        series= document.querySelectorAll(".serie select")
+    function listener() {
+        var concentracion= document.querySelectorAll(".concentracion input");
+        var pms = document.querySelectorAll(".pm input");
+        var dpdt = document.querySelectorAll(".dpdt input");
+        var series = document.querySelectorAll(".serie select");
+    
+        // Remueve y vuelve a agregar el mismo nodo, lo cual quita cualquier listener anterior
+        concentracion.forEach(item =>{
+            item.replaceWith(item.cloneNode(true));
+        })
 
-        pms.forEach(item =>{
-            console.log(item);
+        pms.forEach(item => {
+            item.replaceWith(item.cloneNode(true));
+        });
+    
+        dpdt.forEach(item => {
+            item.replaceWith(item.cloneNode(true));
+        });
+    
+        series.forEach(item => {
+            item.replaceWith(item.cloneNode(true));
+        });
+    
+        // Ahora se pueden agregar los listeners sin duplicarlos
+        concentracion= document.querySelectorAll(".concentracion input");
+        pms = document.querySelectorAll(".pm input");
+        dpdt = document.querySelectorAll(".dpdt input");
+        series = document.querySelectorAll(".serie select");
+
+        concentracion.forEach(item => {
             item.addEventListener('change', function(){
-                presionMedia();
+                var id_item= item.id;
+                var id_peso= id_item.replace("concentracion", "peso");
+                var valor = parseFloat(item.value);
+                var peso= document.getElementById(id_peso);
+    
+                var valorPeso= valor/ 50;
+                peso.value= valorPeso;
             })
         });
-        
-        dpdt.forEach(item =>{
-            item.addEventListener('change', function(){
+    
+        pms.forEach(item => {
+            item.addEventListener('change', function() {
+                presionMedia();
+            });
+        });
+    
+        dpdt.forEach(item => {
+            item.addEventListener('change', function() {
                 dpdtMedia();
                 kmax();
-                
-            })
+            });
         });
-        
-        series.forEach(item =>{
-            item.addEventListener('change', function(){
+    
+        series.forEach(item => {
+            item.addEventListener('change', function() {
                 presionMedia();
                 dpdtMedia();
                 kmax();
-                
-            })
+            });
         });
-    };
-
-
+    }
+    
     listener();
+    
 
+    
     botonAñadir.addEventListener('click', function(){
         listener();  
     })
@@ -216,5 +237,5 @@ document.addEventListener('DOMContentLoaded', function() {
     botonEliminar.addEventListener('click', function(){
         listener();  
     })
-   
-});
+    
+    });

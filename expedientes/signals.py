@@ -111,6 +111,21 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         muestra= instance,
                         ensayo= ensayo,
                     )
+
+            if ensayo.ensayo == "N4":
+                if not N4.objects.filter(muestra= instance).exists():
+                    resultados= N4.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                    )
+
+            if ensayo.ensayo == "O1":
+                if not O1.objects.filter(muestra= instance).exists():
+                    resultados= O1.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                    )
+                
                 
         """
            if ensayo.ensayo in lista_temperatura:

@@ -68,13 +68,13 @@
                   <h4 class= "text-nowrap mb-0 mr-2"> Ensayos </h4>
                   <div style="width:100%; height:2px; background: #A9B2BB"></div>
                 </div>
-                <div id="resultados" class= "mt-3 col-12">
+                <div id="resultados" class= "mt-3 col-12 d-flex flex-wrap">
                   {% for resultado in resultados%}
-                    <p class= "col-8"> 
+                    <p class= "flex-fill text-center"> 
                     {%if resultado.ensayo|lower != 'pmax'%}
                         <a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
                         {%if resultado.resultado|lower != "none" %}
-                        {% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" %}
+                        {% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" %}
                             {{resultado.get_resultado_display}}
                           {%else%}
                             {{resultado.resultado}} {{resultado.unidad}}
@@ -108,18 +108,54 @@
 
                   {%endfor%}
                 </div>
-                <div class= "col-12">
-                  <button id="ensayosMuestrasButton" class= "btn btn-info"> Añadir ensayo </button>
+                <div class= "col-12 d-flex justify-content-between">
+                  <div>
+                    <button id="ensayosMuestrasButton" class= "btn btn-info"> Añadir ensayo </button>
+                    <button type="button" class="btn btn-primary" id="generarPdf" data-toggle="modal" data-target="#ensayosModal">
+                      Generar PDF
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="ensayosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            ...
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button id="generarZip" class= "btn btn-info"> Generar ZIP </button>
+                  </div>
                 </div>
 
               </div>
-
             </div>
           </div>
         </div>
       </div>
     </div>
 </div>
+
+<script>
+  let muestra= {{muestra_json|safe}}
+  let ensayos= {{ensayos_json|safe}} 
+</script>
+
+<script src="{%static 'js/ensayos/generarPdf.js'%}"></script> 
 
 <script>
   console.log("bien")

@@ -1,0 +1,129 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} O1 ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{formO1.muestra.label}}
+          {{formO1.muestra}}
+      </div>
+
+      <div class= "col d-flex flex-column align-items-start">
+        {{formO1.fecha.label}}
+        {{formO1.fecha}}
+      </div>
+  </div>
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col text-nowrap">
+        {{formO1.temperaturaAmbiente.label}}
+        {{formO1.temperaturaAmbiente}}
+
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{formO1.humedad.label}}
+        {{formO1.humedad}}
+      </div>
+  </div>
+
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3 col m-auto">
+    
+    {% if formO1.non_field_errors %}
+            <div>
+                {% for error in formO1.non_field_errors %}
+                    <p class= "text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+    {% endif %}
+    
+    <div>
+        <h5> Ensayo Referencia </h5>
+        <p> El primer valor, hace referencia al bromato potásico, el segundo a la celulosa</p>
+        <table id= "tabla1" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    {%for form in formO1Resultados.forms.0%}
+                        <th class="align-middle">{{form.label}}</th>
+                    {%endfor%}
+
+                </tr>
+            </thead>
+
+            <tbody id="tbody">
+                {{ formO1Resultados.management_form }}
+                    {%for form in formO1Resultados|slice:":3"%}
+                        <tr class="templateRow">
+                            <td>{{form.proporcion}}</td>
+                            <td>{{form.tiempo1}}</td>
+                            <td>{{form.tiempo2}}</td>
+                            <td>{{form.tiempo3}}</td>
+                            <td>{{form.tiempo4}}</td>
+                            <td>{{form.tiempo5}}</td>
+                            <td>{{form.resultado}}</td>
+                        </tr>
+                    {%endfor%}
+
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class= "mt-3">
+        <h5> Ensayo muestra problema </h5>
+        <p> El primer valor, hace referencia a la muestra problema, el segundo a la celulosa</p>
+        <table id= "tabla2" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    {%for form in formO1Resultados.forms.0%}
+                        <th class="align-middle">{{form.label}}</th>
+                    {%endfor%}
+
+                </tr>
+            </thead>
+
+            <tbody id="tbody">
+                {{ formO1Resultados.management_form }}
+                    {%for form in formO1Resultados|slice:"3:5"%}
+                        <tr class="templateRow">
+                            <td>{{form.proporcion}}</td>
+                            <td>{{form.tiempo1}}</td>
+                            <td>{{form.tiempo2}}</td>
+                            <td>{{form.tiempo3}}</td>
+                            <td>{{form.tiempo4}}</td>
+                            <td>{{form.tiempo5}}</td>
+                            <td>{{form.resultado}}</td>
+                        </tr>
+                    {%endfor%}
+
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class= "col-12 mt-3 mb-3">
+        {{formO1.observacion.label}}
+        {{formO1.observacion}}
+    </div>
+    
+</div>
+
+{%endblock%}
+
+
+
+{%block script%}  
+    <script> ensayo= "o1" </script>
+    <script src="{%static 'js/ensayos/o1.js'%}"></script> 
+{%endblock%}

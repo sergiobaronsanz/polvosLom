@@ -5,6 +5,7 @@ from .models import Muestras, DescripcionMuestra
 from ensayos.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
+import json
 
 # Create your views here.
 
@@ -99,9 +100,36 @@ def verMuestra(request, muestra_id):
         resultado= N4.objects.filter(muestra= muestra)
         print("N4")
         resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo= "O1").exists():
+        resultado= O1.objects.filter(muestra= muestra)
+        print("O1")
+        resultados.extend(resultado)
     
         
-    print (resultados)
+    #print (resultados)
+    #pasamos los datos a json para poder mandarlos al script de js
+    ensayos_json=[]
+    for resultado in resultados:
+        if resultado.ensayo.ensayo != "Pmax":
+            ensayo= resultado.ensayo
+            muestra_id= muestra.id
+            muestra_nombre= muestra.empresa.abreviatura + "-" + str(muestra.id_muestra)
+
+            resultado_valor= resultado.resultado
+            if resultado_valor:
+                ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
+                ensayos_json.append(ensayo_dict)
+        else:
+            if resultado.pmax:
+                ensayo= resultado.ensayo
+                muestra_id= muestra.id
+                muestra_nombre= muestra.empresa.abreviatura + "-" + str(muestra.id_muestra)
+                ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
+                ensayos_json.append(ensayo_dict)
+
+    #Sacamos los datos para js
+    ensayos_json_str = json.dumps(ensayos_json)
+    muestra_json_str= json.dumps(muestra_id)
 
     #Sacamos las url
     url_ensayosMuestras= reverse('ensayosMuestrasSimple', kwargs={'muestra': muestra_id})
@@ -110,7 +138,9 @@ def verMuestra(request, muestra_id):
     
     return render(request, 'verMuestra.html', {
         "muestra": muestra,
+        "muestra_json": muestra_json_str,
         "descripcion": descripcion,
         "resultados": resultados,
+        "ensayos_json":ensayos_json_str,
         "url_ensayosMuestras": url_ensayosMuestras,
     })

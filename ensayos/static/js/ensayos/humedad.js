@@ -39,10 +39,11 @@ function calculoDesviacion(){
         let suma= 0;
         let valores=[];
         for (let i = 1; i <= 3; i++) {
-            const valorCampo = parseFloat(document.getElementById(`id_resultado${i}`).value);
+            const valorCampo = parseFloat(document.getElementById(`id_resultado${i}`).value.replace(",","."));
             if (!isNaN(valorCampo)){
                 valores.push(valorCampo);
                 suma+= valorCampo;
+                console.log(valores);
                 
             }
         }

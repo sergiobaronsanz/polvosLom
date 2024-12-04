@@ -33,13 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
             select.forEach(function(select){
                 // Obtén el atributo name del input
                 var name = select.getAttribute('name');
+                var id= select.getAttribute('id');
         
                 // Sustituye el número en el atributo name con el nuevo número
                 var nuevoName = name.replace(/\d+/, siguienteNumero);
+                var nuevoId = id.replace(/\d+/, siguienteNumero);
         
                 // Establece el nuevo name en el input
                 select.setAttribute('name', nuevoName);
-        
+                select.setAttribute('id', nuevoId);
+
                 // Opcional: Imprimir para verificar
                 console.log('Nombre antiguo: ' + name + ', Nombre nuevo: ' + nuevoName);
             });
@@ -47,13 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
             inputs.forEach(function(input) {
                 // Obtén el atributo name del input
                 var name = input.getAttribute('name');
+                var id= input.getAttribute('id');
         
                 // Sustituye el número en el atributo name con el nuevo número
                 var nuevoName = name.replace(/\d+/, siguienteNumero);
+                var nuevoId = id.replace(/\d+/, siguienteNumero);
         
                 // Establece el nuevo name en el input
                 input.setAttribute('name', nuevoName);
-        
+                input.setAttribute('id', nuevoId);
+
                 // Opcional: Imprimir para verificar
                 console.log('Nombre antiguo: ' + name + ', Nombre nuevo: ' + nuevoName);
             });
@@ -67,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         newRow.id = ''; // Eliminar el id para no duplicar ids
         tBody.appendChild(newRow);
+
     }
 
     function deleteRow(){
@@ -79,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         //Actualizamos el ultimo template
         templateRow = document.querySelectorAll(".templateRow")
         lastTemplateRow= templateRow[templateRow.length -1];
-
+        
 
     }
     // Añadir una fila al hacer clic en el botón
