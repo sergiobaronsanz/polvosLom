@@ -6,6 +6,7 @@ from ensayos.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 import json
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -48,6 +49,10 @@ def recepcionMuestra(request):
 def verMuestra(request, muestra_id):
     
     muestra= get_object_or_404(Muestras, id= muestra_id)
+
+    usuarios= get_list_or_404(User)
+
+    print(usuarios)
     
     #Sacamos la descripción de la muestra
     descripcion= get_object_or_404(DescripcionMuestra, muestra=muestra)   
@@ -108,7 +113,7 @@ def verMuestra(request, muestra_id):
         
     #print (resultados)
     #pasamos los datos a json para poder mandarlos al script de js
-    ensayos_json=[]
+    ensayos=[]
     for resultado in resultados:
         if resultado.ensayo.ensayo != "Pmax":
             ensayo= resultado.ensayo
@@ -118,17 +123,17 @@ def verMuestra(request, muestra_id):
             resultado_valor= resultado.resultado
             if resultado_valor:
                 ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
-                ensayos_json.append(ensayo_dict)
+                ensayos.append(ensayo_dict)
         else:
             if resultado.pmax:
                 ensayo= resultado.ensayo
                 muestra_id= muestra.id
                 muestra_nombre= muestra.empresa.abreviatura + "-" + str(muestra.id_muestra)
                 ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
-                ensayos_json.append(ensayo_dict)
+                ensayos.append(ensayo_dict)
 
     #Sacamos los datos para js
-    ensayos_json_str = json.dumps(ensayos_json)
+    ensayos_json_str = json.dumps(ensayos)
     muestra_json_str= json.dumps(muestra_id)
 
     #Sacamos las url
@@ -142,5 +147,6 @@ def verMuestra(request, muestra_id):
         "descripcion": descripcion,
         "resultados": resultados,
         "ensayos_json":ensayos_json_str,
+        "ensayos": ensayos,
         "url_ensayosMuestras": url_ensayosMuestras,
     })

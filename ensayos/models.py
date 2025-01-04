@@ -178,7 +178,7 @@ class ResultadosTMIc (models.Model):
         verbose_name_plural="Resultados TMIc"
         
     def __str__(self):
-        return f"{self.ensayo} | {self.resultado}"
+        return f"{self.ensayo.muestra} | {self.tPlato} | {self.get_resultado_display()}"
     
 
 #TMIn

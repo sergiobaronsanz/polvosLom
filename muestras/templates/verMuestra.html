@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-lg-10 m-auto">
           <div class="card mb-4">
-            <div class="card-body">
+            <div class="card-body" id="content-verMuestra">
               <div id="identificacion-muestra" class= "row col-12">             
                 <div id="nombre-muestra" class= "col-6">
                   <h2> {{muestra.empresa.abreviatura}} - {{muestra.id_muestra}}</h2>
@@ -115,7 +115,7 @@
                       Generar PDF
                     </button>
                     
-                    <!-- Modal -->
+                    <!-- Modal PDF -->
                     <div class="modal fade" id="ensayosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -126,11 +126,22 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            ...
+                            <form id="checklistForm" method="POST">
+                              {% csrf_token %}  <!-- Token CSRF para proteger el formulario -->
+                              
+                              <!-- Iterar sobre los resultados y generar un checkbox para cada uno -->
+                              <div>
+                                {% for ensayo in ensayos %}
+                                  <label>
+                                    <input type="radio" name="ensayo" value="{{ ensayo.ensayo }}"> {{ ensayo.ensayo }}
+                                  </label><br>
+                                {% endfor %}
+                              </div>
+                            </form>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary" id= "saveChangesBtn" >Save changes</button>
                           </div>
                         </div>
                       </div>
@@ -138,9 +149,30 @@
                   </div>
 
                   <div>
-                    <button id="generarZip" class= "btn btn-info"> Generar ZIP </button>
+                    <button type= "button" id="generarZip" class= "btn btn-info" data-toggle= "modal" data-target="#modalMail" > Generar ZIP </button>
                   </div>
                 </div>
+
+                 <!-- Modal ZIP -->
+                 <div class="modal fade" id="modalMail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">¿Quieres enviar un mail con el resumen de los ensayos?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary" id= "saveChangesBtn" >Enviar</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
               </div>
             </div>
@@ -155,7 +187,7 @@
   let ensayos= {{ensayos_json|safe}} 
 </script>
 
-<script src="{%static 'js/ensayos/generarPdf.js'%}"></script> 
+<script src="{%static 'js/muestras/generarPdf.js'%}"></script> 
 
 <script>
   console.log("bien")

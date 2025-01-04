@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt  # Necesario si no manejas CSRF (solo en desarrollo)
 from PDF.generarPdf import PDFGenerator
 import traceback
+import os
+from django.contrib.auth.models import User
 
 def generadorPdf(request):
     if request.method == 'POST':
@@ -21,10 +23,31 @@ def generadorPdf(request):
             output = pdf_gen.generate(datosList)
 
             # Guardar el resultado según la cantidad de archivos
-            with open('output.zip' if len(datosList) > 1 else 'output.pdf', 'wb') as f:
-                f.write(output)                
+            # Obtener la ruta al escritorio
+            ruta_escritorio = os.path.join(os.path.expanduser("~"), "Desktop")
 
-            return JsonResponse({'mensaje': 'ZIP generado correctamente'})
+            # Verificar si la ruta del escritorio existe (por seguridad)
+            if not os.path.exists(ruta_escritorio):
+                raise FileNotFoundError("No se pudo encontrar el escritorio del usuario.")
+
+            # Determinar el nombre del archivo según la condición
+
+            id_archivo= datosList[0]['muestra_nombre']
+            print(len(datosList))
+
+            nombre_archivo = f'{id_archivo}.zip' if len(datosList) > 1 else f'{id_archivo}.pdf'
+
+            print(nombre_archivo)
+            # Construir la ruta completa del archivo
+            ruta_archivo = os.path.join(ruta_escritorio, nombre_archivo)
+
+            
+
+            # Guardar el archivo en la ruta especificada
+            with open(ruta_archivo, 'wb') as f:
+                f.write(output)               
+
+            return JsonResponse({'mensaje': 'Archivo generado correctamente'})
         except Exception as e:
                 # Captura y devuelve la traza completa del error
                 traza_error = traceback.format_exc()
@@ -34,8 +57,8 @@ def generadorPdf(request):
                     'detalle': str(e),
                     'traza': traza_error  # Incluye la traza en la respuesta
                 }, status=500)
-        else:
-            return JsonResponse({'error': 'Método no permitido'}, status=405)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 #Lista Ensayos
 
@@ -387,7 +410,8 @@ def granulometria(request, muestra_id):
 
 def tmic(request, muestra_id):
     #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIc")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIc")   
+    equipos=get_object_or_404(Equipos, ensayos= ensayo)   
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -397,12 +421,13 @@ def tmic(request, muestra_id):
     if request.method == 'POST':
         #Recibimos los formularios diferenciándolos con el prefijo
         formTmic= TmicForm(request.POST, prefix='tmic')
-        formTmicResultados= tmicResultadosFormSet(request.POST, prefix='tmicResultados')  
-        
-        if formTmic.is_valid() and formTmicResultados.is_valid():
+        formTmicResultados= tmicResultadosFormSet(request.POST, prefix='tmicResultados') 
+        formEquipos= EquiposEnsayoForm(request.POST, prefix='equipos')
 
+        
+        if formTmic.is_valid() and formTmicResultados.is_valid() and formEquipos.is_valid():
             muestra= get_object_or_404(Muestras, id= request.POST.get('tmic-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
             
             #Comprobamos que no exista un ensayo de humedad previo
             tmic_instancia= TMIc.objects.filter(muestra= muestra)
@@ -425,6 +450,7 @@ def tmic(request, muestra_id):
                 tiempoMaxEnsayo=tiempoMaxEnsayo,
                 observacion= observacion,
             )
+            equipos= formEquipos.cleaned_data['equiposEnsayo']
             tmic.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -485,7 +511,8 @@ def tmic(request, muestra_id):
     else:
         if muestra_id != 'nueva':
             ensayo_TMIc= TMIc.objects.get(muestra__id= muestra_id)            
-            
+            equipos=ensayo_TMIc.equipos.all() 
+
             muestra= Muestras.objects.get(id=muestra_id) 
             fecha= str(ensayo_TMIc.fecha)
             temperaturaAmbiente= ensayo_TMIc.temperaturaAmbiente
@@ -494,6 +521,7 @@ def tmic(request, muestra_id):
             observacion= ensayo_TMIc.observacion
             
             
+
             formTmic = TmicForm(prefix='tmic', initial={
                 'muestra': muestra,
                 'fecha': fecha,
@@ -529,11 +557,16 @@ def tmic(request, muestra_id):
 
             formTmicResultados=tmicResultadosFormSet(prefix='tmicResultados')            
 
+    
+
+    equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
 
     return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
         'ensayo': ensayo,
         'formTmic': formTmic,
+        'equiposEnsayo': equiposEnsayo,
         'formTmicResultados': formTmicResultados,
+        
     })
 
 
