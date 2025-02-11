@@ -246,7 +246,8 @@ class GranulometriaForm(forms.Form):
     )
 
     archivo= forms.FileField(
-        label= "Archivo"
+        label= "Archivo",
+        required= True,
 
     )
 

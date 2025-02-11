@@ -40,39 +40,39 @@
    
 
 {%block resultados%} 
-<div class= "row mt-3 mb-3">
+  <div class= "row mt-3 mb-3">
 
-  <div class= "col">
-    {{form.d10.label}}
-    {{form.d10}}
+    <div class= "col">
+      {{form.d10.label}}
+      {{form.d10}}
+    </div>
+
+    <div class= "col">
+      {{form.d50.label}}
+      {{form.d50}}
+    </div>
+
+    <div class= "col">
+      {{form.d90.label}}
+      {{form.d90}}
+    </div>
+
   </div>
 
-  <div class= "col">
-    {{form.d50.label}}
-    {{form.d50}}
+
+  <div class= "row mt-3 mb-3 col-12 p-0">
+
+    <div id="titulo-ensayos" class= "mt-5 mb-3 d-flex justify-content-center align-items-center col-12 p-0">
+      <h4 class= "text-nowrap mb-0 mr-2"> También puedes seleccionar un archivo </h4>
+      <div class= "col" style="width:100%; height:2px; background: #A9B2BB"></div>
+    </div> 
+
+    <h3 class= "col-12">  </h4>
+    <div class= "col">
+      {{form.archivo}}
+    </div>
+    <p id="result"></p>
   </div>
-
-  <div class= "col">
-    {{form.d90.label}}
-    {{form.d90}}
-  </div>
-
-</div>
-
-
-<div class= "row mt-3 mb-3 col-12 p-0">
-
-  <div id="titulo-ensayos" class= "mt-5 mb-3 d-flex justify-content-center align-items-center col-12 p-0">
-    <h4 class= "text-nowrap mb-0 mr-2"> También puedes seleccionar un archivo </h4>
-    <div class= "col" style="width:100%; height:2px; background: #A9B2BB"></div>
-  </div> 
-
-  <h3 class= "col-12">  </h4>
-  <div class= "col">
-    {{form.archivo}}
-  </div>
-  <p id="result"></p>
-</div>
 
 {%endblock%}
 

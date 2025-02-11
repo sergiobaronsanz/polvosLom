@@ -109,7 +109,9 @@ class Granulometria(models.Model):
     resultado= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3,null= True, blank= True)#9999.999 es diempre la d50
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default= "um",null= True, blank= True)
 
+    archivo= models.FileField(upload_to="archivosGranulometria")
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
+
     
     class Meta():
         verbose_name="Humedad"

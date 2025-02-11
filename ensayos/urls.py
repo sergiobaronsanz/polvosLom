@@ -6,6 +6,9 @@ urlpatterns = [
     #Generar PDF
     path('ensayos/generarPdf', views.generadorPdf, name= "generadorPdf"),
 
+    #Envio Email
+    path('ensayos/envioMail', views.envioMail, name="envioMail"),
+
     #Lista Ensayos
     path('ensayos/lista-ensayos', views.listaEnsayos, name="listaEnsayos"),
     path('ensayos/lista-ensayos/<str:ensayo>', views.ensayosRealizados, name="ensayosRealizados"),

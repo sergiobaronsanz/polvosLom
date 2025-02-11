@@ -41,14 +41,14 @@ function solicitudPOST(datos){
 
 }
 
-
+///Generar archivos
 botonZIP= document.getElementById("generarZip");
 botonPDF= document.getElementById("generarPdf");
 ensayoElegido= document.getElementById("ensayoElegido");
 console.log(ensayos);
 console.log(muestra);
 
-//Generar Zip
+  //Generar Zip
 botonZIP.addEventListener("click", function() {
   console.log('Generando archivo ZIP...');
   let datos = [];
@@ -61,7 +61,7 @@ botonZIP.addEventListener("click", function() {
   solicitudPOST(datos);  // Llamamos a la función de solicitud POST
 });
 
-//Generar pdf
+  //Generar pdf
 botonPDF.addEventListener("click", function(){
     console.log("hola amigo");
     const saveChangesBtn = document.getElementById("saveChangesBtn");
@@ -90,4 +90,5 @@ botonPDF.addEventListener("click", function(){
       }
     });
   });
+
 

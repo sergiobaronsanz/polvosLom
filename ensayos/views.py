@@ -10,17 +10,18 @@ from PDF.generarPdf import PDFGenerator
 import traceback
 import os
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 
 def generadorPdf(request):
     if request.method == 'POST':
         try:
-            # Lógica para generar el ZIP o procesar los datos
+            # Lógica para generar el archivo o procesar los datos
             datosJson= request.body.decode('utf-8')
             datosList= json.loads(datosJson)
-            print(datosList)
 
-            pdf_gen= PDFGenerator()
-            output = pdf_gen.generate(datosList)
+            pdf_gen= PDFGenerator(datosList)
+            output = pdf_gen.generate()
 
             # Guardar el resultado según la cantidad de archivos
             # Obtener la ruta al escritorio
@@ -33,9 +34,10 @@ def generadorPdf(request):
             # Determinar el nombre del archivo según la condición
 
             id_archivo= datosList[0]['muestra_nombre']
+            id_ensayo={datosList[0]['ensayo']}
             print(len(datosList))
 
-            nombre_archivo = f'{id_archivo}.zip' if len(datosList) > 1 else f'{id_archivo}.pdf'
+            nombre_archivo = f'{id_archivo}.zip' if len(datosList) > 1 else f"{id_archivo}{id_ensayo}.pdf"
 
             print(nombre_archivo)
             # Construir la ruta completa del archivo
@@ -60,8 +62,45 @@ def generadorPdf(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-#Lista Ensayos
 
+def envioMail(request):
+    if request.method == 'POST':
+        try:
+            #Recibimos los datos
+            datosJson= request.body.decode('utf-8')
+            datosList= json.loads(datosJson)
+            id_muestra= datosList[0]['muestra']
+            muestra= Muestras.objects.get(id= id_muestra)
+            print(muestra)
+            abreviatura= muestra.empresa.abreviatura
+            numeroMuestra= muestra.id_muestra
+            expediente=muestra.expediente
+            empresa=muestra.empresa.empresa
+
+            asunto= f"Resultados de {abreviatura}-{numeroMuestra} de la empresa {empresa} para el expediente {expediente}" 
+            mensaje= f"Hola,\n\nYa tienes los resultados de {abreviatura}-{numeroMuestra}.\n\nUn saludo."
+            remitente = settings.EMAIL_HOST_USER
+            destinatarios = ['s.baronsanz@gmail.com']
+            print(mensaje)
+    
+            send_mail(asunto, mensaje, remitente, destinatarios, fail_silently=False)
+
+            return JsonResponse({'mensaje': 'Email enviado'})
+
+        except Exception as e:
+            # Captura y devuelve la traza completa del error
+            traza_error = traceback.format_exc()
+            print(traza_error)  # Muestra la traza en la consola del servidor
+
+            return JsonResponse({
+                'error': 'Error interno del servidor',
+                'detalle': str(e),
+                'traza': traza_error  # Incluye la traza en la respuesta
+            }, status=500)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+#Lista Ensayos
 def listaEnsayos(request):
     listaEnsayos= ListaEnsayos.objects.all()
     
@@ -193,7 +232,7 @@ def humedad(request, muestra_id): #################################### Hay que c
                     
                     sumatorio=0
                     for valor in listaResultados:
-                        sumatorio += valor
+                        sumatorio += float(valor)
                         resultado= sumatorio/longitud_lista
                 else:
                     listaResultados = [
@@ -204,45 +243,38 @@ def humedad(request, muestra_id): #################################### Hay que c
                     
                     sumatorio=0
                     for valor in listaResultados:
-                        sumatorio += valor
+                        sumatorio += float(valor)
                         resultado= sumatorio/longitud_lista
                 
                 #Guardamos los valores en la tabla resultados                
                 resultado= round(resultado, 2)  
 
-                for valor in listaResultados:
+            else:
+                resultado = "N/D"
+                listaResultados = [resultado1, resultado2, resultado3]
+
+            #Guardamos los datos en el servidor
+            humedad= Humedad.objects.create(
+                muestra= muestra,
+                fecha= fecha, 
+                ensayo= ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                tDesecacion= tDesecacion,
+                criterio= criterio,
+                desviacion=desviacion,
+                observacion= observacion,
+                resultado= resultado
+            )
+
+            for valor in listaResultados:
                     resultado= ResultadosHumedad.objects.create(
                         ensayo= humedad,
                         resultado= valor,
                     )
-
-            else:
-                resultado = "N/D"
-            #Guardamos los datos en el servidor
-            
-            humedad= Humedad.objects.create(
-                    muestra= muestra,
-                    fecha= fecha, 
-                    ensayo= ensayo,
-                    temperaturaAmbiente= temperaturaAmbiente,
-                    humedad= humedad,
-                    tDesecacion= tDesecacion,
-                    criterio= criterio,
-                    desviacion=desviacion,
-                    observacion= observacion,
-                    resultado= resultado
-            )
-            
+                    
             #Añadimos los equipos
             humedad.equipos.set(equipos)           
-            
-            
-
-            
-            ############################################################################################
-            #POSIBILIDAD DE ELIMINAR LOS ENSAYOS QUE HAYA DE HUM PARA DICHA MUESTRA ANTES DE GUADAR OTRO,
-            #SI NO, SE VAN A REPETIR LOS ENSAYOS
-            ############################################################################################
             return redirect ("inicio")
         else:
             print("no valido")
@@ -264,51 +296,55 @@ def humedad(request, muestra_id): #################################### Hay que c
             resultado1=0
             
             print(resultados)
-            if len(resultados) <= 3:
-                resultado1= resultados[0].resultado
-                resultado2= resultados[1].resultado
-                resultado3= resultados[2].resultado
-                resultado4= ""
-                resultado5= ""
-                resultado6= ""
-                resultado7= ""
-                resultado8= ""
-                resultado9= ""
-                resultado10= ""
+            if resultados.exists():
+                if len(resultados) <= 3:
+                    resultado1= resultados[0].resultado
+                    resultado2= resultados[1].resultado
+                    resultado3= resultados[2].resultado
+                    resultado4= ""
+                    resultado5= ""
+                    resultado6= ""
+                    resultado7= ""
+                    resultado8= ""
+                    resultado9= ""
+                    resultado10= ""
+                else:
+                    resultado1= resultados[0].resultado
+                    resultado2= resultados[1].resultado
+                    resultado3= resultados[2].resultado
+                    resultado4= resultados[0].resultado
+                    resultado5= resultados[1].resultado
+                    resultado6= resultados[2].resultado
+                    resultado7= resultados[0].resultado
+                    resultado8= resultados[1].resultado
+                    resultado9= resultados[2].resultado
+                    resultado10= resultados[2].resultado
+
+                form = HumedadForm(initial={
+                    'muestra': muestra,
+                    'fecha': fecha,
+                    'temperaturaAmbiente': temperaturaAmbiente,
+                    'humedad': humedad,
+                    'criterio':criterio,
+                    'tiempoEnsayo':tiempoEnsayo,
+                    'tDesecacion': tDesecacion,
+                    'desviacion': desviacion,
+                    'resultado1': resultado1,
+                    'resultado2': resultado2,
+                    'resultado3': resultado3,
+                    'resultado4': resultado4,
+                    'resultado5': resultado5,
+                    'resultado6': resultado6,
+                    'resultado7': resultado7,
+                    'resultado8': resultado8,
+                    'resultado9': resultado9,
+                    'resultado10': resultado10,
+                    })
             else:
-                resultado1= resultados[0].resultado
-                resultado2= resultados[1].resultado
-                resultado3= resultados[2].resultado
-                resultado4= resultados[0].resultado
-                resultado5= resultados[1].resultado
-                resultado6= resultados[2].resultado
-                resultado7= resultados[0].resultado
-                resultado8= resultados[1].resultado
-                resultado9= resultados[2].resultado
-                resultado10= resultados[2].resultado
-            
-            
-            form = HumedadForm(initial={
-                'muestra': muestra,
-                'fecha': fecha,
-                'temperaturaAmbiente': temperaturaAmbiente,
-                'humedad': humedad,
-                'criterio':criterio,
-                'tiempoEnsayo':tiempoEnsayo,
-                'tDesecacion': tDesecacion,
-                'desviacion': desviacion,
-                'resultado1': resultado1,
-                'resultado2': resultado2,
-                'resultado3': resultado3,
-                'resultado4': resultado4,
-                'resultado5': resultado5,
-                'resultado6': resultado6,
-                'resultado7': resultado7,
-                'resultado8': resultado8,
-                'resultado9': resultado9,
-                'resultado10': resultado10,
-                })
-            
+                form = HumedadForm(initial={
+                    'muestra': muestra,
+                    })
+                
             form.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
             
         else:
@@ -331,7 +367,7 @@ def granulometria(request, muestra_id):
     )
 
     if request.method == 'POST':
-        form= GranulometriaForm(request.POST)
+        form= GranulometriaForm(request.POST, request.FILES)
 
         if form.is_valid:
             #Recogemos los datos para guardarlos
@@ -346,8 +382,10 @@ def granulometria(request, muestra_id):
             d10= float(request.POST.get('d10'))
             d50= float(request.POST.get('d50'))
             d90= float(request.POST.get('d90'))
-            observacion= request.POST.get("observacion")
-
+            archivo=request.FILES.get("archivo")
+            print(request.POST)
+            print(request.FILES)
+            print(request.FILES.get("archivo"))
             #Comprobamos que no exista un ensayo de humedad previo
             granulometria_instancia= Granulometria.objects.filter(muestra= muestra)
             granulometria_instancia.delete()
@@ -363,7 +401,8 @@ def granulometria(request, muestra_id):
                 d50= d50,
                 d90= d90,
                 resultado= d50,
-                observacion=observacion
+                archivo= archivo,
+
             )        
 
             granulometria.equipos.set (equipos)

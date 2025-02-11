@@ -138,6 +138,7 @@ def verMuestra(request, muestra_id):
 
     #Sacamos las url
     url_ensayosMuestras= reverse('ensayosMuestrasSimple', kwargs={'muestra': muestra_id})
+    
 
     
     
@@ -149,4 +150,5 @@ def verMuestra(request, muestra_id):
         "ensayos_json":ensayos_json_str,
         "ensayos": ensayos,
         "url_ensayosMuestras": url_ensayosMuestras,
+        "usuarios": usuarios,
     })

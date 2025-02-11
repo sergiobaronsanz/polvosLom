@@ -74,7 +74,7 @@
                     {%if resultado.ensayo|lower != 'pmax'%}
                         <a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
                         {%if resultado.resultado|lower != "none" %}
-                        {% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" %}
+                          {% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" %}
                             {{resultado.get_resultado_display}}
                           {%else%}
                             {{resultado.resultado}} {{resultado.unidad}}
@@ -164,8 +164,14 @@
                         </button>
                       </div>
                       <div class="modal-body">
+                        <p> El mail se enviará a: </p>
+                        {%for usuario in usuarios%}
+                          <p> {{usuario.get_full_name}} a la dirección <p class="emails"> <u> <strong>{{usuario.email}}</strong></u> </p> </p>
+                        {%endfor%}
+                      </div>
+                      <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-primary" id= "saveChangesBtn" >Enviar</button>
+                        <button type="button" class="btn btn-primary" id= "sendMail" >Enviar</button>
                       </div>
 
                     </div>
@@ -188,6 +194,7 @@
 </script>
 
 <script src="{%static 'js/muestras/generarPdf.js'%}"></script> 
+<script src="{%static 'js/muestras/envioMail.js'%}"></script> 
 
 <script>
   console.log("bien")
