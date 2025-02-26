@@ -36,6 +36,11 @@
         {{formEmi.inductancia}}
       </div>
 
+      <div class= "col text-nowrap">
+        {{formEmi.presion.label}}
+        {{formEmi.presion}}
+      </div>
+
   </div>
 
 
@@ -72,6 +77,7 @@
                     <td>{{form.energia}}</td>
                     <td>{{form.retardo}}</td>
                     <td>{{form.resultadoPrueba}}</td>
+                    <td>{{form.numeroEnsayo}}</td>
                 </tr>
             {%endfor%}
         </tbody>
@@ -80,6 +86,13 @@
         <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
         <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
     </div>
+
+    <div class= "col-12 mt-3 mb-3 d-flex align-items-center justify-content-center">
+        <div class= "col-4 mt-3 mb-3">
+            {{formEmi.resultado.label}}
+            {{formEmi.resultado}}
+        </div>
+      </div>
 
     <div class= "col-12 mt-3 mb-3">
         {{formEmi.observacion.label}}
@@ -95,4 +108,5 @@
 {%block script%}  
     <script> ensayo= "emi" </script>
     <script src="{%static 'js/ensayos/general.js'%}"></script> 
+    <script src="{%static 'js/ensayos/emi.js'%}"></script> 
 {%endblock%}

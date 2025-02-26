@@ -297,7 +297,7 @@ class EMI (models.Model):
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
-    presion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Presión Ambiente", blank= True, null= True)
+    presion= models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Presión Ambiente", blank= True, null= True)
     inductancia= models.CharField(max_length=100, choices=selecionInductancia, verbose_name="Inductancia", blank= True, null= True)
     equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
     fecha= models.DateField(verbose_name="Fecha", blank= True, null= True)
@@ -324,10 +324,11 @@ class ResultadosEMI (models.Model):
 
     
     ensayo= models.ForeignKey("EMI", on_delete=models.CASCADE, verbose_name="Ensayo Emi")
-    concentracion= models.DecimalField(decimal_places=4, max_digits=5, verbose_name="Concentracion")
-    energia= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Energia")
-    retardo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Retardo")
+    concentracion= models.IntegerField(verbose_name="Concentracion")
+    energia= models.IntegerField(verbose_name="Energia")
+    retardo= models.IntegerField(verbose_name="Retardo")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
+    numeroEnsayo= models.IntegerField(verbose_name="Número ensayo", default=0)
     
     
     class Meta():
@@ -397,7 +398,7 @@ class ResultadosPmax (models.Model):
         verbose_name_plural="Resultados Pmaxs"
         
     def __str__(self):
-        return f"{self.ensayo} | Pmax: {self.pm}, Pex: {self.pex}, dP/dT: {self.dpdt} "
+        return f"{self.ensayo} | Pmax: {self.pm}, dP/dT: {self.dpdt} "
 
 
 
@@ -785,9 +786,9 @@ class ResultadosREC (models.Model):
 
 
     ensayo= models.ForeignKey("REC", on_delete=models.CASCADE, verbose_name="Ensayo REC")
-    tension= models.DecimalField(decimal_places=2, max_digits=5, verbose_name= "Resultado", blank=True, null= True)
+    tension= models.IntegerField(verbose_name= "Resultado", blank=True, null= True)
     tiempo= models.IntegerField(verbose_name="Tiempo")
-    resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name= "Resultado", blank=True, null= True)
+    resultado= models.DecimalField(decimal_places=2, max_digits=8, verbose_name= "Resultado", blank=True, null= True)
     
     class Meta():
         verbose_name="Resultado REC"

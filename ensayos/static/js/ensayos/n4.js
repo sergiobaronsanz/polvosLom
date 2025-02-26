@@ -31,11 +31,18 @@ const urlCompleta = window.location.href;
 
 if (urlCompleta.includes("nueva")) {
     console.log("holaaaaiu");
-    ensayo1.style.display="none";
-    ensayo2.style.display="none";
-    ensayo3.style.display="none";
-
-    tablaNumForm.value= 1;
+    if (celda2===null){
+        ensayo1.style.display="none";
+        tablaNumForm.value=2
+    }
+    if (celda3===null){
+        ensayo2.style.display="none";
+        tablaNumForm.value=3
+    }
+    if (celda4===null){
+        ensayo3.style.display="none";
+        tablaNumForm.value=4
+    }
 
     celda1.value= "2";
     temperatura1.value= "3";
@@ -110,7 +117,11 @@ resultado3.addEventListener("change", r =>{
         ensayo3.style.display="none";
         tablaNumForm.value= 3;
 
-        resultado3.value="0";
+        if(resultado3.value!="2"){
+            resultado3.value="0";
+        }
+
+        
         
     }
     

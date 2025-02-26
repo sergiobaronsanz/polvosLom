@@ -32,6 +32,21 @@ class PDFGenerator:
 
     def generate_TMIn_pdf(self):
         return self.plantilla.tmin()
+    
+    def generate_LIE_pdf(self):
+        return self.plantilla.lie()
+    
+    def generate_Pmax_pdf(self):
+        return self.plantilla.pmax()
+    
+    def generate_Emi_pdf(self):
+        return self.plantilla.emi()
+    
+    def generate_Rec_pdf(self):
+        return self.plantilla.rec()
+    
+    def generate_Clo_pdf(self):
+        return self.plantilla.clo()
 
 
     # Método principal para gestionar múltiples PDFs
@@ -42,6 +57,8 @@ class PDFGenerator:
                 nombre_archivo= (self.request[0]['muestra_nombre']) + "-" + ("Recepción.pdf")
                 pdf_files.append((nombre_archivo, pdf_bytes))
 
+                print(self.request)
+
         for request in self.request:
             if request['ensayo'] == 'Humedad':
                 pdf_bytes = self.generate_Humedad_pdf()
@@ -51,6 +68,16 @@ class PDFGenerator:
                 pdf_bytes = self.generate_TMIc_pdf()
             if request['ensayo'] == 'TMIn':
                 pdf_bytes = self.generate_TMIn_pdf()
+            if request['ensayo'] == 'LIE':
+                pdf_bytes = self.generate_LIE_pdf()
+            if request['ensayo'] == 'Pmax':
+                pdf_bytes = self.generate_Pmax_pdf()
+            if request['ensayo'] == 'EMI':
+                pdf_bytes = self.generate_Emi_pdf()
+            if request['ensayo'] == 'REC':
+                pdf_bytes = self.generate_Rec_pdf()
+            if request['ensayo'] == 'CLO':
+                pdf_bytes = self.generate_Clo_pdf()
 
         
             nombre_archivo= (request['muestra_nombre']) + "-" + (request['ensayo'] + ".pdf")

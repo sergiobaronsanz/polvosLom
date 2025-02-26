@@ -25,11 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Obtener el nombre del campo del input en la fila clonada
         var inputs = newRow.querySelectorAll('input');
         var select= newRow.querySelectorAll('select');
-        if (inputs.length > 0 & select.length > 0 ) {
-            //Sacamos el número 
-            var entradasFormulario= parseInt(formulario.value);
-            var siguienteNumero= entradasFormulario;
+        var entradasFormulario= parseInt(formulario.value);
+        var siguienteNumero= entradasFormulario;
             
+        if (select.length > 0 ){
             select.forEach(function(select){
                 // Obtén el atributo name del input
                 var name = select.getAttribute('name');
@@ -42,11 +41,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Establece el nuevo name en el input
                 select.setAttribute('name', nuevoName);
                 select.setAttribute('id', nuevoId);
+                select.value= "";
 
                 // Opcional: Imprimir para verificar
                 console.log('Nombre antiguo: ' + name + ', Nombre nuevo: ' + nuevoName);
             });
+        } else {
+            console.log("No se encontraron Selects en la fila clonada.");
+        }
 
+        if (inputs.length > 0 ){
             inputs.forEach(function(input) {
                 // Obtén el atributo name del input
                 var name = input.getAttribute('name');
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Opcional: Imprimir para verificar
                 console.log('Nombre antiguo: ' + name + ', Nombre nuevo: ' + nuevoName);
-            });
+            });            
 
             //Le decimos al formulario que va a ser uno más
             formulario.value= entradasFormulario + 1;

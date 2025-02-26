@@ -918,7 +918,7 @@ def lie (request, muestra_id):
 
 
 def emi (request, muestra_id):
-     #Sacamos el ensayo
+    #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMI")
   
     #Filtramos las muestras que pueden salir
@@ -927,6 +927,7 @@ def emi (request, muestra_id):
     )
 
     if request.method == 'POST':
+        print (request.POST)
         #Recibimos los formularios diferenciándolos con el prefijo
         formEmi= EmiForm(request.POST, prefix='emi')
         formEmiResultados= emiResultadosFormSet(request.POST, prefix='emiResultados')  
@@ -947,6 +948,9 @@ def emi (request, muestra_id):
             humedad= formEmi.cleaned_data['humedad']
             inductancia= formEmi.cleaned_data['inductancia']
             observacion=formEmi.cleaned_data['observacion']
+            presion= formEmi.cleaned_data['presion']
+            resultado= formEmi.cleaned_data['resultado']
+            
 
             emi= EMI.objects.create(
                 muestra=muestra,
@@ -955,7 +959,9 @@ def emi (request, muestra_id):
                 humedad= humedad,
                 inductancia= inductancia,
                 fecha= fecha,
+                presion= presion,
                 observacion= observacion,
+                
             )
             emi.equipos.set (equipos)
 
@@ -970,11 +976,13 @@ def emi (request, muestra_id):
             listaResultados= []  
 
             for form in formEmiResultados:
-                if form.cleaned_data:  # Para evitar formularios vacíos
+                if form.cleaned_data and form.cleaned_data["concentracion"] != None: 
+                    print("holaaa") # Para evitar formularios vacíos
                     concentracion = form.cleaned_data['concentracion']
                     energia= form.cleaned_data['energia']
                     retardo= form.cleaned_data['retardo']
                     resultadoPrueba= form.cleaned_data['resultadoPrueba']
+                    nEnsayo= form.cleaned_data['numeroEnsayo']
 
                     resultadosEmi=ResultadosEMI.objects.create(
                         ensayo= emi,
@@ -982,27 +990,27 @@ def emi (request, muestra_id):
                         energia= energia,
                         retardo= retardo,
                         resultado=resultadoPrueba,
+                        numeroEnsayo=nEnsayo,
                     )
 
                     if resultadoPrueba == "1":
-                        listaResultados.append(concentracion)
+                        listaResultados.append(energia)
                     
 
             #Guardamos en el modelo EMI el resultado del ensayo
             if listaResultados:
-                resultado= min(listaResultados)
+                resultado= resultado
                 
                 emi.resultado= resultado
                 emi.save()
             else:
-                resultado= ">1000"
+                resultado= "N/D"
                 emi.resultado= resultado
                 emi.save()
                 
                         
         else:
-            print (formEmi.errors)
-            formEmi.add_error(None, 'Error en el formulario, revisa los datos')
+            
             return render(request, 'ensayos/nuevosEnsayos/emi.html', {
                 'ensayo': ensayo,
                 'formEmi': formEmi,
@@ -1017,7 +1025,9 @@ def emi (request, muestra_id):
             temperaturaAmbiente= ensayo_EMI.temperaturaAmbiente
             humedad=ensayo_EMI.humedad
             inductancia= ensayo_EMI.inductancia
-            observacion= ensayo_EMI.observacion,
+            resultado= ensayo_EMI.resultado
+            presion= ensayo_EMI.presion
+            observacion= ensayo_EMI.observacion
             
             
             formEmi = EmiForm(prefix='emi', initial={
@@ -1026,6 +1036,8 @@ def emi (request, muestra_id):
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'inductancia': inductancia,
+                'resultado': resultado,
+                'presion': presion,
                 'observacion': observacion,
                 })
             
@@ -1038,8 +1050,9 @@ def emi (request, muestra_id):
                 initial_data.append({
                     'concentracion': resultado.concentracion,
                     'energia': resultado.energia,
-                    'retardo': resultado.resultado,
+                    'retardo': resultado.retardo,
                     'resultadoPrueba': resultado.resultado,
+                    'numeroEnsayo': resultado.numeroEnsayo,
                 })
             
             # Crear el formset con los datos iniciales
@@ -1290,13 +1303,13 @@ def clo (request, muestra_id):
                         resultado=resultadoPrueba,
                     )
 
-                    if resultadoPrueba == "1":
-                        listaResultados.append(concentracion)
+                    if resultadoPrueba == "2":
+                        listaResultados.append(oxigeno)
                     
 
             #Guardamos en el modelo CLO el resultado del ensayo
             if listaResultados:
-                valor_buscado = min(listaResultados)
+                valor_buscado = max(listaResultados)
 
                 clo.resultado= valor_buscado
                 clo.save()
@@ -1381,6 +1394,7 @@ def rec (request, muestra_id):
     )
 
     if request.method == 'POST':
+        print(request.POST)
         #Recibimos los formularios diferenciándolos con el prefijo
         formRec= RecForm(request.POST, prefix='rec')
         formRecResultados= recResultadosFormSet(request.POST, prefix='recResultados')  
@@ -1434,21 +1448,25 @@ def rec (request, muestra_id):
                         resultado=resultadoPrueba,
                     )
 
-                    listaResultados.append(resultado)
+                    listaResultados.append(resultadoPrueba)
                     
 
             #Guardamos en el modelo REC el resultado del ensayo
             if listaResultados:
-                valor_buscado = min(listaResultados)
+                rs = min(listaResultados)
+                hwl= 100
+                resultadoEnsayo= (0.001*float(rs)*hwl)*(10**6)
+                print(float(rs))
+                print(resultadoEnsayo)
 
-                rec.resultado= valor_buscado
+                rec.resultado= resultadoEnsayo
                 rec.save()
             else:
                 resultado= "N/D"
                 rec.resultado= resultado
                 rec.save()
 
-                        
+                    
         else:
             print (formRec.errors)
             formRec.add_error(None, 'Error en el formulario, revisa los datos')
