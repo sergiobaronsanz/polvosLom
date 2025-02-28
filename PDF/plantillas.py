@@ -1562,6 +1562,24 @@ class PlantillasEnsayo():
         ensayoForma= self.descripcion.get_formaEnsayo_display()
         fecha= ensayo.fecha
 
+        resultado1 = None
+        resultado2 = None
+        resultado3 = None
+        resultado4 = None
+
+        for resultado in resultados:  # Aquí debe haber un ":" al final de la línea
+                print(resultado.celda)
+                print(resultado.tConsigna)
+                if resultado.celda == "2" and resultado.tConsigna == "3":
+                        resultado1 = resultado
+                if resultado.celda == "1" and resultado.tConsigna == "3":
+                        resultado2 = resultado
+                if resultado.celda == "2" and resultado.tConsigna == "2":
+                        resultado3 = resultado
+                if resultado.celda == "2" and resultado.tConsigna == "1":
+                        resultado4 = resultado
+
+
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
         #TEXTO 
@@ -1629,47 +1647,274 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIMIENTO",
                 align= "J", fill = 0)
         
+        
+
+        #Primera prueba temperatura 140ºC a 100 mm
+        if resultado1:
+                self.pdf.set_font('Arial', '', 12) 
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Temperatura del ensayo: 140 ºC(+-2ºC)",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Celda 100 mm de lado",
+                        align= "C", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+                
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=180, h= 8,border= 0, txt= "¿Tras 24h, supera los 200ºC?",
+                        align= "L", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+
+                self.pdf.cell(w=5, h= 8, border= "L",
+                        align= "C", fill = 0)
+                
+                if int(resultado1.tMax) >= 200:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra supera los 200ºC, siendo la temperatura máxima alcanzada de {resultado1.tMax} ºC",
+                                align= "L", fill = 0)
+                else:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra no supera los 200ºC, siendo la temperatura máxima alcanzada de {resultado1.tMax} ºC",
+                                        align= "L", fill = 0)
+                                
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+
+                self.pdf.multi_cell(w=190, h= 8,border= "LBR",
+                        align= "J", fill = 0)
+        
+        #Segunda prueba temperatura 140ºC a 25 mm
+        if resultado2:
+                self.pdf.set_font('Arial', '', 12) 
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Temperatura del ensayo: 140 ºC (+-2ºC)",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Celda 25 mm de lado",
+                        align= "C", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+                
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=180, h= 8,border= 0, txt= "¿Tras 24h, supera los 200ºC?",
+                        align= "L", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=5, h= 8, border= "L",
+                        align= "C", fill = 0)
+                
+                if int(resultado2.tMax) >= 200:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra supera los 200ºC, siendo la temperatura máxima alcanzada de {resultado2.tMax} ºC",
+                                align= "L", fill = 0)
+                else:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra no supera los 200ºC, siendo la temperatura máxima alcanzada de {resultado2.tMax} ºC",
+                                        align= "L", fill = 0)
+                                
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)   
+
+                self.pdf.multi_cell(w=190, h= 8,border= "LBR",
+                        align= "J", fill = 0)             
+
+        #Tercera prueba temperatura 120ºC a 100 mm
+        if resultado3:
+                self.pdf.set_font('Arial', '', 12) 
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Temperatura del ensayo: 120 ºC(+-2ºC)",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Celda 100 mm de lado",
+                        align= "C", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+                
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=180, h= 8,border= 0, txt= "¿Tras 24h, supera los 180ºC?",
+                        align= "L", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+
+                self.pdf.cell(w=5, h= 8, border= "L",
+                        align= "C", fill = 0)
+                
+                if int(resultado3.tMax) >= 200:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra supera los 180ºC, siendo la temperatura máxima alcanzada de {resultado3.tMax} ºC",
+                                align= "L", fill = 0)
+                else:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra no supera los 180ºC, siendo la temperatura máxima alcanzada de {resultado3.tMax} ºC",
+                                        align= "L", fill = 0)
+                                
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+                
+                self.pdf.multi_cell(w=190, h= 8,border= "LBR",
+                        align= "J", fill = 0)
+
+        #Cuarta prueba temperatura 100ºC a 100 mm
+        if resultado4:
+                self.pdf.set_font('Arial', '', 12) 
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Temperatura del ensayo: 100 ºC(+-2ºC)",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=90, h= 8,border= 0, txt= "Celda 100 mm de lado",
+                        align= "C", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+                
+                self.pdf.cell(w=5, h= 8,border= "L",
+                        align= "C", fill = 0)
+                self.pdf.cell(w=180, h= 8,border= 0, txt= "¿Tras 24h, supera los 160ºC?",
+                        align= "L", fill = 0)
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+
+                self.pdf.cell(w=5, h= 8, border= "L",
+                        align= "C", fill = 0)
+                
+                if int(resultado4.tMax) >= 200:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra supera los 160ºC, siendo la temperatura máxima alcanzada de {resultado4.tMax} ºC",
+                                align= "L", fill = 0)
+                else:
+                        self.pdf.cell(w=180, h= 8,border= 0, txt= f"La muestra no supera los 160ºC, siendo la temperatura máxima alcanzada de {resultado4.tMax} ºC",
+                                        align= "L", fill = 0)
+                                
+                self.pdf.multi_cell(w=5, h= 8, border= "R",
+                        align= "C", fill = 0)
+                
+                self.pdf.multi_cell(w=190, h= 8,border= "LBR",
+                        align= "J", fill = 0)
+        
+
+                
+
+
+        #Celda con Resultados
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LTR", txt= "RESULTADOS",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR",
+                        align= "J", fill = 0)
+             
+        #Firma
+        self.pdf.set_font('Arial', '', 14) 
+        self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+                align= "J", fill = 0)
+        
+        # Agregar más contenido dinámico aquí...
+        return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+
+
+    def N2(self):
+        ensayo= N2.objects.get(muestra= self.muestra)
+        equipos=ensayo.equipos.all()
+        resultados= ResultadosN2.objects.filter(ensayo= ensayo).order_by("id")
+        ensayoForma= self.descripcion.get_formaEnsayo_display()
+        fecha= ensayo.fecha
+
+        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf.add_page()
+        #TEXTO 
+        self.pdf.set_font('Arial', '', 12)
+        #IMAGEN
+        image_path = os.path.join(self.rutaAbsoluta, 'Imagenes', 'LOGO.png')
+        self.pdf.image(image_path, x=8, y=8, w=30, h=30, link="http://www.lom.upm.es", type='PNG')
+        #Celdas Cabecera
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+                align= "L", fill = 0)
+
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
+                align= "C", fill = 0)
+
+        #Celda I/D muestra
+        self.pdf.multi_cell(w=0, h= 5,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=130, h= 8,border= 0, txt= f"Material: {self.descripcion.id_fabricante}",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=60, h= 8,border= 0, txt= f"Identificación: {self.identificacion}",
+                align= "J", fill = 0)
+
+        #Celda Tratamiento de muestras  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}",
+                align= "J", fill = 0)
+
+
+        #Celda Condiciones ambientales  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "CONDICIONES AMBIENTALES",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.cell(w=95, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaAmbiente} ºC",
+                align= "C", fill = 0)
+
+        self.pdf.multi_cell(w=95, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
+                align= "C", fill = 0)
+
+
+        #Celda Equipos
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+                align= "J", fill = 0)
+
+
+        #Celda Resultados
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIEMIENTO",
+                align= "J", fill = 0)
+        
+
+        self.pdf.multi_cell(w=190, h= 8,border= "LR",align= "L", 
+                txt="El ensayo se realiza con un volumen de 2 ml, lanzando la muestra desde una altura de 1 m, se observa se hay ignición en 5 min",
+                fill = 0)
+
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
         
         #Parámetros tabla
-        self.pdf.cell(w=5, h= 16,border= "L", fill = 0)
-        self.pdf.cell(w=50, h= 16,border= 1,align= "C", 
-                txt= "Concentración (g/m3)", fill = 0)
-        self.pdf.cell(w=25, h= 16,border= 1,align= "C", 
-                txt= "Peso (g)", fill = 0)
-        self.pdf.cell(w=20, h= 16,border= 1,align= "C", 
-                txt= "Pex (bar)", fill = 0)
-        self.pdf.cell(w=20, h= 16,border= 1, align= "C",
-                txt= "Pm (bar)", fill = 0)
-        self.pdf.cell(w=20, h= 16,border= 1, align= "C",
-                txt= "dP/dT", fill = 0)
-        self.pdf.cell(w=20, h= 16,border= 1, align= "C",
-                txt= "Oxígeno", fill = 0)
-        self.pdf.cell(w=25, h= 16,border= 1, align= "C",
-                txt= "Resultado", fill = 0)
+        self.pdf.cell(w=40, h= 16,border= "L", fill = 0)
+        self.pdf.cell(w=55, h= 16,border= 1,align= "C", 
+                txt= "Número prueba", fill = 0)
+        self.pdf.cell(w=55, h= 16,border= 1,align= "C", 
+                txt= "¿Ignición?", fill = 0)
 
-        self.pdf.multi_cell(w=5, h= 16,border= "R", fill = 0)
+        self.pdf.multi_cell(w=40, h= 16,border= "R", fill = 0)
 
         #Resultados tabla (Habría que incluir esto en una clase con las variables)
+        num=0
         for fila in resultados:
-            print(fila)
-        for fila in resultados:
-            self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-            self.pdf.cell(w=50, h= 8,border= 1,align= "C",txt= str(int(fila.concentracion)), 
+            num= num+1
+            self.pdf.cell(w=40, h= 8,border= "L", fill = 0)
+            self.pdf.cell(w=55, h= 8,border= 1,align= "C",txt= str(num), 
                     fill = 0)
-            self.pdf.cell(w=25, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
+            self.pdf.cell(w=55, h= 8,border= 1,align= "C",txt= fila.get_resultado_display(),
                     fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(float(fila.pex)),
-                    fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(float(fila.pm)),
-                    fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(float(fila.dpdt)),
-                    fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(int(fila.oxigeno)),
-                    fill = 0)
-            self.pdf.cell(w=25, h= 8,border= 1, align= "C",txt= fila.get_resultado_display(),
-                    fill = 0)
-            self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
+
+            self.pdf.multi_cell(w=40, h= 8,border= "R", fill = 0)
         
         #Si el ensayo se ha podido hacer
 
@@ -1681,29 +1926,13 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
                 align= "J", fill = 0)
         
-        if ensayo.resultado != "N/D":
-              concentracionNo= str(ensayo.resultado)
-              concentracionSi= str(int(ensayo.resultado) + 1)
-                
-        else:
-              concentracionNo= "N/D"
-              concentracionSi= "N/D"
-              
-
-        
-        self.pdf.set_font('Arial', '', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"El ensayo ha sido realizado con cerillas {ensayo.get_cerillas_display()}",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
                 align= "J", fill = 0)
         
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor concentración de 0xígeno a la que hay explosión: {concentracionSi}%",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR",
                 align= "J", fill = 0)
         
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mayor concentración de 0xígeno a la que no hay explosión: {concentracionNo}%",
-                align= "J", fill = 0)
         
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {concentracionNo} %",
-                align= "J", fill = 0)
         
              
         #Firma

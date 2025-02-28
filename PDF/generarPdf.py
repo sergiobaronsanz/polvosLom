@@ -47,6 +47,12 @@ class PDFGenerator:
     
     def generate_Clo_pdf(self):
         return self.plantilla.clo()
+    
+    def generate_n4_pdf(self):
+        return self.plantilla.N4()
+    
+    def generate_n2_pdf(self):
+        return self.plantilla.N2()
 
 
     # Método principal para gestionar múltiples PDFs
@@ -78,6 +84,10 @@ class PDFGenerator:
                 pdf_bytes = self.generate_Rec_pdf()
             if request['ensayo'] == 'CLO':
                 pdf_bytes = self.generate_Clo_pdf()
+            if request['ensayo'] == 'N4':
+                pdf_bytes = self.generate_n4_pdf()
+            if request['ensayo'] == 'N2':
+                pdf_bytes = self.generate_n2_pdf()
 
         
             nombre_archivo= (request['muestra_nombre']) + "-" + (request['ensayo'] + ".pdf")

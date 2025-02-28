@@ -615,11 +615,18 @@ class ResultadosN4 (models.Model):
         ("1", "25 mm"),
         ("2", "100 mm"),
     ]
+
+    temperaturasDisponibles=[
+        ("0", "Selecciona"),
+        ("1", "100"),
+        ("2", "120"),
+        ("3", "140"),
+    ]
     
     ensayo= models.ForeignKey("N4", on_delete=models.CASCADE, verbose_name="Ensayo N4")
     celda= models.CharField(max_length=300, choices=celdasDisponibles, verbose_name="Celdas")
-    tConsigna= models.IntegerField(verbose_name="Temperatura de la estufa")
-    tMax= models.DecimalField(decimal_places=4, max_digits=5, verbose_name="Temperatura máxima")
+    tConsigna= models.CharField(max_length=300,verbose_name="Temperatura de la estufa", choices=temperaturasDisponibles )
+    tMax= models.DecimalField(decimal_places=2, max_digits=6, verbose_name="Temperatura máxima")
     tiempo= models.IntegerField(verbose_name="Tiempo")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
     

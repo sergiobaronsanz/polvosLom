@@ -1287,41 +1287,40 @@ class N4ResultadosForm(forms.Form):
 
     temperaturasDisponibles=[
         ("0", "Selecciona"),
-        ("1", 100),
-        ("2", 120),
-        ("3", 140),
+        ("1", "100"),
+        ("2", "120"),
+        ("3", "140"),
     ]
-
     celda= forms.ChoiceField(
         choices=celdasDisponibles,
         label="Celda", 
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'readonly':'readonly','style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7;', 'required': 'required'}),
         required=False,
     )
 
     tConsigna= forms.ChoiceField(
         choices=temperaturasDisponibles,
         label="Temperatura", 
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'readonly':'readonly', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7;', 'required': 'required'}),
         required=False,
     )
 
     tMax= forms.DecimalField(
         label="Temperatura máxima", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
     tiempo= forms.IntegerField(
         label="Tiempo", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
     resultado= forms.ChoiceField(
         choices=resultadosPosibles,
         label="Resultado", 
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects', 'style': 'text-align: center;',  'required': 'required'}),
         required=False,
     )
     

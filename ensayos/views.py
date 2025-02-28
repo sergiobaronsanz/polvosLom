@@ -12,6 +12,8 @@ import os
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+from django.urls import reverse
+
 
 def generadorPdf(request):
     if request.method == 'POST':
@@ -1838,7 +1840,8 @@ def n4 (request, muestra_id):
         
         if formN4.is_valid() and formN4Resultados.is_valid():
 
-            muestra= get_object_or_404(Muestras, id= request.POST.get('n4-muestra'))
+            idMuestra= request.POST.get('n4-muestra')
+            muestra= get_object_or_404(Muestras, id= idMuestra)
             equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
             #Comprobamos que no exista un ensayo  previo
@@ -1919,6 +1922,10 @@ def n4 (request, muestra_id):
 
             n4.resultado= resultado
             n4.save()
+
+            print("Redirigimooooos")
+
+            return redirect(reverse('n4', args=[idMuestra]))
 
                         
         else:
