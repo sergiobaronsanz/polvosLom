@@ -74,7 +74,7 @@
                     {%if resultado.ensayo|lower != 'pmax'%}
                         <a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
                         {%if resultado.resultado|lower != "none" %}
-                          {% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" %}
+                          {% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" or resultado.ensayo|lower == "o1" %}
                             {{resultado.get_resultado_display}}
                           {%else%}
                             {{resultado.resultado}} {{resultado.unidad}}

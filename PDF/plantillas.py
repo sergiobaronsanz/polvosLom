@@ -241,8 +241,12 @@ class PlantillasEnsayo():
             self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
         
         try:
-            ti= int(ensayo.resultado)
-            ta= int(ensayo.resultado) - 10
+                if ensayo.funde != "1":
+                        ti = int(ensayo.resultado)
+                        ta = int(ensayo.resultado) - 10
+                else:
+                        ti = "Funde a " + str(ensayo.resultado)
+                        ta = "No funde a " + str(int(ensayo.resultado) - 10)  
         except:
             ti= ensayo.resultado
             ta= "N/D"
@@ -1890,7 +1894,7 @@ class PlantillasEnsayo():
         
 
         self.pdf.multi_cell(w=190, h= 8,border= "LR",align= "L", 
-                txt="El ensayo se realiza con un volumen de 2 ml, lanzando la muestra desde una altura de 1 m, se observa se hay ignición en 5 min",
+                txt="El ensayo se realiza con un volumen de 2 ml, lanzando la muestra desde una altura de 1 m, se observa sI hay ignición en 5 min.",
                 fill = 0)
 
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
@@ -1917,6 +1921,276 @@ class PlantillasEnsayo():
             self.pdf.multi_cell(w=40, h= 8,border= "R", fill = 0)
         
         #Si el ensayo se ha podido hacer
+
+        self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
+
+        #Celda con Resultados
+        self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR",
+                align= "J", fill = 0)
+        
+        
+        
+             
+        #Firma
+        self.pdf.set_font('Arial', '', 14) 
+        self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+                align= "J", fill = 0)
+        
+        # Agregar más contenido dinámico aquí...
+        return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+    
+    
+    def N1(self):
+        ensayo= N1.objects.get(muestra= self.muestra)
+        equipos=ensayo.equipos.all()
+        resultados= ResultadosN1.objects.filter(ensayo= ensayo).order_by("id")
+        ensayoForma= self.descripcion.get_formaEnsayo_display()
+        fecha= ensayo.fecha
+
+        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf.add_page()
+        #TEXTO 
+        self.pdf.set_font('Arial', '', 12)
+        #IMAGEN
+        image_path = os.path.join(self.rutaAbsoluta, 'Imagenes', 'LOGO.png')
+        self.pdf.image(image_path, x=8, y=8, w=30, h=30, link="http://www.lom.upm.es", type='PNG')
+        #Celdas Cabecera
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+                align= "L", fill = 0)
+
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
+                align= "C", fill = 0)
+
+        #Celda I/D muestra
+        self.pdf.multi_cell(w=0, h= 5,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=130, h= 8,border= 0, txt= f"Material: {self.descripcion.id_fabricante}",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=60, h= 8,border= 0, txt= f"Identificación: {self.identificacion}",
+                align= "J", fill = 0)
+
+        #Celda Tratamiento de muestras  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}",
+                align= "J", fill = 0)
+
+
+        #Celda Condiciones ambientales  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "CONDICIONES AMBIENTALES",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.cell(w=95, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaAmbiente} ºC",
+                align= "C", fill = 0)
+
+        self.pdf.multi_cell(w=95, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
+                align= "C", fill = 0)
+
+
+        #Celda Equipos
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+                align= "J", fill = 0)
+
+
+        #Celda Resultados
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIEMIENTO",
+                align= "J", fill = 0)
+        
+        self.pdf.set_font('Arial', '', 12) 
+        preseleccion= None
+        if ensayo.pruebaPreseleccion== "1":
+              preseleccion= "Si, se realiza prueba de velocidad"
+        else:
+              preseleccion= "No, la muestra no se clasifica"
+
+        if (ensayo.tipoPolvo == "1"): #Polvo no metálico
+                self.pdf.multi_cell(w=190, h= 8,border= "LR",align= "L", 
+                        txt=f"El polvo es de tipo no metálico, se le aplica una llama durante 2 min, ¿El tiempo de propagación de la llama a lo largo de los 200mm del reguero es <2min? {preseleccion}",
+                        fill = 0
+                )
+
+                ancho1= 30
+                ancho2= 40
+        else:
+                self.pdf.multi_cell(w=190, h= 8,border= "LR",align= "L", 
+                        txt=f"El polvo es de tipo metálico, se le aplica una llama durante 5 min, ¿El tiempo de propagación de la llama a lo largo de los 200mm del reguero es <20min? {preseleccion}",
+                        fill = 0
+                )
+
+                ancho1= 35
+                ancho2= 60
+
+        self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
+        if resultados:
+                self.pdf.set_font('Arial', 'B', 12) 
+                self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "Prueba velocidad de combustión",
+                        align= "C", fill = 0)
+                self.pdf.set_font('Arial', '', 12)
+                #Parámetros tabla
+                self.pdf.cell(w=ancho1, h= 16,border= "L", fill = 0)
+                self.pdf.cell(w=ancho2, h= 16,border= 1,align= "C", 
+                        txt= "Número prueba", fill = 0)
+                self.pdf.cell(w=ancho2, h= 16,border= 1,align= "C", 
+                        txt= "Tiempo(s)", fill = 0)
+                if (ensayo.tipoPolvo == "1"):
+                        self.pdf.cell(w=50, h= 16,border= 1,align= "C", 
+                                txt= "¿Rebasa zona húmeda?", fill = 0)
+
+                self.pdf.multi_cell(w=ancho1, h= 16,border= "R", fill = 0)
+
+                #Resultados tabla (Habría que incluir esto en una clase con las variables)
+                num=0
+                for fila in resultados:
+                        if fila.zonaHumeda:
+                                resultadoZonaHumeda= fila.get_zonaHumeda_display()
+                        else:
+                                resultadoZonaHumeda= "-"
+                        num= num+1
+                        self.pdf.cell(w=ancho1, h= 8,border= "L", fill = 0)
+                        self.pdf.cell(w=ancho2, h= 8,border= 1,align= "C",txt= str(num), 
+                                fill = 0)
+                        self.pdf.cell(w=ancho2, h= 8,border= 1,align= "C",txt= str(fila.tiempo),
+                                fill = 0)
+                        if (ensayo.tipoPolvo == "1"):
+                                self.pdf.cell(w=50, h= 8,border= 1,align= "C",txt= resultadoZonaHumeda,
+                                        fill = 0)
+
+                        self.pdf.multi_cell(w=ancho1, h= 8,border= "R", fill = 0)
+        
+        #Si el ensayo se ha podido hacer
+
+        self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
+
+        #Celda con Resultados
+        self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR",
+                align= "J", fill = 0)
+        
+        
+        
+             
+        #Firma
+        self.pdf.set_font('Arial', '', 14) 
+        self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+                align= "J", fill = 0)
+        
+        # Agregar más contenido dinámico aquí...
+        return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+    
+
+    def O1(self):
+        ensayo= O1.objects.get(muestra= self.muestra)
+        equipos=ensayo.equipos.all()
+        resultados= ResultadosO1.objects.filter(ensayo= ensayo).order_by("id")
+        ensayoForma= self.descripcion.get_formaEnsayo_display()
+        fecha= ensayo.fecha
+
+        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf.add_page()
+        #TEXTO 
+        self.pdf.set_font('Arial', '', 12)
+        #IMAGEN
+        image_path = os.path.join(self.rutaAbsoluta, 'Imagenes', 'LOGO.png')
+        self.pdf.image(image_path, x=8, y=8, w=30, h=30, link="http://www.lom.upm.es", type='PNG')
+        #Celdas Cabecera
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+                align= "L", fill = 0)
+
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
+                align= "C", fill = 0)
+
+        #Celda I/D muestra
+        self.pdf.multi_cell(w=0, h= 5,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=130, h= 8,border= 0, txt= f"Material: {self.descripcion.id_fabricante}",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=60, h= 8,border= 0, txt= f"Identificación: {self.identificacion}",
+                align= "J", fill = 0)
+
+        #Celda Tratamiento de muestras  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}",
+                align= "J", fill = 0)
+
+
+        #Celda Condiciones ambientales  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "CONDICIONES AMBIENTALES",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.cell(w=95, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaAmbiente} ºC",
+                align= "C", fill = 0)
+
+        self.pdf.multi_cell(w=95, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
+                align= "C", fill = 0)
+
+
+        #Celda Equipos
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+                align= "J", fill = 0)
+
+
+        #Celda Resultados
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIMIENTO",
+                align= "J", fill = 0)
+        
+        self.pdf.set_font('Arial', '', 12) 
+        
 
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
 

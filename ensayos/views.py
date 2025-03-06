@@ -186,25 +186,26 @@ def humedad(request, muestra_id): #################################### Hay que c
             muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
             equipos= get_list_or_404(Equipos, ensayos=ensayo)            
 
-            #Agregamos los campos
-            fecha= request.POST.get('fecha')
-            temperaturaAmbiente= float(request.POST.get('temperaturaAmbiente'))
-            humedad= float(request.POST.get('humedad'))
-            criterio= float(request.POST.get('criterio'))
-            tiempoEnsayo= request.POST.get('tiempoEnsayo')
-            tDesecacion= float(request.POST.get('tDesecacion'))
-            desviacion= float(request.POST.get('desviacion'))
-            resultado1= request.POST.get('resultado1')
-            resultado2= request.POST.get('resultado2')
-            resultado3= request.POST.get('resultado3')
-            resultado4= request.POST.get('resultado4')
-            resultado5= request.POST.get('resultado5')
-            resultado6= request.POST.get('resultado6')
-            resultado7= request.POST.get('resultado7')
-            resultado8= request.POST.get('resultado8')
-            resultado9= request.POST.get('resultado9')
-            resultado10= request.POST.get('resultado10')
-            observacion= request.POST.get("observacion")
+            if form.cleaned_data:
+                #Agregamos los campos
+                fecha= form.cleaned_data['fecha']
+                temperaturaAmbiente= form.cleaned_data['temperaturaAmbiente']
+                humedad= form.cleaned_data['humedad']
+                criterio= form.cleaned_data['criterio']
+                tiempoEnsayo= form.cleaned_data['tiempoEnsayo']
+                tDesecacion= form.cleaned_data['tDesecacion']
+                desviacion= form.cleaned_data['desviacion']
+                resultado1= form.cleaned_data['resultado1'].replace(",", ".")
+                resultado2= form.cleaned_data['resultado2'].replace(",", ".")
+                resultado3= form.cleaned_data['resultado3'].replace(",", ".")
+                resultado4= form.cleaned_data['resultado4'].replace(",", ".")
+                resultado5= form.cleaned_data['resultado5'].replace(",", ".")
+                resultado6= form.cleaned_data['resultado6'].replace(",", ".")
+                resultado7= form.cleaned_data['resultado7'].replace(",", ".")
+                resultado8= form.cleaned_data['resultado8'].replace(",", ".")
+                resultado9= form.cleaned_data['resultado9'].replace(",", ".")
+                resultado10= form.cleaned_data['resultado10'].replace(",", ".")
+                observacion= form.cleaned_data['observacion']
             
             
             #Comprobamos que no exista un ensayo de humedad previo
@@ -1536,6 +1537,7 @@ def n1 (request, muestra_id):
     )
 
     if request.method == 'POST':
+        print(request.POST)
         #N1ibimos los formularios diferenciándolos con el prefijo
         formN1= N1Form(request.POST, prefix='n1')
         formN1Resultados= n1ResultadosFormSet(request.POST, prefix='n1Resultados')  
@@ -1582,7 +1584,7 @@ def n1 (request, muestra_id):
             listaRebasaHumedad= []
 
             for form in formN1Resultados:
-                if form.cleaned_data:  # Para evitar formularios vacíos
+                if form.cleaned_data and form.cleaned_data['tiempo'] :  # Para evitar formularios vacíos
                     tiempo= form.cleaned_data['tiempo']
                     zonaHumeda= form.cleaned_data['zonaHumeda']
 
@@ -2048,7 +2050,8 @@ def o1 (request, muestra_id):
 
             
             #Guardamos los resultados en la tabla de resultados O1 
-            listaResultados= []  
+            listaResultados= [] 
+            listaResultadosReferencia=[] 
             listaRebasaHumedad= []
             nEnsayo= 1
 
@@ -2067,25 +2070,228 @@ def o1 (request, muestra_id):
                     if nEnsayo <= 3:
                         nEnsayo= nEnsayo + 1
                         ensayoReferencia= True
+                        listaResultadosReferencia.append({"proporcion": proporcion, "resultado": resultado}) 
                     else:
                         ensayoReferencia= False
+                        listaResultados.append(resultado)
 
                     resultadosO1=ResultadosO1.objects.create(
                         ensayo= o1,
                         ensayoReferencia= ensayoReferencia,
+                        proporcion= proporcion,
                         tiempo1= tiempo1,
                         tiempo2= tiempo2,
                         tiempo3= tiempo3,
                         tiempo4= tiempo4,
                         tiempo5= tiempo5,
                         resultado= resultado,
-                    )                    
+                    )
+              
+
+            #Resultado ensayo
+            print(listaResultados) 
+            print(listaResultadosReferencia) 
+            
+            #Sacamos valor de referencia con el que comparar los resultados
+            valorReferencia= min(listaResultados)
+            tiempo37= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "1"]
+            tiempo64= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "2"]
+            tiempo46= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "3"]
+
+            print(tiempo37)
+            resultadoEnsayo= "1"
+
+            if valorReferencia <= tiempo37[0]:
+                resultadoEnsayo= "2"
+            if valorReferencia <= tiempo64[0]:
+                resultadoEnsayo= "3"
+            if valorReferencia <= tiempo46[0]:
+                resultadoEnsayo= "4"
 
             #Guardamos en el modelo O1 el resultado del ensayo
-                o1.resultado= resultadosO1.resultado
-                o1.save()
+            o1.resultado= resultadoEnsayo
+            o1.save()
 
-                        
+
+
+        else:
+            print (formO1Resultados.errors)
+            formO1.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/o1.html', {
+                'ensayo': ensayo,
+                'formO1': formO1,
+                'formO1Resultados': formO1Resultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_O1= O1.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_O1.fecha)
+            temperaturaAmbiente= ensayo_O1.temperaturaAmbiente
+            humedad=ensayo_O1.humedad
+            observacion= ensayo_O1.observacion
+            
+            
+            formO1 = O1Form(prefix='o1', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'observacion': observacion,
+                })
+            
+            formO1.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosO1.objects.filter(ensayo=ensayo_O1).order_by("id")
+
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'proporcion': resultado.proporcion,
+                    'tiempo1': resultado.tiempo1,
+                    'tiempo2': resultado.tiempo2,
+                    'tiempo3': resultado.tiempo3,
+                    'tiempo4': resultado.tiempo4,
+                    'tiempo5': resultado.tiempo5,
+                    "resultado": resultado.resultado
+                })
+            
+            # Crear el formset con los datos iniciales
+            O1ResultadosFormSet = formset_factory(O1ResultadosForm, extra=0)
+            if initial_data:
+                formO1Resultados = O1ResultadosFormSet(prefix='o1Resultados',initial=initial_data)
+            else:
+                formO1Resultados= o1ResultadosFormSet(prefix='o1Resultados')
+
+        
+        else:
+            formO1= O1Form(prefix='o1')
+            formO1.fields['muestra'].queryset = muestras_queryset
+
+            formO1Resultados=o1ResultadosFormSet(prefix='o1Resultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/o1.html', {
+        'ensayo': ensayo,
+        'formO1': formO1,
+        'formO1Resultados': formO1Resultados,
+    })
+
+
+def tratamiento (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "Tratamiento")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(o1__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="tratamiento") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        #O1ibimos los formularios diferenciándolos con el prefijo
+        formO1= O1Form(request.POST, prefix='o1') 
+        
+        if formO1.is_valid() and formO1Resultados.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('o1-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            o1_instancia= O1.objects.filter(muestra= muestra)
+            o1_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formO1.cleaned_data['fecha']
+            temperaturaAmbiente= formO1.cleaned_data['temperaturaAmbiente']
+            humedad= formO1.cleaned_data['humedad']
+            observacion=formO1.cleaned_data['observacion']
+
+            o1= O1.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                
+                fecha= fecha,
+                observacion= observacion,
+            )
+            o1.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosO1.objects.filter(ensayo= o1)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados O1 
+            listaResultados= [] 
+            listaResultadosReferencia=[] 
+            listaRebasaHumedad= []
+            nEnsayo= 1
+
+            for form in formO1Resultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    
+                    proporcion= form.cleaned_data['proporcion']
+                    tiempo1= form.cleaned_data['tiempo1']
+                    tiempo2= form.cleaned_data['tiempo2']
+                    tiempo3= form.cleaned_data['tiempo3']
+                    tiempo4= form.cleaned_data['tiempo4']
+                    tiempo5= form.cleaned_data['tiempo5']
+                    resultado= form.cleaned_data['resultado']
+
+                    #Los tres primeros son ensayos de referencia, los otros dos son los ensayos normales
+                    if nEnsayo <= 3:
+                        nEnsayo= nEnsayo + 1
+                        ensayoReferencia= True
+                        listaResultadosReferencia.append({"proporcion": proporcion, "resultado": resultado}) 
+                    else:
+                        ensayoReferencia= False
+                        listaResultados.append(resultado)
+
+                    resultadosO1=ResultadosO1.objects.create(
+                        ensayo= o1,
+                        ensayoReferencia= ensayoReferencia,
+                        proporcion= proporcion,
+                        tiempo1= tiempo1,
+                        tiempo2= tiempo2,
+                        tiempo3= tiempo3,
+                        tiempo4= tiempo4,
+                        tiempo5= tiempo5,
+                        resultado= resultado,
+                    )
+              
+
+            #Resultado ensayo
+            print(listaResultados) 
+            print(listaResultadosReferencia) 
+            
+            #Sacamos valor de referencia con el que comparar los resultados
+            valorReferencia= min(listaResultados)
+            tiempo37= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "1"]
+            tiempo64= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "2"]
+            tiempo46= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "3"]
+
+            print(tiempo37)
+            resultadoEnsayo= "1"
+
+            if valorReferencia <= tiempo37[0]:
+                resultadoEnsayo= "2"
+            if valorReferencia <= tiempo64[0]:
+                resultadoEnsayo= "3"
+            if valorReferencia <= tiempo46[0]:
+                resultadoEnsayo= "4"
+
+            #Guardamos en el modelo O1 el resultado del ensayo
+            o1.resultado= resultadoEnsayo
+            o1.save()
+
+
+
         else:
             print (formO1Resultados.errors)
             formO1.add_error(None, 'Error en el formulario, revisa los datos')

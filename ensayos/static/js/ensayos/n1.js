@@ -4,7 +4,7 @@ console.log("hola luis");
 preseleccion=document.getElementById("id_n1-pruebaPreseleccion");
 tipoPolvo= document.getElementById("id_n1-tipoPolvo");
     
-inputsTabla= document.querySelectorAll("#tabla input");
+inputsTabla= document.querySelectorAll("#tabla input:not([name='n1Resultados-TOTAL_FORMS']):not([name='n1Resultados-INITIAL_FORMS'])");
 selectsTabla= document.querySelectorAll("#tabla select");
 
 //Activamos o desactivamos la tabla según el ensayo de preselección

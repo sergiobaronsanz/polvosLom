@@ -157,7 +157,7 @@ class ResultadosTMIc (models.Model):
         ("1", "SI"),
         ("2", "NO"),
         ("3", "FUNDE"),
-        ("4 FUNDE", "NO FUNDE"),
+        ("4", "NO FUNDE"),
     ]
     
     ignicionesPosibles=[
@@ -167,12 +167,12 @@ class ResultadosTMIc (models.Model):
     ]
     
     ensayo= models.ForeignKey("TMIc", on_delete=models.CASCADE, verbose_name="Ensayo TMIc")
-    tPlato= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura plato")
-    tMaxima= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura máxima")
-    resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
-    tipoIgnicion= models.CharField(max_length=300, choices=ignicionesPosibles, verbose_name="Tipo ignición")
-    tiempoPrueba= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo ensayo")
-    tiempoTmax= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo a temperatura máxima")
+    tPlato= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura plato",null= True, blank= True)
+    tMaxima= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura máxima", null= True, blank= True)
+    resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado", null= True, blank= True)
+    tipoIgnicion= models.CharField(max_length=300, choices=ignicionesPosibles, verbose_name="Tipo ignición", null= True, blank= True)
+    tiempoPrueba= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo ensayo", null= True, blank= True)
+    tiempoTmax= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo a temperatura máxima", null= True, blank= True)
 
     
     class Meta():
@@ -805,3 +805,39 @@ class ResultadosREC (models.Model):
         return f"{self.ensayo} | Proporciones: {self.Tension},Tiempo: {self.tiempo}, Resultado: {self.resultado}" 
    
 
+#TRATAMIENTO
+class Tratamiento (models.Model): 
+    
+    preseleccion= [
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+    
+    
+    muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
+    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE,  verbose_name="Ensayo")
+    
+    secado= models.CharField(verbose_name="Secado", choices=preseleccion, max_length=500)
+    equipoSecado= models.ManyToManyField("Equipos",  verbose_name="Equipos de secado", related_name="tratamientos_equipoSecado",)
+    fechaSecadoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
+    fechaSecadoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
+
+    molido= models.CharField(verbose_name="Molido", choices=preseleccion, max_length=500)
+    equipoMolido= models.ManyToManyField("Equipos",  verbose_name="Equipos de molienda",related_name="tratamientos_equipoMolido",)
+    fechaMolidoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
+    fechaMolidoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
+
+    tamizado= models.CharField(verbose_name="Tamizado", choices=preseleccion, max_length=500)
+    equipoTamizado= models.ManyToManyField("Equipos",  verbose_name="Equipos de tamizado",related_name="tratamientos_equipoTamizado",)
+    fechaTamizadoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
+    fechaTamizadoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
+
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
+    
+    
+    class Meta():
+        verbose_name="Tratamiento"
+        verbose_name_plural="Tratamientos"
+        
+    def __str__(self):
+        return f"{self.muestra} tratada" 

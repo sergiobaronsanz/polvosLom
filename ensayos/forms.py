@@ -1,5 +1,6 @@
 from django import forms
-from ensayos.models import Humedad, Granulometria
+from ensayos.models import Humedad, Granulometria 
+from muestras.models import ListaEnsayos
 from muestras.models import Muestras
 from .models import Equipos
 from django.db.models import Q
@@ -1438,5 +1439,110 @@ class O1ResultadosForm(forms.Form):
         
     )
     
-
 o1ResultadosFormSet= formset_factory(O1ResultadosForm, extra=5)
+
+
+#Tratamiento
+class tratamientoForm(forms.Form):
+
+    preseleccion= [
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+
+    muestras= Muestras.objects.all()
+
+
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "Tratamiento")
+    equipos= Equipos.objects.filter(ensayos= ensayo)
+
+    
+    muestra = forms.ModelChoiceField(
+        queryset=muestras,
+        label="Muestra",
+        empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    #Secado
+    secado = forms.ChoiceField(
+        choices=preseleccion,
+        label="Secado",
+         # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+
+    equipoSecado = forms.ChoiceField(
+        choices=equipos,
+        label="Equipo",
+         # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+
+    fechaSecadoInicio= forms.DateField(
+        label="Fecha inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaSecadoFin= forms.DateField(
+        label="Fecha fin",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    #Molienda
+    molido = forms.ChoiceField(
+        choices=preseleccion,
+        label="Molido",
+         # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+
+    equipoMolienda = forms.ChoiceField(
+        choices=equipos,
+        label="Equipo",
+         # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+
+    fechaMoliendaInicio= forms.DateField(
+        label="Fecha inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaMoliendaFin= forms.DateField(
+        label="Fecha fin",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    #Tamizado
+    tamizado = forms.ChoiceField(
+        choices=preseleccion,
+        label="Tamizado",
+         # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+
+    equipoTamizado = forms.ChoiceField(
+        choices=equipos,
+        label="Equipo",
+         # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+
+    fechaTamizadoInicio= forms.DateField(
+        label="Fecha inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaTamizadoFin= forms.DateField(
+        label="Fecha fin",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    #Observaciones
+
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
