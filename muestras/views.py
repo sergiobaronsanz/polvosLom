@@ -61,6 +61,7 @@ def verMuestra(request, muestra_id):
     listaEnsayos= muestra.listaEnsayos.all()
     resultados= []
 
+    #Para que aparezca el ensayo deberemos crear el ensayo (instanciandolo) en signals.py en Expedientes
     if listaEnsayos.filter(ensayo= "humedad").exists():
         resultado= Humedad.objects.filter(muestra= muestra)
         resultados.extend(resultado)
@@ -109,7 +110,12 @@ def verMuestra(request, muestra_id):
         resultado= O1.objects.filter(muestra= muestra)
         print("O1")
         resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo= "tratamiento").exists():
+        resultado= Tratamiento.objects.filter(muestra= muestra)
+        print("tratamiento")
+        resultados.extend(resultado)
     
+    print(resultados)
         
     #print (resultados)
     #pasamos los datos a json para poder mandarlos al script de js
@@ -119,11 +125,16 @@ def verMuestra(request, muestra_id):
             ensayo= resultado.ensayo
             muestra_id= muestra.id
             muestra_nombre= muestra.empresa.abreviatura + "-" + str(muestra.id_muestra)
-
-            resultado_valor= resultado.resultado
-            if resultado_valor:
-                ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
-                ensayos.append(ensayo_dict)
+            if resultado.ensayo.ensayo == "Tratamiento":
+                if resultado.secado == "2" or resultado.molido=="2" or resultado.tamizado== "2": #Si hay algun tratamiento agregamos hoja tratamiento
+                    ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
+                    ensayos.append(ensayo_dict)
+            #Si hay resultado agregamos las hojas 
+            else:
+                resultado_valor= resultado.resultado
+                if resultado_valor:
+                    ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
+                    ensayos.append(ensayo_dict)
         else:
             if resultado.pmax:
                 ensayo= resultado.ensayo

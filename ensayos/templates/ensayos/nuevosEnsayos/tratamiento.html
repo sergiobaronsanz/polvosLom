@@ -1,0 +1,120 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} Tratamiento de muestras {%endblock%}
+
+
+
+{%block condiciones%} 
+
+  <div class= "mt-3 mb-3 row d-flex flex-column align-items-start">
+		<div class= "col-12">
+			{{formTratamiento.muestra.label}}
+			{{formTratamiento.muestra}}
+		</div>
+  </div>
+
+<!--Secado-->
+	<h4 class= "text-start mt-5"> Secado </h4>
+	<div class= "row ">
+		<div class= "col">
+			{{formTratamiento.secado.label}}
+			{{formTratamiento.secado}}
+		</div>
+
+		<div class= "col">
+			{{formTratamiento.equipoSecado.label}}
+			{{formTratamiento.equipoSecado}}
+		</div>
+	</div>
+
+	<div class= "row ">
+		<div class= "col">
+			{{formTratamiento.tiempo.label}}
+			{{formTratamiento.tiempo}}
+		</div>
+
+		<div class= "col">
+			{{formTratamiento.temperatura.label}}
+			{{formTratamiento.temperatura}}
+		</div>
+	</div>
+
+	<div class= "row ">
+		<div class= "col">
+			{{formTratamiento.fechaSecadoInicio.label}}
+			{{formTratamiento.fechaSecadoInicio}}
+		</div>
+
+		<div class= "col">
+			{{formTratamiento.fechaSecadoFin.label}}
+			{{formTratamiento.fechaSecadoFin}}
+		</div>
+	</div>
+
+
+<!--molido-->
+	<h4 class= "text-start mt-5"> Molienda </h4>
+	<div class= "row ">
+		<div class= "col">
+			{{formTratamiento.molido.label}}
+			{{formTratamiento.molido}}
+		</div>
+
+		<div class= "col">
+			{{formTratamiento.equipoMolido.label}}
+			{{formTratamiento.equipoMolido}}
+		</div>
+	</div>
+
+
+	<div class= "row ">
+		<div class= "col">
+			{{formTratamiento.fechaMolidoInicio.label}}
+			{{formTratamiento.fechaMolidoInicio}}
+		</div>
+
+		<div class= "col">
+			{{formTratamiento.fechaMolidoFin.label}}
+			{{formTratamiento.fechaMolidoFin}}
+		</div>
+	</div>
+
+<!--tamizado-->
+	<h4 class= "text-start mt-5"> Tamizado </h4>
+	<div class= "row ">
+		<div class= "col">
+			{{formTratamiento.tamizado.label}}
+			{{formTratamiento.tamizado}}
+		</div>
+
+		<div class= "col">
+			{{formTratamiento.equipoTamizado.label}}
+			{{formTratamiento.equipoTamizado}}
+		</div>
+
+	</div>
+
+
+	<div class= "row ">
+		<div class= "col">
+			{{formTratamiento.fechaTamizadoInicio.label}}
+			{{formTratamiento.fechaTamizadoInicio}}
+		</div>
+
+		<div class= "col">
+			{{formTratamiento.fechaTamizadoFin.label}}
+			{{formTratamiento.fechaTamizadoFin}}
+		</div>
+	</div>
+
+
+
+
+{%endblock%}
+
+
+{%block script%}  
+    <script> ensayo= "tratamiento" </script>
+    <script src="{%static 'js/ensayos/tratamiento.js'%}"></script> 
+{%endblock%}

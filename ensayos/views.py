@@ -1076,6 +1076,33 @@ def emi (request, muestra_id):
     })
 
 
+def gestorArchivoPmax(request):
+    if request.method == 'POST':
+        archivo = request.FILES['file']
+
+        if archivo:
+            contenido = archivo.read().decode('utf-8')
+            filas = contenido.strip().split('\n')
+            
+            resultado=[]
+            #Quitamos la primera fila
+            for fila in filas[1:]:
+                filaLimpia = fila.strip(';').split(';')
+                serie=[]
+                for valor in filaLimpia:
+                    if valor.strip():
+                        valorLimpio=valor.strip()
+                        serie.append(valorLimpio)
+                
+                resultado.append(serie)
+
+            print(resultado)
+            
+                
+        else:
+            return JsonResponse ({"mensaje": "Archivo no recibido"})
+    return JsonResponse ({"mensaje": "Todo ok"})
+
 def pmax (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "Pmax")
@@ -1879,7 +1906,6 @@ def n4 (request, muestra_id):
 
             for form in formN4Resultados:
                 if form.cleaned_data:  # Para evitar formularios vacíos
-                    print(form.cleaned_data['tMax'])
                     celda= form.cleaned_data['celda']
                     tConsigna= form.cleaned_data['tConsigna']
                     tMax= form.cleaned_data['tMax']
@@ -2186,173 +2212,134 @@ def tratamiento (request, muestra_id):
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(o1__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="tratamiento") & ~Q(estado=1)
+        Q(tratamiento__secado__isnull=True) & Q(tratamiento__molido__isnull=True) & Q(tratamiento__tamizado__isnull=True) & Q(listaEnsayos__ensayo__icontains="tratamiento") & ~Q(estado=1)
     )
 
     if request.method == 'POST':
-        #O1ibimos los formularios diferenciándolos con el prefijo
-        formO1= O1Form(request.POST, prefix='o1') 
+        #Creamos los formularios diferenciándolos con el prefijo
+        formTratamiento= tratamientoForm(request.POST, prefix='tratamiento') 
         
-        if formO1.is_valid() and formO1Resultados.is_valid():
-
-            muestra= get_object_or_404(Muestras, id= request.POST.get('o1-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+        if formTratamiento.is_valid():
+            muestra= get_object_or_404(Muestras, id= request.POST.get('tratamiento-muestra'))  
             
             #Comprobamos que no exista un ensayo  previo
-            o1_instancia= O1.objects.filter(muestra= muestra)
-            o1_instancia.delete()
+            tratamiento_instancia= Tratamiento.objects.filter(muestra= muestra)
+            tratamiento_instancia.delete()
 
-            
-            #Guardamos el formulario  a falta del resultado final
-            fecha= formO1.cleaned_data['fecha']
-            temperaturaAmbiente= formO1.cleaned_data['temperaturaAmbiente']
-            humedad= formO1.cleaned_data['humedad']
-            observacion=formO1.cleaned_data['observacion']
+            #Guardamos el formulario 
+            if formTratamiento.cleaned_data:
+                secado= formTratamiento.cleaned_data["secado"]
+                equipoSecado= formTratamiento.cleaned_data["equipoSecado"]
+                fechaSecadoInicio= formTratamiento.cleaned_data["fechaSecadoInicio"]
+                fechaSecadoFin=formTratamiento.cleaned_data["fechaSecadoFin"]
+                temperatura= formTratamiento.cleaned_data["temperatura"]
+                tiempo= formTratamiento.cleaned_data["tiempo"]
 
-            o1= O1.objects.create(
+                molido= formTratamiento.cleaned_data["molido"]
+                equipoMolido= formTratamiento.cleaned_data["equipoMolido"]
+                fechaMolidoInicio= formTratamiento.cleaned_data["fechaMolidoInicio"]
+                fechaMolidoFin= formTratamiento.cleaned_data["fechaMolidoFin"]
+
+                tamizado= formTratamiento.cleaned_data["tamizado"]
+                equipoTamizado= formTratamiento.cleaned_data["equipoTamizado"]
+                fechaTamizadoInicio= formTratamiento.cleaned_data["fechaTamizadoInicio"]
+                fechaTamizadoFin=formTratamiento.cleaned_data["fechaTamizadoFin"]
+
+            tratamiento= Tratamiento.objects.create(
                 muestra=muestra,
                 ensayo=ensayo,
-                temperaturaAmbiente= temperaturaAmbiente,
-                humedad= humedad,
+                secado=secado,
+                fechaSecadoInicio= fechaSecadoInicio,
+                fechaSecadoFin= fechaSecadoFin,
+                temperatura= temperatura,
+                tiempo= tiempo,
+
+                molido=molido,
+                fechaMolidoInicio= fechaMolidoInicio,
+                fechaMolidoFin= fechaMolidoFin,
+
+                tamizado= tamizado,
+                fechaTamizadoInicio= fechaTamizadoInicio,
+                fechaTamizadoFin=fechaTamizadoFin,
                 
-                fecha= fecha,
-                observacion= observacion,
             )
-            o1.equipos.set (equipos)
+            if equipoSecado:
+                if isinstance(equipoSecado, (list, tuple, set)):  # Si es iterable
+                    tratamiento.equipoSecado.set(equipoSecado)
+                else:  # Si no es iterable, lo pasamos como una lista
+                    tratamiento.equipoSecado.set([equipoSecado])
 
-            #Eliminamos los resultados
-            resultadosAnteriores= ResultadosO1.objects.filter(ensayo= o1)
-            if resultadosAnteriores:
-                for resultado in resultadosAnteriores:
-                    resultado.delete()
+            if equipoMolido:
+                if isinstance(equipoMolido, (list, tuple, set)):  # Si es iterable
+                    tratamiento.equipoMolido.set(equipoMolido)
+                else:  # Si no es iterable, lo pasamos como una lista
+                    tratamiento.equipoMolido.set([equipoMolido])
 
+            if equipoTamizado:
+                if isinstance(equipoTamizado, (list, tuple, set)):  # Si es iterable
+                    tratamiento.equipoTamizado.set(equipoTamizado)
+                else:  # Si no es iterable, lo pasamos como una lista
+                    tratamiento.equipoTamizado.set([equipoTamizado])
             
-            #Guardamos los resultados en la tabla de resultados O1 
-            listaResultados= [] 
-            listaResultadosReferencia=[] 
-            listaRebasaHumedad= []
-            nEnsayo= 1
-
-            for form in formO1Resultados:
-                if form.cleaned_data:  # Para evitar formularios vacíos
-                    
-                    proporcion= form.cleaned_data['proporcion']
-                    tiempo1= form.cleaned_data['tiempo1']
-                    tiempo2= form.cleaned_data['tiempo2']
-                    tiempo3= form.cleaned_data['tiempo3']
-                    tiempo4= form.cleaned_data['tiempo4']
-                    tiempo5= form.cleaned_data['tiempo5']
-                    resultado= form.cleaned_data['resultado']
-
-                    #Los tres primeros son ensayos de referencia, los otros dos son los ensayos normales
-                    if nEnsayo <= 3:
-                        nEnsayo= nEnsayo + 1
-                        ensayoReferencia= True
-                        listaResultadosReferencia.append({"proporcion": proporcion, "resultado": resultado}) 
-                    else:
-                        ensayoReferencia= False
-                        listaResultados.append(resultado)
-
-                    resultadosO1=ResultadosO1.objects.create(
-                        ensayo= o1,
-                        ensayoReferencia= ensayoReferencia,
-                        proporcion= proporcion,
-                        tiempo1= tiempo1,
-                        tiempo2= tiempo2,
-                        tiempo3= tiempo3,
-                        tiempo4= tiempo4,
-                        tiempo5= tiempo5,
-                        resultado= resultado,
-                    )
-              
-
-            #Resultado ensayo
-            print(listaResultados) 
-            print(listaResultadosReferencia) 
-            
-            #Sacamos valor de referencia con el que comparar los resultados
-            valorReferencia= min(listaResultados)
-            tiempo37= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "1"]
-            tiempo64= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "2"]
-            tiempo46= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "3"]
-
-            print(tiempo37)
-            resultadoEnsayo= "1"
-
-            if valorReferencia <= tiempo37[0]:
-                resultadoEnsayo= "2"
-            if valorReferencia <= tiempo64[0]:
-                resultadoEnsayo= "3"
-            if valorReferencia <= tiempo46[0]:
-                resultadoEnsayo= "4"
-
-            #Guardamos en el modelo O1 el resultado del ensayo
-            o1.resultado= resultadoEnsayo
-            o1.save()
-
-
-
+            print("Tratamiento guardado")
         else:
-            print (formO1Resultados.errors)
-            formO1.add_error(None, 'Error en el formulario, revisa los datos')
-            return render(request, 'ensayos/nuevosEnsayos/o1.html', {
+            print("No valido")
+            print (formTratamiento.errors)
+            formTratamiento.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/tratamiento.html', {
                 'ensayo': ensayo,
-                'formO1': formO1,
-                'formO1Resultados': formO1Resultados,
+                'formTratamiento': formTratamiento,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_O1= O1.objects.get(muestra__id= muestra_id)            
+            ensayo_tratamiento= Tratamiento.objects.get(muestra__id= muestra_id)            
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_O1.fecha)
-            temperaturaAmbiente= ensayo_O1.temperaturaAmbiente
-            humedad=ensayo_O1.humedad
-            observacion= ensayo_O1.observacion
-            
-            
-            formO1 = O1Form(prefix='o1', initial={
-                'muestra': muestra,
-                'fecha': fecha,
-                'temperaturaAmbiente': temperaturaAmbiente,
-                'humedad': humedad,
-                'observacion': observacion,
-                })
-            
-            formO1.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
 
-            resultados= ResultadosO1.objects.filter(ensayo=ensayo_O1).order_by("id")
+            secado= ensayo_tratamiento.secado
+            equipoSecado= list(ensayo_tratamiento.equipoSecado.values_list('id', flat=True))
+            fechaSecadoInicio= str(ensayo_tratamiento.fechaSecadoInicio)
+            fechaSecadoFin= str(ensayo_tratamiento.fechaSecadoFin)
+            temperatura= ensayo_tratamiento.temperatura
+            tiempo=ensayo_tratamiento.tiempo
 
+            molido= ensayo_tratamiento.molido
+            equipoMolido= list(ensayo_tratamiento.equipoMolido.values_list('id', flat=True))
+            fechaMolidoInicio= str(ensayo_tratamiento.fechaMolidoInicio)
+            fechaMolidoFin= str(ensayo_tratamiento.fechaMolidoFin)
 
-            initial_data = []
-            for resultado in resultados:
-                initial_data.append({
-                    'proporcion': resultado.proporcion,
-                    'tiempo1': resultado.tiempo1,
-                    'tiempo2': resultado.tiempo2,
-                    'tiempo3': resultado.tiempo3,
-                    'tiempo4': resultado.tiempo4,
-                    'tiempo5': resultado.tiempo5,
-                    "resultado": resultado.resultado
-                })
+            tamizado= ensayo_tratamiento.tamizado
+            equipoTamizado= list(ensayo_tratamiento.equipoTamizado.values_list('id', flat=True))
+            fechaTamizadoInicio= str(ensayo_tratamiento.fechaTamizadoInicio)
+            fechaTamizadoFin=str(ensayo_tratamiento.fechaTamizadoFin)
             
-            # Crear el formset con los datos iniciales
-            O1ResultadosFormSet = formset_factory(O1ResultadosForm, extra=0)
-            if initial_data:
-                formO1Resultados = O1ResultadosFormSet(prefix='o1Resultados',initial=initial_data)
-            else:
-                formO1Resultados= o1ResultadosFormSet(prefix='o1Resultados')
-
+            formTratamiento = tratamientoForm(prefix='tratamiento', initial={
+                "muestra": muestra,
+                "secado":secado,
+                "fechaSecadoInicio": fechaSecadoInicio,
+                "fechaSecadoFin": fechaSecadoFin,
+                "tiempo":tiempo,
+                "temperatura": temperatura,
+                "molido":molido,
+                "fechaMolidoInicio": fechaMolidoInicio,
+                "fechaMolidoFin": fechaMolidoFin,
+                "tamizado": tamizado,
+                "fechaTamizadoInicio": fechaTamizadoInicio,
+                "fechaTamizadoFin":fechaTamizadoFin,
+                "equipoSecado": equipoSecado,
+                "equipoMolido": equipoMolido,
+                "equipoTamizado": equipoTamizado,
+            })
+            print (formTratamiento)
+             # type: ignore
+            formTratamiento.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
         
         else:
-            formO1= O1Form(prefix='o1')
-            formO1.fields['muestra'].queryset = muestras_queryset
-
-            formO1Resultados=o1ResultadosFormSet(prefix='o1Resultados')            
+            formTratamiento= tratamientoForm(prefix='tratamiento')
+            formTratamiento.fields['muestra'].queryset = muestras_queryset  
 
 
-    return render(request, 'ensayos/nuevosEnsayos/o1.html', {
+    return render(request, 'ensayos/nuevosEnsayos/tratamiento.html', {
         'ensayo': ensayo,
-        'formO1': formO1,
-        'formO1Resultados': formO1Resultados,
+        'formTratamiento': formTratamiento,
     })

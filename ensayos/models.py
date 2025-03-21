@@ -21,7 +21,6 @@ from django.shortcuts import render, redirect, get_object_or_404, get_list_or_40
     def __str__(self):
         return f"{self.muestra} | {self.ensayo} -> {self.resultado}
 """
-    
 class Equipos (models.Model):
     codigo= models.CharField(max_length=300, verbose_name="Codigo")
     equipo= models.CharField(max_length=300, verbose_name="Equipo")
@@ -31,12 +30,24 @@ class Equipos (models.Model):
     fechaCalibracion= models.DateField(verbose_name="Fecha de Calibración")
     fechaCaducidadCalibracion= models.DateField(verbose_name="Fecha próxima calibración")
     
+    equipo_padre = models.ForeignKey(
+        'self', 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True, 
+        related_name="subequipos", 
+        verbose_name="Equipo Padre"
+    )
+    
     class Meta():
         verbose_name="Equipo"
         verbose_name_plural="Equipos"
         
     def __str__(self):
-        return f"{self.equipo} | {self.codigo}"
+        if self.equipo_padre:
+            return f"{self.equipo_padre} | {self.codigo} | {self.equipo}"
+        else:
+            return f"{self.equipo} | {self.codigo}"
 
 #Humedad
 class Humedad(models.Model):
@@ -809,26 +820,38 @@ class ResultadosREC (models.Model):
 class Tratamiento (models.Model): 
     
     preseleccion= [
-        ("1", "SI"),
-        ("2", "NO")
+        ("1", "NO"),
+        ("2", "SI")    
     ]
+    
+    tamices= [
+        ("1", "500"),
+        ("2", "1000"),
+        ("2", "250"),
+        ("2", "800"),
+        ("2", "125"),
+        ("2", "63"),
+    ]
+    
     
     
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE,  verbose_name="Ensayo")
     
-    secado= models.CharField(verbose_name="Secado", choices=preseleccion, max_length=500)
-    equipoSecado= models.ManyToManyField("Equipos",  verbose_name="Equipos de secado", related_name="tratamientos_equipoSecado",)
+    secado= models.CharField(verbose_name="Secado", choices=preseleccion, max_length=500, default=None, blank= True, null= True)
+    equipoSecado= models.ManyToManyField("Equipos",  verbose_name="Equipos de secado", related_name="tratamientos_equipoSecado",default=None)
     fechaSecadoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
     fechaSecadoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
+    temperatura= models.IntegerField(verbose_name="Temperatura", blank= True, null= True)
+    tiempo= models.IntegerField(verbose_name="Tiempo", blank= True, null= True)
 
-    molido= models.CharField(verbose_name="Molido", choices=preseleccion, max_length=500)
-    equipoMolido= models.ManyToManyField("Equipos",  verbose_name="Equipos de molienda",related_name="tratamientos_equipoMolido",)
+    molido= models.CharField(verbose_name="Molido", choices=preseleccion, max_length=500, default=None, blank= True, null= True)
+    equipoMolido= models.ManyToManyField("Equipos",  verbose_name="Equipos de molienda",related_name="tratamientos_equipoMolido",default=None)
     fechaMolidoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
     fechaMolidoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
 
-    tamizado= models.CharField(verbose_name="Tamizado", choices=preseleccion, max_length=500)
-    equipoTamizado= models.ManyToManyField("Equipos",  verbose_name="Equipos de tamizado",related_name="tratamientos_equipoTamizado",)
+    tamizado= models.CharField(verbose_name="Tamizado", choices=preseleccion, max_length=500, default=None, blank= True, null= True)
+    equipoTamizado= models.ManyToManyField("Equipos",  verbose_name="Equipos de tamizado",related_name="tratamientos_equipoTamizado",default=None)
     fechaTamizadoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
     fechaTamizadoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
 

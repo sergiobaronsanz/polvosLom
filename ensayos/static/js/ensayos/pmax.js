@@ -4,13 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var botonEliminar= document.getElementById("borrar-fila")
     var botonAñadir= document.getElementById("añadir-fila")
         
-
         /////Cálculo de Presión media, dp/dt media y kmax/////
     var pm_media= document.getElementById("id_pmax-pm_media");
     var dpdt_media= document.getElementById("id_pmax-dpdt_media");
     var kmax_media= document.getElementById("id_pmax-kmax");
-
-    
 
     //Automatizamos las presiones
     function presionMedia(){
@@ -162,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     //Declaramos los listener
-
     function listener() {
         var concentracion= document.querySelectorAll(".concentracion input");
         var pms = document.querySelectorAll(".pm input");
@@ -225,17 +221,92 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
     listener();
-    
-
     
     botonAñadir.addEventListener('click', function(){
         listener();  
-    })
+    });
 
     botonEliminar.addEventListener('click', function(){
         listener();  
-    })
-    
     });
+
+
+
+
+	/////Envio archivo .txt en el modal///
+	/////Envio archivo mediante modal/////
+	var botonEnviar= document.getElementById("saveChangesBtn");
+	var botonModal= document.getElementById("abrirModal");
+	var fileInput= document.getElementById("fileInput");
+	//Empezamos con el botón desactivado y solo se activa si hay archivo
+	botonEnviar.style.display= "none";
+
+	// *En el modal* Detectamos si hay archivo o no para habilitar el botón de enviar
+    function habilitarEnvioModal(){
+		console.log("hola");
+		if (fileInput.files.length > 0) {
+			botonEnviar.style.display= "flex";
+		  } else {
+			botonEnviar.style.display= "none";
+		  }
+	};
+
+	function envioArchivo(){
+		const file = fileInput.files[0];
+		const formData = new FormData();
+		formData.append("file", file);
+		formData.forEach((value, key) => {
+			console.log(key, value);
+		});
+
+		fetch('/ensayos/gestorArchivos/pmax/', {
+			method: "POST",
+			body: formData,
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+		})
+		.then(response => {
+			return response.json();  // Convierte la respuesta en JSON
+		})
+		.then(data => {
+			console.log("Respuesta del servidor:", data);  // Imprime toda la respuesta para revisar su formato
+			if (data && data.mensaje) {
+				console.log(data.mensaje);  // Si 'mensaje' existe, imprímelo
+			} else {
+				console.error('El mensaje no está en la respuesta');
+			}
+		})
+		.catch(error => {
+			console.log("Hubo un problema con la subida.");
+			console.error("Error:", error);
+		});
+
+		function getCookie(name) {
+			let cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				const cookies = document.cookie.split(';');
+				for (let i = 0; i < cookies.length; i++) {
+					const cookie = cookies[i].trim();
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+	};
+
+    
+	//Listener para habilitar botón envio archivo en el modal
+	fileInput.addEventListener('change',function(){
+		habilitarEnvioModal()
+	});
+
+	//Listener para enviar archivo por POST
+	botonEnviar.addEventListener('click', function(){
+		envioArchivo();
+	})
+});

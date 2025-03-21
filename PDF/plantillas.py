@@ -2184,14 +2184,80 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
 
 
-        #Celda Resultados
+        #Celda Resultados muestra referencia
+        self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIMIENTO",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "ENSAYO REFERENCIA",
                 align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12) 
+        for resultado in resultados:
+            if resultado.proporcion == "1":
+                self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mezcla 30 g [30 % bromato potásico / 70 % celulosa]",
+                        align= "J", fill = 0)
+                self.pdf.cell(w=10, h= 8,border= "L")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T1: {resultado.tiempo1} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T2: {resultado.tiempo2} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T3: {resultado.tiempo3} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T4: {resultado.tiempo4} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T5: {resultado.tiempo5} s")
+                self.pdf.cell(w=45, h= 8,border= "", align="R", txt=f"T7-3: {resultado.resultado} s")
+                self.pdf.multi_cell(w=10, h= 8,border= "R")
+
+            if resultado.proporcion == "2":
+                self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mezcla 30 g [60 % bromato potásico / 40 % celulosa]",
+                        align= "J", fill = 0)
+                self.pdf.cell(w=10, h= 8,border= "L")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T1: {resultado.tiempo1} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T2: {resultado.tiempo2} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T3: {resultado.tiempo3} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T4: {resultado.tiempo4} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T5: {resultado.tiempo5} s")
+                self.pdf.cell(w=45, h= 8,border= "", align="R", txt=f"T6-4: {resultado.resultado} s")
+                self.pdf.multi_cell(w=10, h= 8,border= "R")
+            if resultado.proporcion == "3":
+                self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mezcla 30 g [40 % bromato potásico / 60 % celulosa]",
+                        align= "J", fill = 0)
+                self.pdf.cell(w=10, h= 8,border= "L")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T1: {resultado.tiempo1} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T2: {resultado.tiempo2} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T3: {resultado.tiempo3} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T4: {resultado.tiempo4} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T5: {resultado.tiempo5} s")
+                self.pdf.cell(w=45, h= 8,border= "", align="R", txt=f"T4-6: {resultado.resultado} s")
+                self.pdf.multi_cell(w=10, h= 8,border= "R")
+        self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
+        
+        #Celda Resultados muestra problema
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "ENSAYO MUESTRA PROBLEMA",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12) 
+        for resultado in resultados:
+            if resultado.proporcion == "4":
+                self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mezcla 30 g [50 % muestra problema / 50 % celulosa]",
+                        align= "J", fill = 0)
+                self.pdf.cell(w=10, h= 8,border= "L")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T1: {resultado.tiempo1} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T2: {resultado.tiempo2} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T3: {resultado.tiempo3} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T4: {resultado.tiempo4} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T5: {resultado.tiempo5} s")
+                self.pdf.cell(w=45, h= 8,border= "", align="R", txt=f"T5-5: {resultado.resultado} s")
+                self.pdf.multi_cell(w=10, h= 8,border= "R")
+            if resultado.proporcion == "5":
+                self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mezcla 30 g [80 %  muestra problema / 20 % celulosa]",
+                        align= "J", fill = 0)
+                self.pdf.cell(w=10, h= 8,border= "L")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T1: {resultado.tiempo1} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T2: {resultado.tiempo2} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T3: {resultado.tiempo3} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T4: {resultado.tiempo4} s")
+                self.pdf.cell(w=25, h= 8,border= "", txt=f"T5: {resultado.tiempo5} s")
+                self.pdf.cell(w=45, h= 8,border= "", align="R", txt=f"T8-2: {resultado.resultado} s") 
+                self.pdf.multi_cell(w=10, h= 8,border= "R")
+        
         
         self.pdf.set_font('Arial', '', 12) 
-        
-
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
 
         #Celda con Resultados
@@ -2206,6 +2272,136 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LR",
                 align= "J", fill = 0)
         
+        
+        
+             
+        #Firma
+        self.pdf.set_font('Arial', '', 14) 
+        self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+                align= "J", fill = 0)
+        
+        # Agregar más contenido dinámico aquí...
+        return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+    
+
+    def tratamiento(self):
+        ensayo= Tratamiento.objects.get(muestra= self.muestra)
+        ensayoForma= self.descripcion.get_formaEnsayo_display()
+
+        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf.add_page()
+        #TEXTO 
+        self.pdf.set_font('Arial', '', 12)
+        #IMAGEN
+        image_path = os.path.join(self.rutaAbsoluta, 'Imagenes', 'LOGO.png')
+        self.pdf.image(image_path, x=8, y=8, w=30, h=30, link="http://www.lom.upm.es", type='PNG')
+        #Celdas Cabecera
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=55, h= 12, txt = "Fecha:", border= "RT", 
+                align= "L", fill = 0)
+
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
+                align= "C", fill = 0)
+        self.pdf.multi_cell(w=55, h= 12, border= "RB", 
+                align= "C", fill = 0)
+
+        #Celda I/D muestra
+        self.pdf.multi_cell(w=0, h= 5,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=130, h= 8,border= 0, txt= f"Material: {self.descripcion.id_fabricante}",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=60, h= 8,border= 0, txt= f"Identificación: {self.identificacion}",
+                align= "J", fill = 0)
+
+        #Celda Secado 
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "SECADO",
+                align= "J", fill = 0)
+        if ensayo.secado == "2":
+            self.pdf.set_font('Arial', '', 12) 
+
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha inicio: {ensayo.fechaSecadoInicio}",
+                    align= "J", fill = 0)
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha fin: {ensayo.fechaSecadoFin}",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"Estufa: {ensayo.equipoSecado.get().codigo}",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+            
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Tiempo: {ensayo.tiempo} h")
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"temperatura: {ensayo.temperatura} ºC")
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+            self.pdf.multi_cell(w=190, h= 8, border="LR")
+        else:
+            self.pdf.set_font('Arial', '', 12) 
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"No se ha realizado secado",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")      
+        #Celda Molido 
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "MOLIDO",
+                align= "J", fill = 0)
+        
+        if ensayo.molido == "2":
+            self.pdf.set_font('Arial', '', 12) 
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha inicio: {ensayo.fechaMolidoInicio}",
+                    align= "J", fill = 0)
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha fin: {ensayo.fechaMolidoFin}",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"Molino: {ensayo.equipoMolido.get().codigo}",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+            self.pdf.multi_cell(w=190, h= 8, border="LR")   
+        else:
+            self.pdf.set_font('Arial', '', 12) 
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"No se ha realizado Molienda",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+            
+        #Celda Tamizado
+        
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "TAMIZADO",
+                align= "J", fill = 0)
+        if ensayo.tamizado == "2":
+            self.pdf.set_font('Arial', '', 12) 
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha inicio: {ensayo.fechaMolidoInicio}",
+                    align= "J", fill = 0)
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha fin: {ensayo.fechaMolidoFin}",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"Tamizado: {ensayo.equipoTamizado.get().equipo_padre.codigo} | {ensayo.equipoTamizado.get().codigo} | {ensayo.equipoTamizado.get().equipo}",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+            self.pdf.multi_cell(w=190, h= 8, border="LR")   
+        else:
+            self.pdf.set_font('Arial', '', 12) 
+            self.pdf.cell(w=10, h= 8, border="L")
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"No se ha realizado tamizado",
+                    align= "J", fill = 0)
+            self.pdf.multi_cell(w=10, h= 8, border="R")
+
         
         
              

@@ -17,7 +17,7 @@ def actualizar_estado_expediente(sender, instance, created, **kwargs):
         expediente.estado = '3'  # Actualiza el estado del expediente a "Terminado"
         expediente.save()
 
-#Creamos los ensayos
+#Creamos los ensayos si la lista de ensayo cambia
 @receiver(m2m_changed, sender=Muestras.listaEnsayos.through)
 def crear_ensayos(sender, instance, action, **kwargs):
     if action == "post_add":
@@ -122,6 +122,12 @@ def crear_ensayos(sender, instance, action, **kwargs):
             if ensayo.ensayo == "O1":
                 if not O1.objects.filter(muestra= instance).exists():
                     resultados= O1.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                    )
+            if ensayo.ensayo == "Tratamiento":
+                if not Tratamiento.objects.filter(muestra= instance).exists():
+                    resultados= Tratamiento.objects.create(
                         muestra= instance,
                         ensayo= ensayo,
                     )
