@@ -25,7 +25,8 @@ urlpatterns = [
     path('', include('muestras.urls')),
     path('', include('expedientes.urls')),
     path('', include('ensayos.urls')),
-    
+    path('', include('ensayos.urls')),
+    path('', include('calidad.urls')),
 ]
 
 #Configuracion cargar imagenes, eliminar al desplegar el progarama

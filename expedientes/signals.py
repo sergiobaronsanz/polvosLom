@@ -72,6 +72,14 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "mJ",
                     )
+            
+            if ensayo.ensayo == "EMIsin":
+                if not EMIsin.objects.filter(muestra= instance).exists():
+                    resultados= EMIsin.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "mJ",
+                    )
 
             if ensayo.ensayo == "Pmax":
                 if not Pmax.objects.filter(muestra= instance).exists():

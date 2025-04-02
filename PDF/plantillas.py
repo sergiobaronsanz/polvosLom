@@ -1053,7 +1053,7 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"VELOCIDAD DE AUMENTO DE PRESIÓN: {ensayo.dpdt} dP/dT",
                 align= "J", fill = 0)
         
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {ensayo.kmax} barm/s",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {ensayo.kmax} bar·m/s",
                 align= "J", fill = 0)
         
         

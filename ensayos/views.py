@@ -920,6 +920,32 @@ def lie (request, muestra_id):
     })
 
 
+def gestorArchivoEmi(request):
+    resultados = []  # Se inicializa aquí para evitar problemas si hay errores previos.
+
+    if request.method == 'POST':
+        archivo = request.FILES.get('file')
+
+        if archivo:
+            try:
+                contenido = archivo.read().decode('utf-8')
+                filas = contenido.strip().split('\n')
+                
+                # Quitamos la primera fila y procesamos las demás
+                for fila in filas[1:]:
+                    filaLimpia = fila.strip(';').split(';')
+                    serie = [valor.strip() for valor in filaLimpia if valor.strip()]
+                    resultados.append(serie)
+                print(resultados)
+            except Exception as e:
+                return JsonResponse({"error": f"Error al procesar el archivo: {str(e)}"}, status=400)
+        
+        else:
+            return JsonResponse({"error": "Archivo no recibido"}, status=400)
+        
+    return JsonResponse({"resultados": resultados})
+
+
 def emi (request, muestra_id):
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMI")
@@ -980,7 +1006,6 @@ def emi (request, muestra_id):
 
             for form in formEmiResultados:
                 if form.cleaned_data and form.cleaned_data["concentracion"] != None: 
-                    print("holaaa") # Para evitar formularios vacíos
                     concentracion = form.cleaned_data['concentracion']
                     energia= form.cleaned_data['energia']
                     retardo= form.cleaned_data['retardo']
@@ -1076,32 +1101,189 @@ def emi (request, muestra_id):
     })
 
 
-def gestorArchivoPmax(request):
+def emiSinInductancia(request, muestra_id):
+    #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMIsin")
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(emisin__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="emisin") & ~Q(estado=1)
+    )
+
     if request.method == 'POST':
-        archivo = request.FILES['file']
+        print ("request.POST")
+        print (request.POST)
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formEmi= EmiForm(request.POST, prefix='emi')
+        formEmiResultados= emiResultadosFormSet(request.POST, prefix='emiResultados')  
+
+        if formEmi.is_valid() and formEmiResultados.is_valid():
+            muestra= get_object_or_404(Muestras, id= request.POST.get('emi-muestra'))
+            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
+            #Comprobamos que no exista un ensayo  previo
+            emi_instancia= EMIsin.objects.filter(muestra= muestra)
+            emi_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fecha= formEmi.cleaned_data['fecha']
+            temperaturaAmbiente= formEmi.cleaned_data['temperaturaAmbiente']
+            humedad= formEmi.cleaned_data['humedad']
+            inductancia= formEmi.cleaned_data['inductancia']
+            observacion=formEmi.cleaned_data['observacion']
+            presion= formEmi.cleaned_data['presion']
+            resultado= formEmi.cleaned_data['resultado']
+            
+
+            emi= EMIsin.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                inductancia= inductancia,
+                fecha= fecha,
+                presion= presion,
+                observacion= observacion,
+                
+            )
+            emi.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosEMIsin.objects.filter(ensayo= emi)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados EMI 
+            listaResultados= []  
+
+            for form in formEmiResultados:
+                if form.cleaned_data and form.cleaned_data["concentracion"] != None: 
+                    concentracion = form.cleaned_data['concentracion']
+                    energia= form.cleaned_data['energia']
+                    retardo= form.cleaned_data['retardo']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+                    nEnsayo= form.cleaned_data['numeroEnsayo']
+
+                    resultadosEmi=ResultadosEMIsin.objects.create(
+                        ensayo= emi,
+                        concentracion= concentracion,
+                        energia= energia,
+                        retardo= retardo,
+                        resultado=resultadoPrueba,
+                        numeroEnsayo=nEnsayo,
+                    )
+
+                    if resultadoPrueba == "1":
+                        listaResultados.append(energia)
+                    
+
+            #Guardamos en el modelo EMI el resultado del ensayo
+            if listaResultados:
+                resultado= resultado
+                
+                emi.resultado= resultado
+                emi.save()
+            else:
+                resultado= "N/D"
+                emi.resultado= resultado
+                emi.save()
+                
+            print("guardado")
+        else:
+            print (formEmi.errors)
+            print (formEmiResultados.errors)
+            formEmi.add_error(None, f'Error en el formulario, revisa los datos {formEmi.errors}')
+            return render(request, 'ensayos/nuevosEnsayos/emi.html', {
+                'ensayo': ensayo,
+                'formEmi': formEmi,
+                'formEmiResultados': formEmiResultados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_EMI= EMIsin.objects.get(muestra__id= muestra_id)            
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fecha= str(ensayo_EMI.fecha)
+            temperaturaAmbiente= ensayo_EMI.temperaturaAmbiente
+            humedad=ensayo_EMI.humedad
+            inductancia= ensayo_EMI.inductancia
+            resultado= ensayo_EMI.resultado
+            presion= ensayo_EMI.presion
+            observacion= ensayo_EMI.observacion
+            
+            
+            formEmi = EmiForm(prefix='emi', initial={
+                'muestra': muestra,
+                'fecha': fecha,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'inductancia': inductancia,
+                'resultado': resultado,
+                'presion': presion,
+                'observacion': observacion,
+                })
+            
+            formEmi.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosEMIsin.objects.filter(ensayo=ensayo_EMI).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'concentracion': resultado.concentracion,
+                    'energia': resultado.energia,
+                    'retardo': resultado.retardo,
+                    'resultadoPrueba': resultado.resultado,
+                    'numeroEnsayo': resultado.numeroEnsayo,
+                })
+            
+            # Crear el formset con los datos iniciales
+            EmiResultadosFormSet = formset_factory(EmiResultadosForm, extra=0)
+            formEmiResultados = EmiResultadosFormSet(prefix='emiResultados',initial=initial_data)
+        
+        else:
+            formEmi= EmiForm(prefix='emi')
+            formEmi.fields['muestra'].queryset = muestras_queryset
+            formEmi.fields['inductancia'].initial = "2"
+
+            formEmiResultados=emiResultadosFormSet(prefix='emiResultados')            
+
+
+    return render(request, 'ensayos/nuevosEnsayos/emi.html', {
+        'ensayo': ensayo,
+        'formEmi': formEmi,
+        'formEmiResultados': formEmiResultados,
+    })
+
+
+def gestorArchivoPmax(request):
+    resultados = []  # Se inicializa aquí para evitar problemas si hay errores previos.
+
+    if request.method == 'POST':
+        archivo = request.FILES.get('file')
 
         if archivo:
-            contenido = archivo.read().decode('utf-8')
-            filas = contenido.strip().split('\n')
-            
-            resultado=[]
-            #Quitamos la primera fila
-            for fila in filas[1:]:
-                filaLimpia = fila.strip(';').split(';')
-                serie=[]
-                for valor in filaLimpia:
-                    if valor.strip():
-                        valorLimpio=valor.strip()
-                        serie.append(valorLimpio)
+            try:
+                contenido = archivo.read().decode('utf-8')
+                filas = contenido.strip().split('\n')
                 
-                resultado.append(serie)
-
-            print(resultado)
-            
-                
+                # Quitamos la primera fila y procesamos las demás
+                for fila in filas[1:]:
+                    filaLimpia = fila.strip(';').split(';')
+                    serie = [valor.strip() for valor in filaLimpia if valor.strip()]
+                    resultados.append(serie)
+                print(resultados)
+            except Exception as e:
+                return JsonResponse({"error": f"Error al procesar el archivo: {str(e)}"}, status=400)
+        
         else:
-            return JsonResponse ({"mensaje": "Archivo no recibido"})
-    return JsonResponse ({"mensaje": "Todo ok"})
+            return JsonResponse({"error": "Archivo no recibido"}, status=400)
+        
+    return JsonResponse({"resultados": resultados})
+
 
 def pmax (request, muestra_id):
      #Sacamos el ensayo
@@ -1113,11 +1295,18 @@ def pmax (request, muestra_id):
     )
 
     if request.method == 'POST':
+        print("1.hemos llegado aqui")
+        
+
         #Recibimos los formularios diferenciándolos con el prefijo
         formPmax= PmaxForm(request.POST, prefix='pmax')
-        formPmaxResultados= pmaxResultadosFormSet(request.POST, prefix='pmaxResultados')  
+        formPmaxResultados= pmaxResultadosFormSet(request.POST, prefix='pmaxResultados')
+  
+        print("Datos POST recibidos:", request.POST)
         
         if formPmax.is_valid() and formPmaxResultados.is_valid():
+            print("2.hemos llegado aqui")
+
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('pmax-muestra'))
             equipos= get_list_or_404(Equipos, ensayos=ensayo)  
@@ -1163,14 +1352,18 @@ def pmax (request, muestra_id):
             #Guadramos la lista de resultados
 
             for form in formPmaxResultados:
+                
                 if form.cleaned_data:  # Para evitar formularios vacíos
+                    print("4.hemos llegado aqui")
                     concentracion = form.cleaned_data['concentracion']
                     peso = form.cleaned_data['peso']
                     serie= form.cleaned_data['serie']
                     pm= form.cleaned_data['pm_serie']
                     dpdt= form.cleaned_data['dpdt_serie']
+                    print(concentracion)
 
                     print(form.cleaned_data)
+                    
 
                     resultadosPmax=ResultadosPmax.objects.create(
                         ensayo= pmax,
@@ -1183,6 +1376,7 @@ def pmax (request, muestra_id):
                     
                 else:
                     formPmax.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
+                    print(formPmaxResultados.errors)
                     return render(request, 'ensayos/nuevosEnsayos/pmax.html', {
                         'ensayo': ensayo,
                         'formPmax': formPmax,

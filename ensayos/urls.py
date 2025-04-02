@@ -13,9 +13,6 @@ urlpatterns = [
     path('ensayos/lista-ensayos', views.listaEnsayos, name="listaEnsayos"),
     path('ensayos/lista-ensayos/<str:ensayo>', views.ensayosRealizados, name="ensayosRealizados"),
     
-    #Equipos
-    path('equipos', views.equipos, name="equipos"),
-    path('equipos/nuevo-equipo', views.nuevoEquipo, name="nuevoEquipo"),
     
     #Ensayos
     path('ensayos/humedad/<str:muestra_id>/', views.humedad, name="humedad"),
@@ -24,6 +21,7 @@ urlpatterns = [
     path('ensayos/tmin/<str:muestra_id>/', views.tmin, name="tmin"),
     path('ensayos/lie/<str:muestra_id>/', views.lie, name="lie"),
     path('ensayos/emi/<str:muestra_id>/', views.emi, name="emi"),
+	path('ensayos/emiSinIn/<str:muestra_id>/', views.emiSinInductancia, name="emisin"),
     path('ensayos/pmax/<str:muestra_id>/', views.pmax, name="pmax"),
     path('ensayos/clo/<str:muestra_id>/', views.clo, name="clo"),
     path('ensayos/rec/<str:muestra_id>/', views.rec, name="rec"),
@@ -35,6 +33,7 @@ urlpatterns = [
 
 	#Gestor de archivos para valores de ensayos
 	path('ensayos/gestorArchivos/pmax/', views.gestorArchivoPmax, name="gestorArchivosPmax"),
+	path('ensayos/gestorArchivos/emi/', views.gestorArchivoEmi, name="gestorArchivosEmi"),
 
 
     

@@ -650,9 +650,8 @@ class EmiForm(forms.Form):
     inductancia= forms.ChoiceField( 
         choices= selecionInductancia,
         label= "Inductancia",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
-        required=False,
-
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm','style': 'text-align: center;'}),
+        required=True,
     )
 
     resultado= forms.IntegerField(
@@ -779,7 +778,7 @@ class PmaxForm(forms.Form):
     )
 
     pm_media= forms.DecimalField(
-        decimal_places=2,
+        decimal_places=1,
         max_digits=5,
         label="Presión media",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly','style': 'text-align: center;'})

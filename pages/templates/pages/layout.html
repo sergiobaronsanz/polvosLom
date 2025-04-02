@@ -127,13 +127,13 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{%url 'listaEnsayos'%}">Ensayos</a>
-                        <a class="collapse-item" href="{%url 'equipos'%}">Equipos</a>
                         <a class="collapse-item" href="{% url 'humedad' muestra_id='nueva' %}">Humedad</a>
                         <a class="collapse-item" href="{% url 'granulometria' muestra_id='nueva' %}">Granulometría</a>
                         <a class="collapse-item" href="{% url 'tmic' muestra_id='nueva' %}">TMIc</a>
                         <a class="collapse-item" href="{% url 'tmin' muestra_id='nueva' %}">TMin</a>
                         <a class="collapse-item" href="{% url 'lie' muestra_id='nueva' %}">LIE</a>
                         <a class="collapse-item" href="{% url 'emi' muestra_id='nueva' %}">EMI</a>
+						<a class="collapse-item" href="{% url 'emisin' muestra_id='nueva' %}">EMI (sin iductancia)</a>
                         <a class="collapse-item" href="{% url 'pmax' muestra_id='nueva' %}">PMAX</a>
                         <a class="collapse-item" href="{% url 'clo' muestra_id='nueva' %}">CLO</a>
                         <a class="collapse-item" href="{% url 'rec' muestra_id='nueva' %}">REC</a>
@@ -144,6 +144,22 @@
 						<a class="collapse-item" href="{% url 'tratamiento' muestra_id='nueva' %}">Tratamiento</a>
                         <a class="collapse-item" href="utilities-border.html">IMacie</a>
                         <a class="collapse-item" href="utilities-border.html">TAI</a>
+                    </div>
+                </div>
+            </li>
+
+			<!-- Nav Item - Ensayos -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCalidad"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="bi bi-fire blue-label"></i>
+                    <span class="blue-label">Calidad</span>
+                </a>
+                <div id="collapseCalidad" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item" href="{%url 'equipos'%}">Equipos</a>
+
                     </div>
                 </div>
             </li>

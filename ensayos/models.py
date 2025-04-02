@@ -348,7 +348,58 @@ class ResultadosEMI (models.Model):
         
     def __str__(self):
         return f"{self.ensayo} | {self.resultado}"
+
+#Emi
+class EMIsin (models.Model):
+    selecionInductancia= [
+        ("1", "SI"),
+        ("2", "NO")
+    ]
+
+    muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
+    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
+    temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
+    humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
+    presion= models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Presión Ambiente", blank= True, null= True)
+    inductancia= models.CharField(max_length=100, choices=selecionInductancia, verbose_name="Inductancia", blank= True, null= True)
+    equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
+    fecha= models.DateField(verbose_name="Fecha", blank= True, null= True)
+    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True, blank= True, null= True)
+    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True, blank= True, null= True)
+    resultado= models.CharField(verbose_name="Resultado", max_length=100, blank= True, null= True) #9999,99
+    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ", blank= True, null= True)
+    observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
+
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
+
+    class Meta():
+        verbose_name="Emi"
+        verbose_name_plural="Emis"
+        
+    def __str__(self):
+        return f"{self.muestra} | {self.resultado}" 
+
+class ResultadosEMIsin (models.Model):
+    resultadosPosibles = [
+        ("1", "SI"),
+        ("2", "NO"),
+    ]
+
     
+    ensayo= models.ForeignKey("EMIsin", on_delete=models.CASCADE, verbose_name="Ensayo Emi")
+    concentracion= models.IntegerField(verbose_name="Concentracion")
+    energia= models.IntegerField(verbose_name="Energia")
+    retardo= models.IntegerField(verbose_name="Retardo")
+    resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
+    numeroEnsayo= models.IntegerField(verbose_name="Número ensayo", default=0)
+    
+    
+    class Meta():
+        verbose_name="Resultado Emi"
+        verbose_name_plural="Resultados Emi"
+        
+    def __str__(self):
+        return f"{self.ensayo} | {self.resultado}"    
 
 #Pmax
 class Pmax (models.Model):
@@ -398,10 +449,10 @@ class ResultadosPmax (models.Model):
 
     
     ensayo= models.ForeignKey("Pmax", on_delete=models.CASCADE, verbose_name="Ensayo Pmax")
-    concentracion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Concentración")
-    peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso equivalente")
+    concentracion= models.IntegerField(verbose_name="Concentración")
+    peso= models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Peso equivalente")
     serie= models.CharField(max_length=300, choices=seriesPosibles, verbose_name= "Serie")
-    pm= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PM")
+    pm= models.DecimalField(decimal_places=2, max_digits=7, verbose_name="PM")
     dpdt= models.IntegerField( verbose_name="dP/dT")
     
     class Meta():

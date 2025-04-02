@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function presionMedia(){
         var pms= document.querySelectorAll(".pm input")
 
+
         //Sacamos las variables necesarias
         var sumaPresiones= 0;
         var numPresiones= 0;
@@ -26,9 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
         pms.forEach(item =>{
             var id_item= item.id;
             var id_serie= id_item.replace("pm_serie", "serie");
+			var serie= document.getElementById(id_serie);
             var serie= document.getElementById(id_serie);
             var valor_serie= serie.value;
-            console.log(id_serie)
+            
 
             if(valor_serie=== "1"){
                 
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (item === 0){
                 numValores= numValores -1;
             }
-            pm_media.value= (valor_maximo / numValores).toFixed(2);
+			pm_media.value = (Math.ceil(valor_maximo / numValores * 10) / 10).toFixed(1);
         });
         
     };
@@ -139,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         valor_maximo= listaValoresMaximos[0] + listaValoresMaximos[1] + listaValoresMaximos[2];
+		console.log("el valor dpdt max es:" + valor_maximo/3)
 
         //Hacemos la media con el numero de valores que haya
         var numValores= 3;
@@ -146,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (item === 0){
                 numValores= numValores -1;
             }
-            dpdt_media.value= parseInt(valor_maximo / numValores);
+            dpdt_media.value= (Math.round(valor_maximo / numValores).toFixed(0));
         });
         
     };
@@ -155,10 +158,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function kmax(){
         var dpdt= document.querySelectorAll(".dpdt input")
         //Hay que aplicar una fórmula que es...
-        kmax_media.value= 44;
+		valorVelocidad= dpdt_media.value;
+		let raizCubica = Math.cbrt(20/1000);
+		let resultado= Math.round(valorVelocidad * raizCubica)
+		console.log("la raiz es: " + raizCubica + "el resultado es: " + (valorVelocidad * raizCubica))
+        kmax_media.value= resultado
     };
 
-    //Declaramos los listener
+    //Declaramos los listener para que se puedan actualizar cuando se borren id
     function listener() {
         var concentracion= document.querySelectorAll(".concentracion input");
         var pms = document.querySelectorAll(".pm input");
@@ -179,7 +186,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     
         series.forEach(item => {
-            item.replaceWith(item.cloneNode(true));
+			let valorAnteriorItem= item.value;
+			console.log("el valor de la serie es<" + valorAnteriorItem)
+            let nuevoItem = item.cloneNode(true); // Clonar el nodo
+    		nuevoItem.value = valorAnteriorItem;  // Restaurar el valor antes de reemplazarlo
+
+    item.replaceWith(nuevoItem)
         });
     
         // Ahora se pueden agregar los listeners sin duplicarlos
@@ -237,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	/////Envio archivo .txt en el modal///
 	/////Envio archivo mediante modal/////
 	var botonEnviar= document.getElementById("saveChangesBtn");
-	var botonModal= document.getElementById("abrirModal");
 	var fileInput= document.getElementById("fileInput");
 	//Empezamos con el botón desactivado y solo se activa si hay archivo
 	botonEnviar.style.display= "none";
@@ -252,37 +263,35 @@ document.addEventListener('DOMContentLoaded', function() {
 		  }
 	};
 
-	function envioArchivo(){
+	async function envioArchivo() {
 		const file = fileInput.files[0];
 		const formData = new FormData();
 		formData.append("file", file);
-		formData.forEach((value, key) => {
-			console.log(key, value);
-		});
-
-		fetch('/ensayos/gestorArchivos/pmax/', {
-			method: "POST",
-			body: formData,
-			headers: {
-				'X-CSRFToken': getCookie('csrftoken')
-			},
-		})
-		.then(response => {
-			return response.json();  // Convierte la respuesta en JSON
-		})
-		.then(data => {
-			console.log("Respuesta del servidor:", data);  // Imprime toda la respuesta para revisar su formato
-			if (data && data.mensaje) {
-				console.log(data.mensaje);  // Si 'mensaje' existe, imprímelo
+	
+		try {
+			const response = await fetch('/ensayos/gestorArchivos/pmax/', {
+				method: "POST",
+				body: formData,
+				headers: {
+					'X-CSRFToken': getCookie('csrftoken')
+				},
+			});
+	
+			const data = await response.json();
+			console.log("Respuesta del servidor:", data);
+	
+			if (data.resultados) {
+				console.log("Datos procesados:", data.resultados);
+				return data.resultados;  
 			} else {
-				console.error('El mensaje no está en la respuesta');
+				console.error("No se encontraron resultados en la respuesta");
+				return null;
 			}
-		})
-		.catch(error => {
-			console.log("Hubo un problema con la subida.");
-			console.error("Error:", error);
-		});
-
+		} catch (error) {
+			console.error("Hubo un problema con la subida:", error);
+			return null;
+		}
+	
 		function getCookie(name) {
 			let cookieValue = null;
 			if (document.cookie && document.cookie !== '') {
@@ -298,15 +307,121 @@ document.addEventListener('DOMContentLoaded', function() {
 			return cookieValue;
 		}
 	};
+		//Procesamos el archivo para que aparezcan los datos en las tablas
+	function procesarArchivo(resultados){
+		var filaDatos= document.querySelectorAll(".templateRow");
+		var tBody= document.getElementById("tbody");
+		
+
+		//1. Borramos los registros si los hubiera
+		filaDatos.forEach(element=>{
+			element.remove();
+		});
+		
+
+		//2. Copiamos la fila y agregamos los datos
+		var numeroResultado = 0;
+		resultados.forEach(element=>{
+
+			//Sacamos los valores de los resultados
+			let concentracion= element[2];
+			let peso= (parseFloat(concentracion) / 50).toFixed(2);
+			let serie= element[1];
+			let pmax=  parseFloat(element[3].replace(",", "."));
+			let dpdt= element[4];
+
+			
+			var copiaFilaDatos = filaDatos[0].cloneNode(true); // Copia completa con contenido
+			tBody.appendChild(copiaFilaDatos); // Agrega la copia al tbody
+			
+			
+			//Agregamos datos
+			let inputs = copiaFilaDatos.querySelectorAll("input");
+			let selects = copiaFilaDatos.querySelectorAll("select");
+			inputs.forEach(input => {
+				input.value = "";
+				
+				//Reemplazamos el valor al id
+				let idDato= input.id;
+				let nuevoId = idDato.replace(/-\d+-/, `-${numeroResultado}-`);
+				input.id= nuevoId
+
+				let nameDato= input.name;
+				let nuevoName= nameDato.replace(/-\d+-/, `-${numeroResultado}-`);
+				input.name= nuevoName;
+
+				//Ingresamos los valores
+				if (idDato.includes("concentracion")) {
+					input.value= concentracion;
+				}
+				if (idDato.includes("peso")) {
+					input.value= peso;
+				}
+				if (idDato.includes("pm_serie")) {
+					input.value= pmax;
+				}
+				if (idDato.includes("dpdt_serie")) {
+					input.value= dpdt;
+				}
+			}); 
+
+			selects.forEach(select => {
+				select.value = "";
+				
+				//Reemplazamos el valor al id
+				let idDato= select.id;
+				let nuevoId = idDato.replace(/-\d+-/, `-${numeroResultado}-`);
+				select.id= nuevoId
+				
+				let nameDato= select.name;
+				let nuevoName= nameDato.replace(/-\d+-/, `-${numeroResultado}-`);
+				select.name= nuevoName;
+
+				console.log("la serie es" + serie)
+				select.value = serie;
+				console.log("El valor es" + select.value)
+				console.log(select.id)
+				console.log("Nuevo valor del select:", select.value); // Muestra el nuevo valor
+			}); 
+			
+			numeroResultado ++;
+			var numeroEnsayos= document.getElementById("id_pmaxResultados-TOTAL_FORMS");
+			numeroEnsayos.value= numeroResultado;
+		})
+
+		//Recalculamos las medias
+		listener();
+		presionMedia();
+		dpdtMedia();
+		kmax();
+		
+	}
 
     
 	//Listener para habilitar botón envio archivo en el modal
 	fileInput.addEventListener('change',function(){
-		habilitarEnvioModal()
+		habilitarEnvioModal();
+		
+
 	});
 
 	//Listener para enviar archivo por POST
-	botonEnviar.addEventListener('click', function(){
-		envioArchivo();
-	})
+	botonEnviar.addEventListener('click', async function() {
+		try {
+			// Espera el resultado de la función asíncrona
+			const resultados = await envioArchivo();  // Usamos `await` aquí para esperar la respuesta
+	
+			// Verifica que `resultados` no sea null o undefined
+			if (resultados) {
+				resultados.forEach(resultado => {
+					console.log(resultado);  // Imprime cada resultado
+				});
+				procesarArchivo(resultados)
+			} else {
+				console.error('No se encontraron resultados.');
+			}
+		} catch (error) {
+			console.error('Hubo un error al procesar los resultados:', error);
+		}
+	});
 });

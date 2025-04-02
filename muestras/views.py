@@ -81,6 +81,10 @@ def verMuestra(request, muestra_id):
     if listaEnsayos.filter(ensayo= "EMI").exists():
         resultado= EMI.objects.filter(muestra= muestra)
         print(resultado)
+        resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo= "EMIsin").exists():
+        resultado= EMIsin.objects.filter(muestra= muestra)
+        print(resultado)
         resultados.extend(resultado)   
     if listaEnsayos.filter(ensayo= "Pmax").exists():
         resultado= Pmax.objects.filter(muestra= muestra)

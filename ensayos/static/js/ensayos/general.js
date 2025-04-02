@@ -6,14 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var borrarFila = document.getElementById('borrar-fila');
     var tabla = document.getElementById('tabla');
     var templateRow = document.querySelectorAll(".templateRow")
-    var formulario= document.getElementById("id_"+ ensayo + "Resultados-TOTAL_FORMS")
+    var formulario= document.getElementById("id_"+ ensayo + "Resultados-TOTAL_FORMS");
     // última template row
     var lastTemplateRow= templateRow[templateRow.length -1];
     var tBody = document.getElementById('tbody');
 
     // Función para añadir una fila
     function addRow() {
-        console.log("hola");
         var newRow = lastTemplateRow.cloneNode(true);
 
         //Los dejamos vacíos
@@ -81,6 +80,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function deleteRow(){
+		var templateRow = document.querySelectorAll(".templateRow");
+		var lastTemplateRow= templateRow[templateRow.length -1];
+
         if (lastTemplateRow) {
             //Borramos la última fila del form y reseteamos el numero de inputs del form
             lastTemplateRow.parentNode.removeChild(lastTemplateRow);

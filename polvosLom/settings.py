@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'expedientes',
     'muestras',
     'ensayos',
+	'calidad',
     'jsonify',
 ]
 
