@@ -13,10 +13,15 @@
           {{formRec.muestra}}
       </div>
 
-      <div class= "col d-flex flex-column align-items-start">
-        {{formRec.fecha.label}}
-        {{formRec.fecha}}
-      </div>
+      <div class= "col-3 d-flex flex-column align-items-start">
+		{{formRec.fechaInicio.label}}
+		{{formRec.fechaInicio}}
+	  </div>
+  
+	  <div class= "col-3 d-flex flex-column align-items-start">
+		  {{formRec.fechaFin.label}}
+		  {{formRec.fechaFin}}
+	  </div>
   </div>
 
   <div class= "row mt-3 mb-3">
@@ -32,6 +37,13 @@
       </div>
 
   </div>
+
+  <div class= "row mt-4 d-flex justify-content-center">
+    <div class= "col-8 text-nowrap">
+      {{equiposEnsayo}}
+    </div>
+  </div>
+
 
 
 {%endblock%}
@@ -53,16 +65,27 @@
     <table id= "tabla" class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
-                {%for form in formRecResultados.forms.0%}
+                {%for form in formRecResultadosSerie1.forms.0%}
                     <th class="align-middle">{{form.label}}</th>
                 {%endfor%}
 
             </tr>
         </thead>
         <tbody id="tbody">
-            {{ formRecResultados.management_form }}
-            {%for form in formRecResultados%}
+            {{ formRecResultadosSerie1.management_form }}
+            {%for form in formRecResultadosSerie1%}
                 <tr class="templateRow">
+					<td> {{form.nPrueba}}</td>
+                    <td> {{form.tension}}</td>
+                    <td> {{form.tiempo}}</td>
+                    <td>{{form.resultadoPrueba}}</td>
+                </tr>
+            {%endfor%}
+
+			{{ formRecResultadosSerie2.management_form }}
+            {%for form in formRecResultadosSerie2%}
+                <tr class="templateRow">
+					<td> {{form.nPrueba}}</td>
                     <td> {{form.tension}}</td>
                     <td> {{form.tiempo}}</td>
                     <td>{{form.resultadoPrueba}}</td>
@@ -70,10 +93,6 @@
             {%endfor%}
         </tbody>
     </table>
-    <div class= "col-2 d-flex justify-content-between">
-        <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
-        <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
-    </div>
 
     <div class= "col-12 mt-3 mb-3">
         {{formRec.observacion.label}}
@@ -88,6 +107,5 @@
 
 {%block script%}  
     <script> ensayo= "rec" </script>
-    <script src="{%static 'js/ensayos/general.js'%}"></script> 
-    <script src="{%static 'js/ensayos/lie.js'%}"></script> 
+
 {%endblock%}

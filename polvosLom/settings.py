@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'polvosLom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.mysql",
-        'NAME': "polvoslom",
+        'NAME': "polvosLom",
         'USER': "root",
         'PASSWORD': "",
         'HOST': "localhost",

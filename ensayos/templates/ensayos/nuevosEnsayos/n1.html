@@ -13,10 +13,15 @@
           {{formN1.muestra}}
       </div>
 
-      <div class= "col d-flex flex-column align-items-start">
-        {{formN1.fecha.label}}
-        {{formN1.fecha}}
-      </div>
+      <div class= "col-3 d-flex flex-column align-items-start">
+		{{formTmin.fechaInicio.label}}
+		{{formTmin.fechaInicio}}
+	  </div>
+  
+	  <div class= "col-3 d-flex flex-column align-items-start">
+		  {{formTmin.fechaFin.label}}
+		  {{formTmin.fechaFin}}
+	  </div>
   </div>
 
   <div class= "row mt-3 mb-3">
@@ -42,7 +47,13 @@
         {{formN1.pruebaPreseleccion.label}}
         {{formN1.pruebaPreseleccion}}
       </div>
-</div>
+  </div>
+
+  <div class= "row mt-4 d-flex justify-content-center">
+    <div class= "col-8 text-nowrap">
+      {{equiposEnsayo}}
+    </div>
+  </div>	
 
 {%endblock%}
 

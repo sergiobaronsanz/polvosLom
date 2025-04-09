@@ -33,6 +33,7 @@ urlpatterns = [
 
 	#Gestor de archivos para valores de ensayos
 	path('ensayos/gestorArchivos/pmax/', views.gestorArchivoPmax, name="gestorArchivosPmax"),
+	path('ensayos/gestorArchivos/lie/', views.gestorArchivoLie, name="gestorArchivosLie"),
 	path('ensayos/gestorArchivos/emi/', views.gestorArchivoEmi, name="gestorArchivosEmi"),
 
 

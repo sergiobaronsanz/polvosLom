@@ -1237,7 +1237,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosREC.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio####################################################
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -1251,15 +1252,24 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
+              
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -1319,7 +1329,8 @@ class PlantillasEnsayo():
 
         self.pdf.multi_cell(w=5, h= 16,border= "R", fill = 0)
 
-        listaResultados= []
+        listaResultados1= []
+        listaResultados2= []
         #Resultados tabla (Habría que incluir esto en una clase con las variables)
         for fila in resultados:
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
@@ -1333,7 +1344,12 @@ class PlantillasEnsayo():
 
             self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
-            listaResultados.append(fila.resultado)
+            if fila.nPrueba == "1":
+                listaResultados1.append(fila.resultado)
+            else:
+                listaResultados2.append(fila.resultado)
+        
+        
         
         #Si el ensayo se ha podido hacer
 
@@ -1347,8 +1363,12 @@ class PlantillasEnsayo():
         
         
         resultado= ensayo.resultado
-        menorResistencia= min(listaResultados) * 1000000
-        menorResistencia= "{:.2E}".format(menorResistencia)
+        menorResistencia1= min(listaResultados1)
+        menorResistencia2 = min(listaResultados2)
+
+        valorMedioMenorResistencia= ((menorResistencia1 + menorResistencia2)/2)* 1000000
+
+        menorResistencia= "{:.2E}".format(valorMedioMenorResistencia)
 
         print(f'el resultado es: {resultado}')
 
@@ -1357,7 +1377,8 @@ class PlantillasEnsayo():
         
         
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor resistencia medida(rs): {menorResistencia} ohm",
+
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Media de las resistencias mínimas medidas(rs): {menorResistencia} ohm",
                 align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 30,border= "LR", fill = 0)
@@ -1381,8 +1402,16 @@ class PlantillasEnsayo():
         # Insertar la imagen centrada
         self.pdf.image(formulaImage_path, x=x_position, y=y_position, w=image_width, h=image_height, link="http://www.lom.upm.es", type='PNG')
 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"RESISTIVIDAD ELECTRICA EN CAPA: {resultadoRec} ohm · m",
+        clasificacion=""
+        if resultado <= 1000:
+            clasificacion= "clasifica como polvo IIIC, clasifica como polvo conductivo"
+        else:
+            clasificacion= "clasifica como polvo IIIB, polvo conductivo"
+
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"RESISTIVIDAD ELECTRICA EN CAPA: {resultadoRec} ohm · m, {clasificacion}",
                 align= "J", fill = 0)
+        
+        
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", fill = 0)
              

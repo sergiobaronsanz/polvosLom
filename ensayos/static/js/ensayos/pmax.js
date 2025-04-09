@@ -191,8 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let nuevoItem = item.cloneNode(true); // Clonar el nodo
     		nuevoItem.value = valorAnteriorItem;  // Restaurar el valor antes de reemplazarlo
 
-    item.replaceWith(nuevoItem)
-        });
+			item.replaceWith(nuevoItem)
+		});
     
         // Ahora se pueden agregar los listeners sin duplicarlos
         concentracion= document.querySelectorAll(".concentracion input");

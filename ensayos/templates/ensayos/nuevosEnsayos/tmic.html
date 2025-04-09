@@ -13,10 +13,15 @@
           {{formTmic.muestra}}
       </div>
 
-      <div class= "col d-flex flex-column align-items-start">
-        {{formTmic.fecha.label}}
-        {{formTmic.fecha}}
-      </div>
+      <div class= "col-3 d-flex flex-column align-items-start">
+		{{formTmic.fechaInicio.label}}
+		{{formTmic.fechaInicio}}
+	  </div>
+  
+	  <div class= "col-3 d-flex flex-column align-items-start">
+		  {{formTmic.fechaFin.label}}
+		  {{formTmic.fechaFin}}
+	  </div>
   </div>
 
   <div class= "row">
@@ -37,11 +42,11 @@
       </div>
   </div>
 
-  <div class= "row">
-    <div class= "col text-nowrap">
+  <div class= "row mt-4 d-flex justify-content-center">
+    <div class= "col-8 text-nowrap">
       {{equiposEnsayo}}
     </div>
-</div>
+  </div>
 
 {%endblock%}
 

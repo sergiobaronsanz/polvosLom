@@ -28,32 +28,41 @@
               
               </div>
               <div class="card-body table-responsive" style="max-height: 80vh;">
-                  <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th scope="col">Código</th>
-                          <th scope="col">Equipo</th>
-                          <th scope="col">Controlado</th>
-                          <th scope="col">Calibrado</th>
-                          <th scope="col">Caduca</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {% for equipo in equipos%}
-                        <tr>
-                          <th scope="row"><a href= "">{{equipo.codigo}}</a></th>
-                          <td>{{equipo.equipo }}</td>
-                          {%if equipo.controlado == True%}
-                            <td>Si</td>
-                          {%else%}
-                            <td>No</td>
-                          {%endif%}
-                          <td>{{equipo.fechaCalibracion}}</td>
-                          <td>{{equipo.fechaCaducidadCalibracion}}</td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                	<table class="table table-striped">
+                		<thead>
+							<tr>
+							<th scope="col">Código</th>
+							<th scope="col">Equipo</th>
+							<th scope="col">Controlado</th>
+							<th scope="col">Calibrado</th>
+							<th scope="col">Caduca</th>
+							<th scope="col">Eliminar</th>
+							</tr>
+                      	</thead>
+                      	<tbody class="col-12">
+						{% for equipo in equipos%}
+							<tr>
+								<th class="align-middle" scope="row"><a href= "{% url "editarEquipo" equipo.id %}">{{equipo.codigo}}</a></th>
+								<td class="align-middle">{{equipo.equipo }}</td>
+								{%if equipo.controlado == True%}
+									<td class="align-middle">Si</td>
+								{%else%}
+									<td class="align-middle">No</td>
+								{%endif%}
+								<td class="align-middle">{{equipo.fechaCalibracion}}</td>
+								<td class="align-middle">{{equipo.fechaCaducidadCalibracion}}</td>
+								<td>
+									<form method="POST" action="{% url 'eliminarEquipo' equipo.id %}" onsubmit="return confirm('¿Seguro que deseas eliminar este equipo?');">
+										{% csrf_token %}
+										<button type="submit" style="border: none; background: none;">
+											<img style="width: 30px; height: auto;" src="{% static 'img/pages/trash.png' %}">
+										</button>
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
               </div>
             </div>
           </div>

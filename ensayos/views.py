@@ -13,6 +13,8 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
+from calidad.models import Equipos
+from calidad.forms import *
 
 
 def generadorPdf(request):
@@ -140,37 +142,11 @@ def ensayosRealizados(request, ensayo):
         'ensayo': ensayo,
     })
 
-#Equipos
-def equipos (request):
-    equipos= Equipos.objects.all().order_by()
-    
-    return render (request, "ensayos/equipos/equipos.html",{
-        'equipos': equipos
-        
-    })
-    
-def nuevoEquipo (request):
-    if request.method == "POST":
-        form= EquiposForm(request.POST)
-        
-        if form.is_valid():
-            form.save()
-
-            return redirect ("equipos")
-               
-    else:
-        form= EquiposForm()
-    
-    return render (request, "ensayos/equipos/nuevoEquipo.html",{
-        'equipos': equipos,
-        'form': EquiposForm,
-        
-    })
-
 #Ensayos
 def humedad(request, muestra_id): #################################### Hay que cambiar muestras_id por humedad_id para así poder tener varias humedades en una misma muestra
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "humedad")
+    equipos=get_object_or_404(Equipos, ensayos= ensayo)  
 
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -180,15 +156,16 @@ def humedad(request, muestra_id): #################################### Hay que c
     if request.method == 'POST':
                
         form = HumedadForm(request.POST)
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equipos')
         print(form.errors)
 
-        if form.is_valid():
-            muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)            
+        if form.is_valid() and equiposEnsayo.is_valid():
+            muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))         
 
             if form.cleaned_data:
                 #Agregamos los campos
-                fecha= form.cleaned_data['fecha']
+                fechaInicio= form.cleaned_data['fechaInicio']
+                fechaFin= form.cleaned_data['fechaFin']
                 temperaturaAmbiente= form.cleaned_data['temperaturaAmbiente']
                 humedad= form.cleaned_data['humedad']
                 criterio= form.cleaned_data['criterio']
@@ -259,7 +236,8 @@ def humedad(request, muestra_id): #################################### Hay que c
             #Guardamos los datos en el servidor
             humedad= Humedad.objects.create(
                 muestra= muestra,
-                fecha= fecha, 
+                fechaInicio= fechaInicio, 
+                fechaFin= fechaFin, 
                 ensayo= ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
@@ -277,18 +255,20 @@ def humedad(request, muestra_id): #################################### Hay que c
                     )
                     
             #Añadimos los equipos
-            humedad.equipos.set(equipos)           
-            return redirect ("inicio")
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
+            humedad.equipos.set (equipos)
         else:
             print("no valido")
     else:
         if muestra_id != "nueva":
             ensayo= Humedad.objects.get(muestra__id= muestra_id)
             resultados= ResultadosHumedad.objects.filter(ensayo=ensayo).order_by('id')
+            equipos=ensayo.equipos.all() 
             
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo.fecha)
+            fechaInicio= str(ensayo.fechaInicio)
+            fechaFin= str(ensayo.fechaFin)
             temperaturaAmbiente= ensayo.temperaturaAmbiente
             humedad=ensayo.humedad
             criterio= ensayo.criterio
@@ -325,7 +305,8 @@ def humedad(request, muestra_id): #################################### Hay que c
 
                 form = HumedadForm(initial={
                     'muestra': muestra,
-                    'fecha': fecha,
+                    'fechaInicio': fechaInicio,
+                    'fechaFin': fechaFin,
                     'temperaturaAmbiente': temperaturaAmbiente,
                     'humedad': humedad,
                     'criterio':criterio,
@@ -349,20 +330,26 @@ def humedad(request, muestra_id): #################################### Hay que c
                     })
                 
             form.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
             
         else:
             form = HumedadForm()
             form.fields['muestra'].queryset = muestras_queryset
 
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+
     return render(request, 'ensayos/nuevosEnsayos/humedad.html', {
         'form': form, 
         'ensayo': ensayo,
+        'equiposEnsayo': equiposEnsayo,
         })
 
 
 def granulometria(request, muestra_id):
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "granulometria")
+    equipos= get_object_or_404(Equipos, ensayos= ensayo)
+    id_ensayo= muestra_id
 
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -371,14 +358,16 @@ def granulometria(request, muestra_id):
 
     if request.method == 'POST':
         form= GranulometriaForm(request.POST, request.FILES)
+        equiposEnsayo = EquiposEnsayoForm(request.POST, prefix='equipos')
 
-        if form.is_valid:
+        if form.is_valid() and equiposEnsayo.is_valid():
             #Recogemos los datos para guardarlos
             muestra= get_object_or_404(Muestras, id= request.POST.get('muestra'))
             equipos= get_list_or_404(Equipos, ensayos=ensayo)            
 
             #Agregamos los campos
-            fecha= request.POST.get('fecha')
+            fechaInicio= request.POST.get('fechaInicio')
+            fechaFin= request.POST.get('fechaFin')
             temperaturaAmbiente= float(request.POST.get('temperaturaAmbiente'))
             humedad= float(request.POST.get('humedad'))
             via= float(request.POST.get('via'))
@@ -386,9 +375,7 @@ def granulometria(request, muestra_id):
             d50= float(request.POST.get('d50'))
             d90= float(request.POST.get('d90'))
             archivo=request.FILES.get("archivo")
-            print(request.POST)
-            print(request.FILES)
-            print(request.FILES.get("archivo"))
+
             #Comprobamos que no exista un ensayo de humedad previo
             granulometria_instancia= Granulometria.objects.filter(muestra= muestra)
             granulometria_instancia.delete()
@@ -398,7 +385,8 @@ def granulometria(request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 via= via,
                 d10=d10,
                 d50= d50,
@@ -408,45 +396,57 @@ def granulometria(request, muestra_id):
 
             )        
 
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             granulometria.equipos.set (equipos)
 
-            return redirect ("inicio")
+            return redirect('granulometria', muestra_id=id_ensayo)
+
+
     
     else:
         if muestra_id != 'nueva':
             ensayo= Granulometria.objects.get(muestra__id= muestra_id)            
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo.fecha)
+            fechaInicio= str(ensayo.fechaInicio)
+            fechaFin= str(ensayo.fechaFin)
             temperaturaAmbiente= ensayo.temperaturaAmbiente
             humedad=ensayo.humedad
             via= ensayo.via
             d10= ensayo.d10
             d50= ensayo.d50
             d90= ensayo.d90
+            archivo= ensayo.archivo
+            print(archivo)
             
             
             form = GranulometriaForm(initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'via':via,
                 'd10': d10,
                 'd50': d50,
                 'd90': d90,
+                'archivo': archivo,
                 })
             
             form.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
 
         else:
             form= GranulometriaForm()
             form.fields['muestra'].queryset = muestras_queryset
 
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+
 
     return render(request, 'ensayos/nuevosEnsayos/granulometria.html', {
         'ensayo': ensayo,
         'form': form,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
@@ -464,10 +464,10 @@ def tmic(request, muestra_id):
         #Recibimos los formularios diferenciándolos con el prefijo
         formTmic= TmicForm(request.POST, prefix='tmic')
         formTmicResultados= tmicResultadosFormSet(request.POST, prefix='tmicResultados') 
-        formEquipos= EquiposEnsayoForm(request.POST, prefix='equipos')
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equipos')
 
         
-        if formTmic.is_valid() and formTmicResultados.is_valid() and formEquipos.is_valid():
+        if formTmic.is_valid() and formTmicResultados.is_valid() and equiposEnsayo.is_valid():
             muestra= get_object_or_404(Muestras, id= request.POST.get('tmic-muestra'))
             
             
@@ -477,7 +477,8 @@ def tmic(request, muestra_id):
 
             
             #Guardamos el formulario de la capa a falta del resultado final
-            fecha= formTmic.cleaned_data['fecha']
+            fechaInicio= formTmic.cleaned_data['fechaInicio']
+            fechaFin= formTmic.cleaned_data['fechaFin']
             temperaturaAmbiente= formTmic.cleaned_data['temperaturaAmbiente']
             humedad= formTmic.cleaned_data['humedad']
             tiempoMaxEnsayo= formTmic.cleaned_data['tiempoMaxEnsayo']
@@ -488,11 +489,12 @@ def tmic(request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 tiempoMaxEnsayo=tiempoMaxEnsayo,
                 observacion= observacion,
             )
-            equipos= formEquipos.cleaned_data['equiposEnsayo']
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             tmic.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -545,9 +547,12 @@ def tmic(request, muestra_id):
         else:
             print (formTmic.errors)
             formTmic.add_error(None, 'Error en el formulario, revisa los datos')
+            formTmicResultados.add_error(None, 'Error en el formulario, revisa los datos')
+
             return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
                 'ensayo': ensayo,
                 'formTmic': formTmic,
+                'equiposEnsayo': equiposEnsayo,
                 'formTmicResultados': formTmicResultados,
             })
     else:
@@ -556,7 +561,8 @@ def tmic(request, muestra_id):
             equipos=ensayo_TMIc.equipos.all() 
 
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_TMIc.fecha)
+            fechaInicio= str(ensayo_TMIc.fechaInicio)
+            fechaFin= str(ensayo_TMIc.fechaFin)
             temperaturaAmbiente= ensayo_TMIc.temperaturaAmbiente
             humedad=ensayo_TMIc.humedad
             tiempoMaxEnsayo= ensayo_TMIc.tiempoMaxEnsayo
@@ -566,7 +572,8 @@ def tmic(request, muestra_id):
 
             formTmic = TmicForm(prefix='tmic', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'tiempoMaxEnsayo': tiempoMaxEnsayo,
@@ -592,6 +599,8 @@ def tmic(request, muestra_id):
             TmicResultadosFormSet = formset_factory(TmicResultadosForm, extra=0)
             formTmicResultados = TmicResultadosFormSet(prefix='tmicResultados',initial=initial_data)
 
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+
         
         else:
             formTmic= TmicForm(prefix='tmic')
@@ -599,9 +608,7 @@ def tmic(request, muestra_id):
 
             formTmicResultados=tmicResultadosFormSet(prefix='tmicResultados')            
 
-    
-
-    equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
 
     return render(request, 'ensayos/nuevosEnsayos/tmic.html', {
         'ensayo': ensayo,
@@ -624,12 +631,13 @@ def tmin (request, muestra_id):
     if request.method == 'POST':
         #Recibimos los formularios diferenciándolos con el prefijo
         formTmin= TminForm(request.POST, prefix='tmin')
-        formTminResultados= tminResultadosFormSet(request.POST, prefix='tminResultados')  
+        formTminResultados= tminResultadosFormSet(request.POST, prefix='tminResultados') 
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equipos')
+ 
         
-        if formTmin.is_valid() and formTminResultados.is_valid():
+        if formTmin.is_valid() and formTminResultados.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('tmin-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
             #Comprobamos que no exista un ensayo  previo
             tmin_instancia= TMIn.objects.filter(muestra= muestra)
@@ -637,7 +645,8 @@ def tmin (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formTmin.cleaned_data['fecha']
+            fechaInicio= formTmin.cleaned_data['fechaInicio']
+            fechaFin= formTmin.cleaned_data['fechaFin']
             temperaturaAmbiente= formTmin.cleaned_data['temperaturaAmbiente']
             humedad= formTmin.cleaned_data['humedad']
             observacion=formTmin.cleaned_data['observacion']
@@ -647,9 +656,11 @@ def tmin (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             tmin.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -694,18 +705,24 @@ def tmin (request, muestra_id):
                         
         else:
             print (formTmin.errors)
+            print(formTminResultados.errors)
+            print(equiposEnsayo.errors)
             formTmin.add_error(None, 'Error en el formulario, revisa los datos')
             return render(request, 'ensayos/nuevosEnsayos/tmin.html', {
                 'ensayo': ensayo,
                 'formTmin': formTmin,
                 'formTminResultados': formTminResultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_TMIn= TMIn.objects.get(muestra__id= muestra_id)            
+            ensayo_TMIn= TMIn.objects.get(muestra__id= muestra_id)  
+            equipos=ensayo_TMIn.equipos.all() 
+          
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_TMIn.fecha)
+            fechaInicio= str(ensayo_TMIn.fechaInicio)
+            fechaFin= str(ensayo_TMIn.fechaFin)
             temperaturaAmbiente= ensayo_TMIn.temperaturaAmbiente
             humedad=ensayo_TMIn.humedad
             observacion= ensayo_TMIn.observacion
@@ -713,7 +730,8 @@ def tmin (request, muestra_id):
             
             formTmin = TminForm(prefix='tmin', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'observacion': observacion,
@@ -736,25 +754,57 @@ def tmin (request, muestra_id):
             TminResultadosFormSet = formset_factory(TminResultadosForm, extra=0)
             formTminResultados = TminResultadosFormSet(prefix='tminResultados',initial=initial_data)
 
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+
+
         
         else:
             formTmin= TminForm(prefix='tmin')
             formTmin.fields['muestra'].queryset = muestras_queryset
 
-            formTminResultados=tminResultadosFormSet(prefix='tminResultados')            
+            formTminResultados=tminResultadosFormSet(prefix='tminResultados')  
+
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos')
+          
 
 
     return render(request, 'ensayos/nuevosEnsayos/tmin.html', {
         'ensayo': ensayo,
         'formTmin': formTmin,
         'formTminResultados': formTminResultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
+
+def gestorArchivoLie(request):
+    resultados = []  # Se inicializa aquí para evitar problemas si hay errores previos.
+
+    if request.method == 'POST':
+        archivo = request.FILES.get('file')
+
+        if archivo:
+            try:
+                contenido = archivo.read().decode('utf-8')
+                filas = contenido.strip().split('\n')
+                
+                # Quitamos la primera fila y procesamos las demás
+                for fila in filas[1:]:
+                    filaLimpia = fila.strip(';').split(';')
+                    serie = [valor.strip() for valor in filaLimpia if valor.strip()]
+                    resultados.append(serie)
+                print(resultados)
+            except Exception as e:
+                return JsonResponse({"error": f"Error al procesar el archivo: {str(e)}"}, status=400)
+        
+        else:
+            return JsonResponse({"error": "Archivo no recibido"}, status=400)
+        
+    return JsonResponse({"resultados": resultados})
 
 def lie (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "LIE")
-  
+
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
         Q(lie__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="lie") & ~Q(estado=1)
@@ -764,11 +814,12 @@ def lie (request, muestra_id):
         #Recibimos los formularios diferenciándolos con el prefijo
         formLie= LieForm(request.POST, prefix='lie')
         formLieResultados= lieResultadosFormSet(request.POST, prefix='lieResultados')  
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equipoEnsayo')
+
         
-        if formLie.is_valid() and formLieResultados.is_valid():
+        if formLie.is_valid() and formLieResultados.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('lie-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
             #Comprobamos que no exista un ensayo  previo
             lie_instancia= LIE.objects.filter(muestra= muestra)
@@ -776,7 +827,8 @@ def lie (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formLie.cleaned_data['fecha']
+            fechaInicio= formLie.cleaned_data['fechaInicio']
+            fechaFin= formLie.cleaned_data['fechaFin']
             temperaturaAmbiente= formLie.cleaned_data['temperaturaAmbiente']
             humedad= formLie.cleaned_data['humedad']
             cerillas= formLie.cleaned_data['cerillas']
@@ -790,9 +842,12 @@ def lie (request, muestra_id):
                 humedad= humedad,
                 cerillas= cerillas,
                 boquilla= boquilla,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+            
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             lie.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -863,13 +918,16 @@ def lie (request, muestra_id):
                 'ensayo': ensayo,
                 'formLie': formLie,
                 'formLieResultados': formLieResultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
             ensayo_LIE= LIE.objects.get(muestra__id= muestra_id)            
+            equipos=ensayo_LIE.equipos.all() 
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_LIE.fecha)
+            fechaInicio= str(ensayo_LIE.fechaInicio)
+            fechaFin= str(ensayo_LIE.fechaFin)
             temperaturaAmbiente= ensayo_LIE.temperaturaAmbiente
             humedad=ensayo_LIE.humedad
             cerillas=ensayo_LIE.cerillas,
@@ -879,7 +937,8 @@ def lie (request, muestra_id):
             
             formLie = LieForm(prefix='lie', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'cerillas': cerillas,
@@ -905,18 +964,24 @@ def lie (request, muestra_id):
             # Crear el formset con los datos iniciales
             LieResultadosFormSet = formset_factory(LieResultadosForm, extra=0)
             formLieResultados = LieResultadosFormSet(prefix='lieResultados',initial=initial_data)
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})           
+
         
         else:
             formLie= LieForm(prefix='lie')
             formLie.fields['muestra'].queryset = muestras_queryset
 
-            formLieResultados=lieResultadosFormSet(prefix='lieResultados')            
+            formLieResultados=lieResultadosFormSet(prefix='lieResultados') 
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')           
 
 
     return render(request, 'ensayos/nuevosEnsayos/lie.html', {
         'ensayo': ensayo,
         'formLie': formLie,
         'formLieResultados': formLieResultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
@@ -945,7 +1010,6 @@ def gestorArchivoEmi(request):
         
     return JsonResponse({"resultados": resultados})
 
-
 def emi (request, muestra_id):
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMI")
@@ -956,15 +1020,14 @@ def emi (request, muestra_id):
     )
 
     if request.method == 'POST':
-        print (request.POST)
         #Recibimos los formularios diferenciándolos con el prefijo
         formEmi= EmiForm(request.POST, prefix='emi')
         formEmiResultados= emiResultadosFormSet(request.POST, prefix='emiResultados')  
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= "equiposEnsayo")
         
-        if formEmi.is_valid() and formEmiResultados.is_valid():
+        if formEmi.is_valid() and formEmiResultados.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('emi-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
             #Comprobamos que no exista un ensayo  previo
             emi_instancia= EMI.objects.filter(muestra= muestra)
@@ -972,7 +1035,8 @@ def emi (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formEmi.cleaned_data['fecha']
+            fechaInicio= formEmi.cleaned_data['fechaInicio']
+            fechaFin= formEmi.cleaned_data['fechaFin']
             temperaturaAmbiente= formEmi.cleaned_data['temperaturaAmbiente']
             humedad= formEmi.cleaned_data['humedad']
             inductancia= formEmi.cleaned_data['inductancia']
@@ -987,11 +1051,13 @@ def emi (request, muestra_id):
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
                 inductancia= inductancia,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 presion= presion,
                 observacion= observacion,
                 
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             emi.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -1043,13 +1109,16 @@ def emi (request, muestra_id):
                 'ensayo': ensayo,
                 'formEmi': formEmi,
                 'formEmiResultados': formEmiResultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_EMI= EMI.objects.get(muestra__id= muestra_id)            
+            ensayo_EMI= EMI.objects.get(muestra__id= muestra_id)   
+            equipos= ensayo_EMI.equipos.all()        
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_EMI.fecha)
+            fechaInicio= str(ensayo_EMI.fechaInicio)
+            fechaFin= str(ensayo_EMI.fechaFin)
             temperaturaAmbiente= ensayo_EMI.temperaturaAmbiente
             humedad=ensayo_EMI.humedad
             inductancia= ensayo_EMI.inductancia
@@ -1060,7 +1129,8 @@ def emi (request, muestra_id):
             
             formEmi = EmiForm(prefix='emi', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'inductancia': inductancia,
@@ -1086,20 +1156,23 @@ def emi (request, muestra_id):
             # Crear el formset con los datos iniciales
             EmiResultadosFormSet = formset_factory(EmiResultadosForm, extra=0)
             formEmiResultados = EmiResultadosFormSet(prefix='emiResultados',initial=initial_data)
+            
+            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo", initial= {'equiposEnsayo':equipos})
         
         else:
             formEmi= EmiForm(prefix='emi')
             formEmi.fields['muestra'].queryset = muestras_queryset
 
-            formEmiResultados=emiResultadosFormSet(prefix='emiResultados')            
+            formEmiResultados=emiResultadosFormSet(prefix='emiResultados') 
+            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo")           
 
 
     return render(request, 'ensayos/nuevosEnsayos/emi.html', {
         'ensayo': ensayo,
         'formEmi': formEmi,
         'formEmiResultados': formEmiResultados,
+        'equiposEnsayo': equiposEnsayo,
     })
-
 
 def emiSinInductancia(request, muestra_id):
     #Sacamos el ensayo
@@ -1111,15 +1184,14 @@ def emiSinInductancia(request, muestra_id):
     )
 
     if request.method == 'POST':
-        print ("request.POST")
-        print (request.POST)
         #Recibimos los formularios diferenciándolos con el prefijo
         formEmi= EmiForm(request.POST, prefix='emi')
-        formEmiResultados= emiResultadosFormSet(request.POST, prefix='emiResultados')  
+        formEmiResultados= emiResultadosFormSet(request.POST, prefix='emiResultados') 
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= "equiposEnsayo") 
 
-        if formEmi.is_valid() and formEmiResultados.is_valid():
+        if formEmi.is_valid() and formEmiResultados.is_valid() and equiposEnsayo.is_valid():
             muestra= get_object_or_404(Muestras, id= request.POST.get('emi-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
             
             #Comprobamos que no exista un ensayo  previo
             emi_instancia= EMIsin.objects.filter(muestra= muestra)
@@ -1127,7 +1199,8 @@ def emiSinInductancia(request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formEmi.cleaned_data['fecha']
+            fechaInicio= formEmi.cleaned_data['fechaInicio']
+            fechaFin= formEmi.cleaned_data['fechaFin']
             temperaturaAmbiente= formEmi.cleaned_data['temperaturaAmbiente']
             humedad= formEmi.cleaned_data['humedad']
             inductancia= formEmi.cleaned_data['inductancia']
@@ -1142,11 +1215,12 @@ def emiSinInductancia(request, muestra_id):
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
                 inductancia= inductancia,
-                fecha= fecha,
+                fechaInicio= fechaFin,
                 presion= presion,
                 observacion= observacion,
                 
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             emi.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -1200,13 +1274,16 @@ def emiSinInductancia(request, muestra_id):
                 'ensayo': ensayo,
                 'formEmi': formEmi,
                 'formEmiResultados': formEmiResultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_EMI= EMIsin.objects.get(muestra__id= muestra_id)            
+            ensayo_EMI= EMIsin.objects.get(muestra__id= muestra_id)  
+            equipos= ensayo_EMI.equipos.all()          
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_EMI.fecha)
+            fechaInicio= str(ensayo_EMI.fechaInicio)
+            fechaFin= str(ensayo_EMI.fechaFin)
             temperaturaAmbiente= ensayo_EMI.temperaturaAmbiente
             humedad=ensayo_EMI.humedad
             inductancia= ensayo_EMI.inductancia
@@ -1217,7 +1294,8 @@ def emiSinInductancia(request, muestra_id):
             
             formEmi = EmiForm(prefix='emi', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'inductancia': inductancia,
@@ -1243,19 +1321,23 @@ def emiSinInductancia(request, muestra_id):
             # Crear el formset con los datos iniciales
             EmiResultadosFormSet = formset_factory(EmiResultadosForm, extra=0)
             formEmiResultados = EmiResultadosFormSet(prefix='emiResultados',initial=initial_data)
+
+            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo", initial= {'equiposEnsayo':equipos})
         
         else:
             formEmi= EmiForm(prefix='emi')
             formEmi.fields['muestra'].queryset = muestras_queryset
             formEmi.fields['inductancia'].initial = "2"
 
-            formEmiResultados=emiResultadosFormSet(prefix='emiResultados')            
+            formEmiResultados=emiResultadosFormSet(prefix='emiResultados') 
+            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo")           
 
 
     return render(request, 'ensayos/nuevosEnsayos/emi.html', {
         'ensayo': ensayo,
         'formEmi': formEmi,
         'formEmiResultados': formEmiResultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
@@ -1284,7 +1366,6 @@ def gestorArchivoPmax(request):
         
     return JsonResponse({"resultados": resultados})
 
-
 def pmax (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "Pmax")
@@ -1295,21 +1376,15 @@ def pmax (request, muestra_id):
     )
 
     if request.method == 'POST':
-        print("1.hemos llegado aqui")
         
-
         #Recibimos los formularios diferenciándolos con el prefijo
         formPmax= PmaxForm(request.POST, prefix='pmax')
         formPmaxResultados= pmaxResultadosFormSet(request.POST, prefix='pmaxResultados')
-  
-        print("Datos POST recibidos:", request.POST)
-        
-        if formPmax.is_valid() and formPmaxResultados.is_valid():
-            print("2.hemos llegado aqui")
-
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equiposEnsayo')
+          
+        if formPmax.is_valid() and formPmaxResultados.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('pmax-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
             #Comprobamos que no exista un ensayo  previo
             pmax_instancia= Pmax.objects.filter(muestra= muestra)
@@ -1317,7 +1392,8 @@ def pmax (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formPmax.cleaned_data['fecha']
+            fechaInicio= formPmax.cleaned_data['fechaInicio']
+            fechaFin= formPmax.cleaned_data['fechaFin']
             temperaturaAmbiente= formPmax.cleaned_data['temperaturaAmbiente']
             humedad= formPmax.cleaned_data['humedad']
             cerillas= formPmax.cleaned_data['cerillas']
@@ -1337,10 +1413,11 @@ def pmax (request, muestra_id):
                 pmax= pmax,
                 dpdt= dpdt,
                 kmax= kmax,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
-
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             pmax.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -1354,15 +1431,11 @@ def pmax (request, muestra_id):
             for form in formPmaxResultados:
                 
                 if form.cleaned_data:  # Para evitar formularios vacíos
-                    print("4.hemos llegado aqui")
                     concentracion = form.cleaned_data['concentracion']
                     peso = form.cleaned_data['peso']
                     serie= form.cleaned_data['serie']
                     pm= form.cleaned_data['pm_serie']
                     dpdt= form.cleaned_data['dpdt_serie']
-                    print(concentracion)
-
-                    print(form.cleaned_data)
                     
 
                     resultadosPmax=ResultadosPmax.objects.create(
@@ -1381,6 +1454,7 @@ def pmax (request, muestra_id):
                         'ensayo': ensayo,
                         'formPmax': formPmax,
                         'formPmaxResultados': formPmaxResultados,
+                        'equiposEnsayo': equiposEnsayo,
                     })
                         
         else:
@@ -1390,13 +1464,16 @@ def pmax (request, muestra_id):
                 'ensayo': ensayo,
                 'formPmax': formPmax,
                 'formPmaxResultados': formPmaxResultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_Pmax= Pmax.objects.get(muestra__id= muestra_id)            
+            ensayo_Pmax= Pmax.objects.get(muestra__id= muestra_id)   
+            equipos= ensayo_Pmax.equipos.all()         
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_Pmax.fecha)
+            fechaInicio= str(ensayo_Pmax.fechaInicio)
+            fechaFin= str(ensayo_Pmax.fechaFin)
             temperaturaAmbiente= ensayo_Pmax.temperaturaAmbiente
             humedad=ensayo_Pmax.humedad
             cerillas=ensayo_Pmax.cerillas
@@ -1409,7 +1486,8 @@ def pmax (request, muestra_id):
             
             formPmax = PmaxForm(prefix='pmax', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'cerillas': cerillas,
@@ -1437,18 +1515,23 @@ def pmax (request, muestra_id):
             # Crear el formset con los datos iniciales
             PmaxResultadosFormSet = formset_factory(PmaxResultadosForm, extra=0)
             formPmaxResultados = PmaxResultadosFormSet(prefix='pmaxResultados',initial=initial_data)
+            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo", initial= {'equiposEnsayo':equipos})
+
         
         else:
             formPmax= PmaxForm(prefix='pmax')
             formPmax.fields['muestra'].queryset = muestras_queryset
 
-            formPmaxResultados=pmaxResultadosFormSet(prefix='pmaxResultados')            
+            formPmaxResultados=pmaxResultadosFormSet(prefix='pmaxResultados')     
+            equiposEnsayo= EquiposEnsayoForm(prefix= "equiposEnsayo") 
+                
 
 
     return render(request, 'ensayos/nuevosEnsayos/pmax.html', {
         'ensayo': ensayo,
         'formPmax': formPmax,
         'formPmaxResultados': formPmaxResultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
@@ -1465,11 +1548,11 @@ def clo (request, muestra_id):
         #Recibimos los formularios diferenciándolos con el prefijo
         formClo= CloForm(request.POST, prefix='clo')
         formCloResultados= cloResultadosFormSet(request.POST, prefix='cloResultados')  
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo')
         
-        if formClo.is_valid() and formCloResultados.is_valid():
+        if formClo.is_valid() and formCloResultados.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('clo-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
             
             #Comprobamos que no exista un ensayo  previo
             clo_instancia= CLO.objects.filter(muestra= muestra)
@@ -1477,7 +1560,8 @@ def clo (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formClo.cleaned_data['fecha']
+            fechaInicio= formClo.cleaned_data['fechaInicio']
+            fechaFin= formClo.cleaned_data['fechaFin']
             temperaturaAmbiente= formClo.cleaned_data['temperaturaAmbiente']
             humedad= formClo.cleaned_data['humedad']
             cerillas= formClo.cleaned_data['cerillas']
@@ -1491,9 +1575,12 @@ def clo (request, muestra_id):
                 humedad= humedad,
                 cerillas= cerillas,
                 boquilla= boquilla,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             clo.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -1550,13 +1637,16 @@ def clo (request, muestra_id):
                 'ensayo': ensayo,
                 'formClo': formClo,
                 'formCloResultados': formCloResultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_CLO= CLO.objects.get(muestra__id= muestra_id)            
+            ensayo_CLO= CLO.objects.get(muestra__id= muestra_id) 
+            equipos= ensayo_CLO.equipos.all()           
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_CLO.fecha)
+            fechaInicio= str(ensayo_CLO.fechaInicio)
+            fechaFin= str(ensayo_CLO.fechaFin)
             temperaturaAmbiente= ensayo_CLO.temperaturaAmbiente
             humedad=ensayo_CLO.humedad
             cerillas=ensayo_CLO.cerillas,
@@ -1566,7 +1656,8 @@ def clo (request, muestra_id):
             
             formClo = CloForm(prefix='clo', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'cerillas': cerillas,
@@ -1593,18 +1684,23 @@ def clo (request, muestra_id):
             # Crear el formset con los datos iniciales
             CloResultadosFormSet = formset_factory(CloResultadosForm, extra=0)
             formCloResultados = CloResultadosFormSet(prefix='cloResultados',initial=initial_data)
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
         
         else:
             formClo= CloForm(prefix='clo')
             formClo.fields['muestra'].queryset = muestras_queryset
 
-            formCloResultados=cloResultadosFormSet(prefix='cloResultados')            
+            formCloResultados=cloResultadosFormSet(prefix='cloResultados')   
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')
+
 
 
     return render(request, 'ensayos/nuevosEnsayos/clo.html', {
         'ensayo': ensayo,
         'formClo': formClo,
         'formCloResultados': formCloResultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
@@ -1621,12 +1717,14 @@ def rec (request, muestra_id):
         print(request.POST)
         #Recibimos los formularios diferenciándolos con el prefijo
         formRec= RecForm(request.POST, prefix='rec')
-        formRecResultados= recResultadosFormSet(request.POST, prefix='recResultados')  
+        formRecResultadosSerie1= recResultadosSerie1FormSet(request.POST, prefix='recResultadosSerie1') 
+        formRecResultadosSerie2= recResultadosSerie2FormSet(request.POST, prefix='recResultadosSerie2') 
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo') 
         
-        if formRec.is_valid() and formRecResultados.is_valid():
+        if formRec.is_valid() and formRecResultadosSerie1.is_valid() and formRecResultadosSerie2.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('rec-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            
             
             #Comprobamos que no exista un ensayo  previo
             rec_instancia= REC.objects.filter(muestra= muestra)
@@ -1634,7 +1732,8 @@ def rec (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formRec.cleaned_data['fecha']
+            fechaInicio= formRec.cleaned_data['fechaInicio']
+            fechaFin= formRec.cleaned_data['fechaFin']
             temperaturaAmbiente= formRec.cleaned_data['temperaturaAmbiente']
             humedad= formRec.cleaned_data['humedad']
             observacion=formRec.cleaned_data['observacion']
@@ -1644,9 +1743,11 @@ def rec (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             rec.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -1657,27 +1758,51 @@ def rec (request, muestra_id):
 
             
             #Guardamos los resultados en la tabla de resultados REC 
-            listaResultados= []  
+            listaResultados1= []  
+            listaResultados2= [] 
 
-            for form in formRecResultados:
+            for form in formRecResultadosSerie1:
                 if form.cleaned_data:  # Para evitar formularios vacíos
+                    nPrueba= form.cleaned_data['nPrueba']
                     tension= form.cleaned_data['tension']
                     tiempo= form.cleaned_data['tiempo']
                     resultadoPrueba= form.cleaned_data['resultadoPrueba']
 
                     resultadosRec=ResultadosREC.objects.create(
+                        nPrueba= nPrueba,
                         ensayo= rec,
                         tension= tension,
                         tiempo= tiempo,
                         resultado=resultadoPrueba,
                     )
 
-                    listaResultados.append(resultadoPrueba)
+                    listaResultados1.append(resultadoPrueba)
                     
+            for form in formRecResultadosSerie2:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    nPrueba= form.cleaned_data['nPrueba']
+                    tension= form.cleaned_data['tension']
+                    tiempo= form.cleaned_data['tiempo']
+                    resultadoPrueba= form.cleaned_data['resultadoPrueba']
+
+                    resultadosRec=ResultadosREC.objects.create(
+                        nPrueba= nPrueba,
+                        ensayo= rec,
+                        tension= tension,
+                        tiempo= tiempo,
+                        resultado=resultadoPrueba,
+                    )
+
+                    listaResultados2.append(resultadoPrueba)
 
             #Guardamos en el modelo REC el resultado del ensayo
-            if listaResultados:
-                rs = min(listaResultados)
+            if listaResultados1 and listaResultados2:
+                
+                
+                rs1 = min(listaResultados1)
+                rs2= min(listaResultados2)
+
+                rs= (rs1+rs2)/2
                 hwl= 100
                 resultadoEnsayo= (0.001*float(rs)*hwl)*(10**6)
                 print(float(rs))
@@ -1697,14 +1822,18 @@ def rec (request, muestra_id):
             return render(request, 'ensayos/nuevosEnsayos/rec.html', {
                 'ensayo': ensayo,
                 'formRec': formRec,
-                'formRecResultados': formRecResultados,
+                'formRecResultadosSerie1': formRecResultadosSerie1,
+                'formRecResultadosSerie2': formRecResultadosSerie2,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_REC= REC.objects.get(muestra__id= muestra_id)            
+            ensayo_REC= REC.objects.get(muestra__id= muestra_id)
+            equipos= ensayo_REC.equipos.all()            
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_REC.fecha)
+            fechaInicio= str(ensayo_REC.fechaInicio)
+            fechaFin= str(ensayo_REC.fechaFin)
             temperaturaAmbiente= ensayo_REC.temperaturaAmbiente
             humedad=ensayo_REC.humedad
             observacion= ensayo_REC.observacion,
@@ -1712,7 +1841,8 @@ def rec (request, muestra_id):
             
             formRec = RecForm(prefix='rec', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'observacion': observacion,
@@ -1721,30 +1851,65 @@ def rec (request, muestra_id):
             formRec.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
 
             resultados= ResultadosREC.objects.filter(ensayo=ensayo_REC).order_by("id")
+            print(resultados)
 
-            initial_data = []
+            initial_data1 = []
+            initial_data2 = []
             for resultado in resultados:
-                initial_data.append({
-                    'tension': resultado.tension,
-                    'tiempo': resultado.tiempo,
-                    'resultadoPrueba': resultado.resultado,
-                })
-            
+                print("hola")
+                print(resultado.nPrueba)
+                if resultado.nPrueba == "1":
+                    initial_data1.append({
+                        'nPrueba': resultado.nPrueba,
+                        'tension': resultado.tension,
+                        'tiempo': resultado.tiempo,
+                        'resultadoPrueba': resultado.resultado,
+                    })
+                if resultado.nPrueba == "2":
+                    initial_data2.append({
+                        'nPrueba': resultado.nPrueba,
+                        'tension': resultado.tension,
+                        'tiempo': resultado.tiempo,
+                        'resultadoPrueba': resultado.resultado,
+                    })
+            print(initial_data1)
             # Crear el formset con los datos iniciales
             RecResultadosFormSet = formset_factory(RecResultadosForm, extra=0)
-            formRecResultados = RecResultadosFormSet(prefix='recResultados',initial=initial_data)
+
+            formRecResultadosSerie1=recResultadosSerie1FormSet(prefix='recResultadosSerie1', initial= initial_data1)   
+            formRecResultadosSerie2=recResultadosSerie2FormSet(prefix='recResultadosSerie2', initial= initial_data2)
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
         
         else:
             formRec= RecForm(prefix='rec')
             formRec.fields['muestra'].queryset = muestras_queryset
+            
+            default_data1 = [
+                {'nPrueba': '1', 'tension': 100, 'tiempo': 60, },
+                {'nPrueba': '1', 'tension': 500, 'tiempo': 60, },
+                {'nPrueba': '1',  'tension': 1000, 'tiempo': 60,},
+            ]
 
-            formRecResultados=recResultadosFormSet(prefix='recResultados')            
+            default_data2 = [
+                {'nPrueba': '2', 'tension': 100, 'tiempo': 60,},
+                {'nPrueba': '2', 'tension': 500, 'tiempo': 60,},
+                {'nPrueba': '2',  'tension': 1000, 'tiempo': 60,},
+            ]
+
+            formRecResultadosSerie1=recResultadosSerie1FormSet(prefix='recResultadosSerie1', initial= default_data1)   
+            formRecResultadosSerie2=recResultadosSerie2FormSet(prefix='recResultadosSerie2', initial= default_data2)  
+
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')        
 
 
     return render(request, 'ensayos/nuevosEnsayos/rec.html', {
         'ensayo': ensayo,
         'formRec': formRec,
-        'formRecResultados': formRecResultados,
+        'formRecResultadosSerie1': formRecResultadosSerie1,
+        'formRecResultadosSerie2': formRecResultadosSerie2,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
@@ -1762,11 +1927,12 @@ def n1 (request, muestra_id):
         #N1ibimos los formularios diferenciándolos con el prefijo
         formN1= N1Form(request.POST, prefix='n1')
         formN1Resultados= n1ResultadosFormSet(request.POST, prefix='n1Resultados')  
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equiposEnsayos')
         
-        if formN1.is_valid() and formN1Resultados.is_valid():
+        if formN1.is_valid() and formN1Resultados.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('n1-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+              
             
             #Comprobamos que no exista un ensayo  previo
             n1_instancia= N1.objects.filter(muestra= muestra)
@@ -1774,7 +1940,8 @@ def n1 (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formN1.cleaned_data['fecha']
+            fechaInicio= formN1.cleaned_data['fechaInicio']
+            fechaFin= formN1.cleaned_data['fechaFin']
             temperaturaAmbiente= formN1.cleaned_data['temperaturaAmbiente']
             humedad= formN1.cleaned_data['humedad']
             tipoPolvo= formN1.cleaned_data['tipoPolvo']
@@ -1788,9 +1955,11 @@ def n1 (request, muestra_id):
                 humedad= humedad,
                 tipoPolvo= tipoPolvo,
                 pruebaPreseleccion= pruebaPreseleccion,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             n1.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -1862,13 +2031,16 @@ def n1 (request, muestra_id):
                 'ensayo': ensayo,
                 'formN1': formN1,
                 'formN1Resultados': formN1Resultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_N1= N1.objects.get(muestra__id= muestra_id)            
+            ensayo_N1= N1.objects.get(muestra__id= muestra_id)
+            equipos= ensayo_N1.equipos.all()            
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_N1.fecha)
+            fechaInicio= str(ensayo_N1.fechaInicio)
+            fechaFin= str(ensayo_N1.fechaFin)
             temperaturaAmbiente= ensayo_N1.temperaturaAmbiente
             humedad=ensayo_N1.humedad
             tipoPolvo= ensayo_N1.tipoPolvo
@@ -1878,7 +2050,8 @@ def n1 (request, muestra_id):
             
             formN1 = N1Form(prefix='n1', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'tipoPolvo': tipoPolvo,
@@ -1900,18 +2073,21 @@ def n1 (request, muestra_id):
             # Crear el formset con los datos iniciales
             N1ResultadosFormSet = formset_factory(N1ResultadosForm, extra=0)
             formN1Resultados = N1ResultadosFormSet(prefix='n1Resultados',initial=initial_data)
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
         
         else:
             formN1= N1Form(prefix='n1')
             formN1.fields['muestra'].queryset = muestras_queryset
 
-            formN1Resultados=n1ResultadosFormSet(prefix='n1Resultados')            
+            formN1Resultados=n1ResultadosFormSet(prefix='n1Resultados')  
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')          
 
 
     return render(request, 'ensayos/nuevosEnsayos/n1.html', {
         'ensayo': ensayo,
         'formN1': formN1,
         'formN1Resultados': formN1Resultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 

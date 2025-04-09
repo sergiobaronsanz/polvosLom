@@ -1,5 +1,6 @@
 from django import forms
-from ensayos.models import Equipos
+from calidad.models import Equipos
+
 
 
 class EquiposForm(forms.ModelForm):
@@ -10,10 +11,12 @@ class EquiposForm(forms.ModelForm):
             'codigo': forms.TextInput(attrs={'class': 'form-control'}),
             'equipo': forms.TextInput(attrs={'class': 'form-control'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control'}),
+            'controlado': forms.CheckboxInput(attrs={"style":"transform: scale(2)"}),
             'ensayos': forms.SelectMultiple(attrs={'class': 'form-control'}),
-            'fechaCalibracion': forms.TextInput(attrs={'class': 'form-control'}),
-            'fechaCaducidadCalibracion': forms.TextInput(attrs={'class': 'form-control'}),
+            'fechaCalibracion': forms.TextInput(attrs={'class': 'form-control form-control-sm secado', 'style': 'text-align: center;', 'type': 'date'}),
+            'fechaCaducidadCalibracion': forms.TextInput(attrs={'class': 'form-control form-control-sm secado', 'style': 'text-align: center;', 'type': 'date'}),
         }
+        
 
 class EquiposEnsayoForm(forms.Form):
     def __init__(self, *args, **kwargs):
