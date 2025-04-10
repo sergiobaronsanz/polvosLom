@@ -67,7 +67,6 @@ const urlCompleta = window.location.href;
 //Iniciamos, todas oculas menos ensayo 1 que tiene que ir definida en 140ºC con celda de 100mm
 
 if (urlCompleta.includes("nueva")) {
-    console.log("holaaaaiu");
     
     deshabilitarEnsayo(ensayo1);
     deshabilitarEnsayo(ensayo2);
@@ -79,16 +78,36 @@ if (urlCompleta.includes("nueva")) {
     temperatura1.value= "3";
 } else {
     resultadotd.forEach(resultado => {
+		//Si algún ensayo no tiene valor en el select eso es que no tiene que aparecer, se le quita y se le anula el required
+		var numeroBucles= 0
         if (resultado.value === "0"){
+			numeroBucles ++;
             const numero = resultado.id.match(/-(\d+)-/);
             const numeroValor= numero[1];
             const idEnsayo= "ensayo" + numeroValor;
-            console.log(idEnsayo);
+            console.log("el valor del ensayo es:" + idEnsayo);
             
             const ensayoseleccionado= document.getElementById(idEnsayo);
             ensayoseleccionado.style.display="none";
+
+			let inputs= ensayoseleccionado.querySelectorAll(".inputs");
+			let selects= ensayoseleccionado.querySelectorAll(".selects");
+
+			inputs.forEach((input) =>{
+				input.disabled= true;
+			});
+
+			selects.forEach((select) =>{
+				select.disabled= true;
+			});
+
+
             
         }
+		//Actualizamos el número de filas de la tabla
+		let numeroFilastotales= tablaNumForm.value
+		tablaNumForm.value= numeroFilastotales-numeroBucles
+		
     });
 }
 

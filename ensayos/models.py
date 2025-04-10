@@ -582,8 +582,8 @@ class N2 (models.Model):
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
-    fecha= models.DateField(verbose_name="Fecha", blank= True, null= True)
-    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
+    fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
+    fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
     resultado= models.CharField(choices=resultadosPosibles, verbose_name="resultado", max_length=100, blank= True, null= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
@@ -632,7 +632,8 @@ class N4 (models.Model):
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
-    fecha= models.DateField(verbose_name="Fecha", blank= True, null= True)
+    fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
+    fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
     resultado= models.CharField(choices=resultadosPosibles, verbose_name="resultado", max_length=100, blank= True, null= True)
@@ -640,8 +641,7 @@ class N4 (models.Model):
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=4)
-    """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
-    unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""
+
     
     class Meta():
         verbose_name="N4"
@@ -757,7 +757,8 @@ class O1 (models.Model):
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank=True, null= True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     ensayoHumedad= models.FileField(upload_to='ensayos/o1/humedad_celulosa/', verbose_name="Humedad Celulosa", blank=True, null= True)
-    fecha= models.DateField(verbose_name="Fecha", blank=True, null= True)
+    fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
+    fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True, blank=True, null= True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True, blank=True, null= True)
     resultado= models.CharField(max_length=50, choices= resultadosPosibles, verbose_name="Resultado", blank=True, null=True) #9999,99

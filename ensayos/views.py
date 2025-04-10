@@ -146,7 +146,7 @@ def ensayosRealizados(request, ensayo):
 def humedad(request, muestra_id): #################################### Hay que cambiar muestras_id por humedad_id para así poder tener varias humedades en una misma muestra
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "humedad")
-    equipos=get_object_or_404(Equipos, ensayos= ensayo)  
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
 
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -453,7 +453,7 @@ def granulometria(request, muestra_id):
 def tmic(request, muestra_id):
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIc")   
-    equipos=get_object_or_404(Equipos, ensayos= ensayo)   
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)   
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -622,6 +622,7 @@ def tmic(request, muestra_id):
 def tmin (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIn")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -764,7 +765,7 @@ def tmin (request, muestra_id):
 
             formTminResultados=tminResultadosFormSet(prefix='tminResultados')  
 
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos')
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
           
 
 
@@ -804,6 +805,7 @@ def gestorArchivoLie(request):
 def lie (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "LIE")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
 
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -974,7 +976,7 @@ def lie (request, muestra_id):
 
             formLieResultados=lieResultadosFormSet(prefix='lieResultados') 
 
-            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')           
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})          
 
 
     return render(request, 'ensayos/nuevosEnsayos/lie.html', {
@@ -1013,6 +1015,7 @@ def gestorArchivoEmi(request):
 def emi (request, muestra_id):
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMI")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -1164,7 +1167,7 @@ def emi (request, muestra_id):
             formEmi.fields['muestra'].queryset = muestras_queryset
 
             formEmiResultados=emiResultadosFormSet(prefix='emiResultados') 
-            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo")           
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})           
 
 
     return render(request, 'ensayos/nuevosEnsayos/emi.html', {
@@ -1177,6 +1180,7 @@ def emi (request, muestra_id):
 def emiSinInductancia(request, muestra_id):
     #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMIsin")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -1330,7 +1334,7 @@ def emiSinInductancia(request, muestra_id):
             formEmi.fields['inductancia'].initial = "2"
 
             formEmiResultados=emiResultadosFormSet(prefix='emiResultados') 
-            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo")           
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})           
 
 
     return render(request, 'ensayos/nuevosEnsayos/emi.html', {
@@ -1369,6 +1373,7 @@ def gestorArchivoPmax(request):
 def pmax (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "Pmax")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -1523,7 +1528,7 @@ def pmax (request, muestra_id):
             formPmax.fields['muestra'].queryset = muestras_queryset
 
             formPmaxResultados=pmaxResultadosFormSet(prefix='pmaxResultados')     
-            equiposEnsayo= EquiposEnsayoForm(prefix= "equiposEnsayo") 
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos}) 
                 
 
 
@@ -1538,6 +1543,7 @@ def pmax (request, muestra_id):
 def clo (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "CLO")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -1692,7 +1698,7 @@ def clo (request, muestra_id):
             formClo.fields['muestra'].queryset = muestras_queryset
 
             formCloResultados=cloResultadosFormSet(prefix='cloResultados')   
-            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
 
 
 
@@ -1707,6 +1713,7 @@ def clo (request, muestra_id):
 def rec (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "REC")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -1901,7 +1908,7 @@ def rec (request, muestra_id):
             formRecResultadosSerie2=recResultadosSerie2FormSet(prefix='recResultadosSerie2', initial= default_data2)  
 
 
-            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')        
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})       
 
 
     return render(request, 'ensayos/nuevosEnsayos/rec.html', {
@@ -1916,6 +1923,7 @@ def rec (request, muestra_id):
 def n1 (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "N1")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo)  
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -1927,7 +1935,7 @@ def n1 (request, muestra_id):
         #N1ibimos los formularios diferenciándolos con el prefijo
         formN1= N1Form(request.POST, prefix='n1')
         formN1Resultados= n1ResultadosFormSet(request.POST, prefix='n1Resultados')  
-        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equiposEnsayos')
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equiposEnsayo')
         
         if formN1.is_valid() and formN1Resultados.is_valid() and equiposEnsayo.is_valid():
 
@@ -1960,6 +1968,7 @@ def n1 (request, muestra_id):
                 observacion= observacion,
             )
             equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
+            print(f"el equipo es {equipos}")
             n1.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -1977,8 +1986,10 @@ def n1 (request, muestra_id):
                 if form.cleaned_data and form.cleaned_data['tiempo'] :  # Para evitar formularios vacíos
                     tiempo= form.cleaned_data['tiempo']
                     zonaHumeda= form.cleaned_data['zonaHumeda']
+        
 
                     print(tiempo)
+                    print(zonaHumeda)
                     resultadosN1=ResultadosN1.objects.create(
                         ensayo= n1,
                         tiempo= tiempo,
@@ -2062,6 +2073,7 @@ def n1 (request, muestra_id):
             formN1.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
 
             resultados= ResultadosN1.objects.filter(ensayo=ensayo_N1).order_by("id")
+            print(resultados)
 
             initial_data = []
             for resultado in resultados:
@@ -2080,7 +2092,7 @@ def n1 (request, muestra_id):
             formN1.fields['muestra'].queryset = muestras_queryset
 
             formN1Resultados=n1ResultadosFormSet(prefix='n1Resultados')  
-            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo')          
+            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})         
 
 
     return render(request, 'ensayos/nuevosEnsayos/n1.html', {
@@ -2094,6 +2106,8 @@ def n1 (request, muestra_id):
 def n2 (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "N2")
+    equipos= get_list_or_404(Equipos, ensayos=ensayo)
+
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -2104,11 +2118,11 @@ def n2 (request, muestra_id):
         #N2ibimos los formularios diferenciándolos con el prefijo
         formN2= N2Form(request.POST, prefix='n2')
         formN2Resultados= n2ResultadosFormSet(request.POST, prefix='n2Resultados')  
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equipoEnsayos')
         
-        if formN2.is_valid() and formN2Resultados.is_valid():
+        if formN2.is_valid() and formN2Resultados.is_valid() and equiposEnsayo.is_valid():
 
-            muestra= get_object_or_404(Muestras, id= request.POST.get('n2-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            muestra= get_object_or_404(Muestras, id= request.POST.get('n2-muestra')) 
             
             #Comprobamos que no exista un ensayo  previo
             n2_instancia= N2.objects.filter(muestra= muestra)
@@ -2116,7 +2130,8 @@ def n2 (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formN2.cleaned_data['fecha']
+            fechaInicio= formN2.cleaned_data['fechaInicio']
+            fechaFin= formN2.cleaned_data['fechaFin']
             temperaturaAmbiente= formN2.cleaned_data['temperaturaAmbiente']
             humedad= formN2.cleaned_data['humedad']
             observacion=formN2.cleaned_data['observacion']
@@ -2126,9 +2141,11 @@ def n2 (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             n2.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -2155,12 +2172,10 @@ def n2 (request, muestra_id):
 
             #Guardamos en el modelo N2 el resultado del ensayo
             if listaResultados:
-                print("HOLA")
                 resultado= "2"
                 n2.resultado= resultado
                 n2.save()
             else:
-                print("adiossssss")
                 resultado= "1"
                 n2.resultado= resultado
                 n2.save()
@@ -2173,13 +2188,16 @@ def n2 (request, muestra_id):
                 'ensayo': ensayo,
                 'formN2': formN2,
                 'formN2Resultados': formN2Resultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_N2= N2.objects.get(muestra__id= muestra_id)            
+            ensayo_N2= N2.objects.get(muestra__id= muestra_id) 
+            equipos= ensayo_N2.equipos.all()           
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_N2.fecha)
+            fechaInicio= str(ensayo_N2.fechaInicio)
+            fechaFin= str(ensayo_N2.fechaFin)
             temperaturaAmbiente= ensayo_N2.temperaturaAmbiente
             humedad=ensayo_N2.humedad
             observacion= ensayo_N2.observacion
@@ -2187,7 +2205,8 @@ def n2 (request, muestra_id):
             
             formN2 = N2Form(prefix='n2', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'observacion': observacion,
@@ -2206,24 +2225,28 @@ def n2 (request, muestra_id):
             # Crear el formset con los datos iniciales
             N2ResultadosFormSet = formset_factory(N2ResultadosForm, extra=0)
             formN2Resultados = N2ResultadosFormSet(prefix='n2Resultados',initial=initial_data)
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
         
         else:
             formN2= N2Form(prefix='n2')
             formN2.fields['muestra'].queryset = muestras_queryset
 
-            formN2Resultados=n2ResultadosFormSet(prefix='n2Resultados')            
+            formN2Resultados=n2ResultadosFormSet(prefix='n2Resultados') 
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})           
 
 
     return render(request, 'ensayos/nuevosEnsayos/n2.html', {
         'ensayo': ensayo,
         'formN2': formN2,
         'formN2Resultados': formN2Resultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
 def n4 (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "N4")
+    equipos= get_list_or_404(Equipos, ensayos=ensayo)
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -2234,14 +2257,12 @@ def n4 (request, muestra_id):
         #N4ibimos los formularios diferenciándolos con el prefijo
         formN4= N4Form(request.POST, prefix='n4')
         formN4Resultados= n4ResultadosFormSet(request.POST, prefix='n4Resultados') 
-
-        print(request.POST) 
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo')
         
-        if formN4.is_valid() and formN4Resultados.is_valid():
+        if formN4.is_valid() and formN4Resultados.is_valid() and equiposEnsayo.is_valid():
 
             idMuestra= request.POST.get('n4-muestra')
-            muestra= get_object_or_404(Muestras, id= idMuestra)
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+            muestra= get_object_or_404(Muestras, id= idMuestra) 
             
             #Comprobamos que no exista un ensayo  previo
             n4_instancia= N4.objects.filter(muestra= muestra)
@@ -2249,7 +2270,8 @@ def n4 (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formN4.cleaned_data['fecha']
+            fechaInicio= formN4.cleaned_data['fechaInicio']
+            fechaFin= formN4.cleaned_data['fechaFin']
             temperaturaAmbiente= formN4.cleaned_data['temperaturaAmbiente']
             humedad= formN4.cleaned_data['humedad']
             observacion=formN4.cleaned_data['observacion']
@@ -2259,9 +2281,11 @@ def n4 (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             n4.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -2321,25 +2345,27 @@ def n4 (request, muestra_id):
             n4.resultado= resultado
             n4.save()
 
-            print("Redirigimooooos")
-
             return redirect(reverse('n4', args=[idMuestra]))
 
                         
         else:
-            print (formN4.errors)
-            formN4.add_error(None, 'Error en el formulario, revisa los datos')
+            print ("error")
+            formN4.add_error(None, f'Error en el formulario, revisa los datos {formN4.errors}')
+            
             return render(request, 'ensayos/nuevosEnsayos/n4.html', {
                 'ensayo': ensayo,
                 'formN4': formN4,
                 'formN4Resultados': formN4Resultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_N4= N4.objects.get(muestra__id= muestra_id)            
+            ensayo_N4= N4.objects.get(muestra__id= muestra_id) 
+            equipos= ensayo_N4.equipos.all()        
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_N4.fecha)
+            fechaInicio= str(ensayo_N4.fechaInicio)
+            fechaFin= str(ensayo_N4.fechaFin)
             temperaturaAmbiente= ensayo_N4.temperaturaAmbiente
             humedad=ensayo_N4.humedad
             observacion= ensayo_N4.observacion
@@ -2347,7 +2373,8 @@ def n4 (request, muestra_id):
             
             formN4 = N4Form(prefix='n4', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'observacion': observacion,
@@ -2382,24 +2409,29 @@ def n4 (request, muestra_id):
             # Crear el formset con los datos iniciales
             N4ResultadosFormSet = formset_factory(N4ResultadosForm, extra=0)
             formN4Resultados = N4ResultadosFormSet(prefix='n4Resultados',initial=initial_data)
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
         
         else:
             formN4= N4Form(prefix='n4')
             formN4.fields['muestra'].queryset = muestras_queryset
 
-            formN4Resultados=n4ResultadosFormSet(prefix='n4Resultados')            
+            formN4Resultados=n4ResultadosFormSet(prefix='n4Resultados') 
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})           
 
 
     return render(request, 'ensayos/nuevosEnsayos/n4.html', {
         'ensayo': ensayo,
         'formN4': formN4,
         'formN4Resultados': formN4Resultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 
 def o1 (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo= "O1")
+    equipos= get_list_or_404(Equipos, ensayos=ensayo)
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -2409,12 +2441,13 @@ def o1 (request, muestra_id):
     if request.method == 'POST':
         #O1ibimos los formularios diferenciándolos con el prefijo
         formO1= O1Form(request.POST, prefix='o1')
-        formO1Resultados= o1ResultadosFormSet(request.POST, prefix='o1Resultados')  
-        
-        if formO1.is_valid() and formO1Resultados.is_valid():
+        formO1Resultados= o1ResultadosFormSet(request.POST, prefix='o1Resultados') 
 
-            muestra= get_object_or_404(Muestras, id= request.POST.get('o1-muestra'))
-            equipos= get_list_or_404(Equipos, ensayos=ensayo)  
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo') 
+        
+        if formO1.is_valid() and formO1Resultados.is_valid() and equiposEnsayo.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('o1-muestra')) 
             
             #Comprobamos que no exista un ensayo  previo
             o1_instancia= O1.objects.filter(muestra= muestra)
@@ -2422,7 +2455,8 @@ def o1 (request, muestra_id):
 
             
             #Guardamos el formulario  a falta del resultado final
-            fecha= formO1.cleaned_data['fecha']
+            fechaInicio= formO1.cleaned_data['fechaInicio']
+            fechaFin= formO1.cleaned_data['fechaFin']
             temperaturaAmbiente= formO1.cleaned_data['temperaturaAmbiente']
             humedad= formO1.cleaned_data['humedad']
             observacion=formO1.cleaned_data['observacion']
@@ -2432,10 +2466,11 @@ def o1 (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
-                
-                fecha= fecha,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
                 observacion= observacion,
             )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             o1.equipos.set (equipos)
 
             #Eliminamos los resultados
@@ -2509,7 +2544,6 @@ def o1 (request, muestra_id):
             o1.save()
 
 
-
         else:
             print (formO1Resultados.errors)
             formO1.add_error(None, 'Error en el formulario, revisa los datos')
@@ -2517,13 +2551,16 @@ def o1 (request, muestra_id):
                 'ensayo': ensayo,
                 'formO1': formO1,
                 'formO1Resultados': formO1Resultados,
+                'equiposEnsayo': equiposEnsayo,
             })
     else:
         if muestra_id != 'nueva':
-            ensayo_O1= O1.objects.get(muestra__id= muestra_id)            
+            ensayo_O1= O1.objects.get(muestra__id= muestra_id)    
+            equipos= ensayo_O1.equipos.all()        
             
             muestra= Muestras.objects.get(id=muestra_id) 
-            fecha= str(ensayo_O1.fecha)
+            fechaInicio= str(ensayo_O1.fechaInicio)
+            fechaFin= str(ensayo_O1.fechaFin)
             temperaturaAmbiente= ensayo_O1.temperaturaAmbiente
             humedad=ensayo_O1.humedad
             observacion= ensayo_O1.observacion
@@ -2531,7 +2568,8 @@ def o1 (request, muestra_id):
             
             formO1 = O1Form(prefix='o1', initial={
                 'muestra': muestra,
-                'fecha': fecha,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'observacion': observacion,
@@ -2561,18 +2599,23 @@ def o1 (request, muestra_id):
             else:
                 formO1Resultados= o1ResultadosFormSet(prefix='o1Resultados')
 
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
+
         
         else:
             formO1= O1Form(prefix='o1')
             formO1.fields['muestra'].queryset = muestras_queryset
 
-            formO1Resultados=o1ResultadosFormSet(prefix='o1Resultados')            
+            formO1Resultados=o1ResultadosFormSet(prefix='o1Resultados')   
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})         
 
 
     return render(request, 'ensayos/nuevosEnsayos/o1.html', {
         'ensayo': ensayo,
         'formO1': formO1,
         'formO1Resultados': formO1Resultados,
+        'equiposEnsayo': equiposEnsayo,
     })
 
 

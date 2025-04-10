@@ -1,16 +1,25 @@
 console.log("hola luis");
 
-//Variables comunes
-preseleccion=document.getElementById("id_n1-pruebaPreseleccion");
-tipoPolvo= document.getElementById("id_n1-tipoPolvo");
+var preseleccion=document.getElementById("id_n1-pruebaPreseleccion");
+var tipoPolvo= document.getElementById("id_n1-tipoPolvo");
     
-inputsTabla= document.querySelectorAll("#tabla input:not([name='n1Resultados-TOTAL_FORMS']):not([name='n1Resultados-INITIAL_FORMS'])");
-selectsTabla= document.querySelectorAll("#tabla select");
+let inputsTabla= document.querySelectorAll("#tabla input:not([name='n1Resultados-TOTAL_FORMS']):not([name='n1Resultados-INITIAL_FORMS'])");
+let selectsTabla= document.querySelectorAll("#tabla select");
+
+function listener(){
+
+	preseleccion.addEventListener("change", function(){
+		pruebaPreseleccion();
+	});
+
+	tipoPolvo.addEventListener("change", function(){
+		pruebaTipoPolvo();
+
+	});
+}
 
 //Activamos o desactivamos la tabla según el ensayo de preselección
-function pruebaPreseleccion(){    
-
-    preseleccion.addEventListener("change", function(){
+function pruebaPreseleccion(){   
         estadoPreseleccion= preseleccion.value;
         if (estadoPreseleccion === "1"){
             inputsTabla.forEach(input => {
@@ -33,28 +42,30 @@ function pruebaPreseleccion(){
                 select.value= "0";
             });
         }
-    });
-
 }
 
 //Desactivamos la zona humeda si el polvo es metalico
 function pruebaTipoPolvo(){
-    console.log("ey");
-    tipoPolvo.addEventListener("change", function(){
-        polvo= tipoPolvo.value;
-        if (polvo === "1"){           
-            selectsTabla.forEach(select => {
-                select.disabled= false;
-            });
-        }
-        else {
-            selectsTabla.forEach(select => {
-                select.disabled= true;
-                select.value= "0";
-            });
-        }
-    });
+	polvo= tipoPolvo.value;
+	if (polvo === "1"){           
+		selectsTabla.forEach(select => {
+			select.disabled= false;
+		});
+	}
+	else {
+		selectsTabla.forEach(select => {
+			select.disabled= true;
+			select.value= "0";
+		});
+	}
 }
+
 
 pruebaPreseleccion();
 pruebaTipoPolvo();
+listener();
+
+
+/////Automatización columna Concentración-Peso/////
+var botonEliminar= document.getElementById("borrar-fila")
+var botonAñadir= document.getElementById("añadir-fila")

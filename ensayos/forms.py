@@ -1224,8 +1224,13 @@ class N2Form(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
     )
     
-    fecha= forms.DateField(
-        label="Fecha",
+    fechaInicio= forms.DateField(
+        label="Fecha Inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm',  'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaFin= forms.DateField(
+        label="Fecha Fin",
         widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
     )
 
@@ -1294,8 +1299,13 @@ class N4Form(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
     )
     
-    fecha= forms.DateField(
-        label="Fecha",
+    fechaInicio= forms.DateField(
+        label="Fecha Inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm',  'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaFin= forms.DateField(
+        label="Fecha Fin",
         widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
     )
 
@@ -1345,33 +1355,28 @@ class N4ResultadosForm(forms.Form):
         choices=celdasDisponibles,
         label="Celda", 
         widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7;', 'required': 'required'}),
-        required=False,
     )
 
     tConsigna= forms.ChoiceField(
         choices=temperaturasDisponibles,
         label="Temperatura", 
         widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7;', 'required': 'required'}),
-        required=False,
     )
 
     tMax= forms.DecimalField(
         label="Temperatura máxima", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center;', 'required': 'required'}),
-        required=False,
     )
 
     tiempo= forms.IntegerField(
         label="Tiempo", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center;', 'required': 'required'}),
-        required=False,
     )
 
     resultado= forms.ChoiceField(
         choices=resultadosPosibles,
         label="Resultado", 
         widget=forms.Select(attrs={'class': 'form-control form-control-sm selects', 'style': 'text-align: center;',  'required': 'required'}),
-        required=False,
     )
     
 
@@ -1401,8 +1406,13 @@ class O1Form(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
     )
     
-    fecha= forms.DateField(
-        label="Fecha",
+    fechaInicio= forms.DateField(
+        label="Fecha Inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm',  'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaFin= forms.DateField(
+        label="Fecha Fin",
         widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
     )
 
