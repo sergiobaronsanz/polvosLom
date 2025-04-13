@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
 #Equipos
+@login_required
 def equipos (request):
     equipos= Equipos.objects.all().order_by()
     
@@ -13,6 +15,7 @@ def equipos (request):
     })
     
 #Alta de nuevos equipos
+@login_required
 def nuevoEquipo (request):
     if request.method == "POST":
         form= EquiposForm(request.POST)
@@ -32,6 +35,7 @@ def nuevoEquipo (request):
     })
 
 #Editar equipos
+@login_required
 def editarEquipo (request, id_equipo):
      
     equipo= get_object_or_404(Equipos, id=id_equipo)
@@ -56,6 +60,7 @@ def editarEquipo (request, id_equipo):
 
 
 #Eliminar equipo
+@login_required
 def eliminarEquipo(request, id_equipo):
     if request.method == "POST":
         equipo = get_object_or_404(Equipos, id=id_equipo)

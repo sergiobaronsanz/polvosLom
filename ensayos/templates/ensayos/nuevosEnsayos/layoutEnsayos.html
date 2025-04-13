@@ -6,6 +6,13 @@
     <div class="container py-5">  
       <div class="row justify-content-center">
           <div class="card mb-4 col-lg-12">
+			{%if ensayo.usuario.firmas.firma%}
+				<div>
+					<p> Ensayo realizado por {{ensayo.usuario.firmas.firma}} </p>
+				<div>
+					
+				{%endif%}
+			
             <div class="text-center mt-3">
               <h2 class= "text-dark"> {%block tituloEnsayo%} {%endblock%}</h2>
             </div>
@@ -16,8 +23,34 @@
                 <div id="titulo-ensayos" class= " mt-3 mb-3 d-flex justify-content-center align-items-center">
                   <h4 class= "text-nowrap mb-0 mr-2"> Condiciones </h4>
                   <div style="width:100%; height:2px; background: #A9B2BB"></div>
-                </div>                
+                </div> 
+
+				<!--Modal de ensayo guardado-->
+				<div class="modal fade" id="ensayosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content ">
+							<div class="modal-header">
+							<h5 class="modal-title" id="envioModalLabel">Ensayo Guardado</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="check-icon" style="font-size: 50px; color: #28a745;">&#x2714;</div>
+								<p>El ensayo se ha guardado correctamente.</p>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+							</div>
+						</div>
+					</div>
+				</div>   
+				
+
                 {%block condiciones%}
+				
                 {%endblock%}
 
                 <div id="titulo-ensayos" class= "mt-5 mb-3 d-flex justify-content-center align-items-center">
@@ -36,5 +69,21 @@
 </div>
 
   {%block script%} {%endblock%}
+  {% if datosGuardados %}
+	<script>
+		window.onload = function() {
+		console.log("holaaaaaa");
+		
+		// Asegúrate de que el elemento existe en el DOM
+		var modalElement = document.getElementById('ensayosModal');
+		if (modalElement) {
+			var envioModal = new bootstrap.Modal(modalElement);
+			envioModal.show();
+		} else {
+			console.log("No se encontró el modal en el DOM");
+		}
+		}
+	</script>
+	{% endif %} 
 
 {%endblock%}

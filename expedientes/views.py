@@ -6,8 +6,11 @@ from ensayos.models import *
 from muestras.models import Muestras
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
+
 
 #Seleccion Expediente
+@login_required
 def nuevoExpediente(request): 
     if request.method == 'POST':
         form = ExpedientesForm(request.POST)
@@ -38,7 +41,7 @@ def nuevoExpediente(request):
         form = ExpedientesForm()
 
     return render(request, 'nuevoExpediente.html', {'form': form})
-
+@login_required
 def empresaSugerencias(request):
     data= []
     empresas= Empresa.objects.filter(empresa__icontains=request.POST['term'])
@@ -46,7 +49,7 @@ def empresaSugerencias(request):
     for empresa in empresas:
         data.append(empresa.empresa)
     return JsonResponse(data, safe=False)
-
+@login_required
 def empresaExistente(request):
     empresas= Empresa.objects.filter(empresa__iexact=request.POST['term'])
     data=False
@@ -55,7 +58,7 @@ def empresaExistente(request):
     else:
         data=False
     return JsonResponse(data, safe=False)
-
+@login_required
 def abreviaturaExistente(request):
     abreviatura= Empresa.objects.filter(abreviatura__iexact=request.POST["term"])
     data=False
@@ -67,6 +70,7 @@ def abreviaturaExistente(request):
     return JsonResponse(data, safe=False)
 
 #Seleccion de los ensayos para cada muestra
+@login_required
 def ensayosMuestras(request,expediente, empresa, nMuestras):
 
     #Extraemos los objetos de expediente y empresa
@@ -123,7 +127,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         'abreviaturaCompleta': abreviaturaCompleta,
         'form': form
     })
-
+@login_required
 def ensayosMuestrasSimple(request, muestra):
     muestra= Muestras.objects.get(id= muestra)
     expediente= muestra.expediente
@@ -155,6 +159,7 @@ def ensayosMuestrasSimple(request, muestra):
     })
 
 #Ver expedientes
+@login_required
 def verExpedientes(request):
 
     #Sacamos los expedientes
@@ -172,7 +177,7 @@ def verExpedientes(request):
         'expedientes': expedientes
     } )
 
-
+@login_required
 def expediente (request, nExpediente):
 
     #Sacamos el expediente
@@ -187,7 +192,7 @@ def expediente (request, nExpediente):
     })
 
 
-
+@login_required
 def eliminarExpediente (request, expediente):
     if request.POST:
         expediente= get_object_or_404(Expedientes, expediente=expediente)

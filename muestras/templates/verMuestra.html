@@ -4,12 +4,15 @@
 {%block style%} <link rel="stylesheet" href="{% static "css/muestras/estilos.css" %}"> {%endblock%}
 
 {%block content%}
+
+
 <div id="content-wrapper" class="d-flex flex-column">
     <div class="container py-5">  
       <div class="row">
         <div class="col-lg-10 m-auto">
           <div class="card mb-4">
             <div class="card-body" id="content-verMuestra">
+			
               <div id="identificacion-muestra" class= "row col-12">             
                 <div id="nombre-muestra" class= "col-6">
                   <h2> {{muestra.empresa.abreviatura}} - {{muestra.id_muestra}}</h2>
@@ -71,39 +74,48 @@
                 <div id="resultados" class= "mt-3 col-12 d-flex flex-wrap">
                   {% for resultado in resultados%}
                     <p class= "flex-fill text-center"> 
-                    {%if resultado.ensayo|lower != 'pmax'%}
-                        <a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
-                        {%if resultado.resultado|lower != "none" %}
-                          {% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" or resultado.ensayo|lower == "o1" %}
-                            {{resultado.get_resultado_display}}
-                          {%else%}
-                            {{resultado.resultado}} {{resultado.unidad}}
-                          {%endif%} 
-                        {%else%}
-                          Sin ensayar 
-                        {%endif%}
-                    {%else%} 
-                        <a href= {% url resultado.ensayo|lower muestra.id %}>Pmax = </a> 
-                          {%if resultado.pmax|lower != "none" %}
-                            {{resultado.pmax}} {{resultado.unidadPmax}} |
-                          {%else%}
-                            Sin ensayar
-                          {%endif%}
+						{%if resultado.ensayo|lower != 'tratamiento' %}
+							{%if resultado.ensayo|lower != 'pmax'%}
+								<a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
+								{%if resultado.resultado|lower != "none" %}
+									{% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" or resultado.ensayo|lower == "o1" %}
+										{{resultado.get_resultado_display}}
+									{%else%}
+										{{resultado.resultado}} {{resultado.unidad}}
+									{%endif%} 
+								{%else%}
+								Sin ensayar 
+								{%endif%}
+							{%else%} 
+								<a href= {% url resultado.ensayo|lower muestra.id %}>Pmax = </a> 
+								{%if resultado.pmax|lower != "none" %}
+									{{resultado.pmax}} {{resultado.unidadPmax}} |
+								{%else%}
+									Sin ensayar
+								{%endif%}
 
-                        <a href= {% url resultado.ensayo|lower muestra.id %}>dPdT = </a> 
-                          {%if resultado.dpdt|lower != "none" %}
-                            {{resultado.dpdt}} {{resultado.unidadDpdt}} |
-                          {%else%}
-                            Sin ensayar
-                          {%endif%}
+								<a href= {% url resultado.ensayo|lower muestra.id %}>dPdT = </a> 
+								{%if resultado.dpdt|lower != "none" %}
+									{{resultado.dpdt}} {{resultado.unidadDpdt}} |
+								{%else%}
+									Sin ensayar
+								{%endif%}
 
-                          <a href= {% url resultado.ensayo|lower muestra.id %}>kmax = </a> 
-                          {%if resultado.kmax != "none" %}
-                            {{resultado.kmax}}
-                          {%else%}
-                            Sin ensayar
-                          {%endif%}
-                    {%endif%}
+								<a href= {% url resultado.ensayo|lower muestra.id %}>kmax = </a> 
+								{%if resultado.kmax != "none" %}
+									{{resultado.kmax}}
+								{%else%}
+									Sin ensayar
+								{%endif%}
+							{%endif%}
+						{%else%}
+							<a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a>
+							{%if resultado.secado or resultado.molido or resultado.tamizado %}
+								Muestra tratada
+							{%else%}
+								Muestra sin tratar 
+							{%endif%}
+						{%endif%}
                     </p>
 
                   {%endfor%}
@@ -195,6 +207,8 @@
 
 <script src="{%static 'js/muestras/generarPdf.js'%}"></script> 
 <script src="{%static 'js/muestras/envioMail.js'%}"></script> 
+
+
 
 <script>
   console.log("bien")

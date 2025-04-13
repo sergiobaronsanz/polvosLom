@@ -20,7 +20,8 @@ function listener(){
 
 //Activamos o desactivamos la tabla según el ensayo de preselección
 function pruebaPreseleccion(){   
-        estadoPreseleccion= preseleccion.value;
+        let estadoPreseleccion= preseleccion.value;
+		
         if (estadoPreseleccion === "1"){
             inputsTabla.forEach(input => {
                 input.readOnly= false;
@@ -28,7 +29,8 @@ function pruebaPreseleccion(){
             });
             
             selectsTabla.forEach(select => {
-                select.disabled= false;
+                select.style.pointerEvents = 'auto';
+				select.style.backgroundColor = '';	
             });
         }
         else {
@@ -36,33 +38,42 @@ function pruebaPreseleccion(){
                 input.readOnly= true;
                 input.value=""
             });
-            
+            console.log("Hola")
             selectsTabla.forEach(select => {
-                select.disabled= true;
-                select.value= "0";
+				console.log("Entró dentro")
+				select.style.pointerEvents = "none";
+				select.style.backgroundColor = '#eee';	
             });
         }
+		pruebaTipoPolvo()
 }
 
 //Desactivamos la zona humeda si el polvo es metalico
 function pruebaTipoPolvo(){
-	polvo= tipoPolvo.value;
-	if (polvo === "1"){           
-		selectsTabla.forEach(select => {
-			select.disabled= false;
-		});
+	let polvo= tipoPolvo.value;
+	let estadoPreseleccion= preseleccion.value;
+	
+	if (estadoPreseleccion === "1" ){
+		if (polvo === "1"){           
+			selectsTabla.forEach(select => {
+				select.style.pointerEvents = 'auto';
+				select.style.backgroundColor = '';	
+			});
+		}
+		else {
+			selectsTabla.forEach(select => {
+				select.style.pointerEvents = "none";
+				select.style.backgroundColor = '#eee';
+				select.value= "0";
+			});
+		}
 	}
-	else {
-		selectsTabla.forEach(select => {
-			select.disabled= true;
-			select.value= "0";
-		});
-	}
+	
 }
 
-
-pruebaPreseleccion();
 pruebaTipoPolvo();
+pruebaPreseleccion();
+
 listener();
 
 

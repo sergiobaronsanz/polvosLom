@@ -74,10 +74,16 @@
   <div class= "row mt-3 mb-3 col-12 p-0">
 
     <div id="titulo-ensayos" class= "mt-5 mb-3 d-flex justify-content-center align-items-center col-12 p-0">
-      <h4 class= "text-nowrap mb-0 mr-2"> También puedes seleccionar un archivo </h4>
+      <h4 class= "text-nowrap mb-0 mr-2"> Sube el archivo </h4>
       <div class= "col" style="width:100%; height:2px; background: #A9B2BB"></div>
     </div> 
-
+	{%if nombreArchivo%}
+		<div>
+			<h5> Archivo guardado </h5>
+			<p> {{nombreArchivo}} </p>
+		</div>
+	{%endif%}
+		
     <h3 class= "col-12">  </h4>
     <div class= "col">
       {{form.archivo}}

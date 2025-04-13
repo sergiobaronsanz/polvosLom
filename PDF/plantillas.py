@@ -113,7 +113,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         
@@ -126,7 +126,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosTMIc.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -141,15 +142,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -280,7 +289,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -292,7 +301,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosTMIn.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -306,15 +316,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -454,7 +472,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -466,7 +484,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosHumedad.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -480,15 +499,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -622,7 +649,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -649,7 +676,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosLIE.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -663,15 +691,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -796,7 +832,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -808,7 +844,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosPmax.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -822,15 +859,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -1063,7 +1108,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 6,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 6,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 6,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -1075,7 +1120,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosEMI.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -1089,15 +1135,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -1225,7 +1279,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -1237,7 +1291,7 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosREC.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fechaInicio= ensayo.fechaInicio####################################################
+        fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
@@ -1419,7 +1473,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -1431,7 +1485,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosCLO.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -1445,15 +1500,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -1581,7 +1644,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -1593,7 +1656,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosN4.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         resultado1 = None
         resultado2 = None
@@ -1625,15 +1689,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -1840,7 +1912,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -1852,7 +1924,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosN2.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -1866,15 +1939,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -1972,7 +2053,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -1984,7 +2065,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosN1.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -1998,15 +2080,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -2098,16 +2188,27 @@ class PlantillasEnsayo():
                 #Resultados tabla (Habría que incluir esto en una clase con las variables)
                 num=0
                 for fila in resultados:
-                        if fila.zonaHumeda:
+                        if fila.zonaHumeda and fila.zonaHumeda != "0":
                                 resultadoZonaHumeda= fila.get_zonaHumeda_display()
                         else:
                                 resultadoZonaHumeda= "-"
+                                
+                        if str(fila.tiempo) == "None":
+                            tiempo= "-"
+                            
+                        else: 
+                            tiempo= str(fila.tiempo)
+
+
                         num= num+1
                         self.pdf.cell(w=ancho1, h= 8,border= "L", fill = 0)
                         self.pdf.cell(w=ancho2, h= 8,border= 1,align= "C",txt= str(num), 
                                 fill = 0)
-                        self.pdf.cell(w=ancho2, h= 8,border= 1,align= "C",txt= str(fila.tiempo),
+                        
+                        
+                        self.pdf.cell(w=ancho2, h= 8,border= 1,align= "C",txt= str(tiempo),
                                 fill = 0)
+                        
                         if (ensayo.tipoPolvo == "1"):
                                 self.pdf.cell(w=50, h= 8,border= 1,align= "C",txt= resultadoZonaHumeda,
                                         fill = 0)
@@ -2137,7 +2238,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -2149,7 +2250,8 @@ class PlantillasEnsayo():
         equipos=ensayo.equipos.all()
         resultados= ResultadosO1.objects.filter(ensayo= ensayo).order_by("id")
         ensayoForma= self.descripcion.get_formaEnsayo_display()
-        fecha= ensayo.fecha
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
 
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
@@ -2163,15 +2265,23 @@ class PlantillasEnsayo():
                 align= "C", fill = 0)
         self.pdf.cell(w= 100, h= 12, txt = ensayo.ensayo.ensayo, border= 1, 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.cell(w=100, h= 12, txt = ensayo.ensayo.normativa,border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=0, h= 12, txt = fecha.strftime("%d/%m/%Y"), border= "RB", 
-                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -2308,7 +2418,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
@@ -2438,7 +2548,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: SBS",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...

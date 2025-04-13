@@ -7,9 +7,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 import json
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
-
+@login_required
 def muestras(request):
       #Sacamos las muestras
     try:
@@ -24,7 +26,7 @@ def muestras(request):
     return render(request, 'muestras.html', {
         'muestras': muestras
     })
-
+@login_required
 def recepcionMuestra(request):
     if request.method == 'POST':
         form = DescripcionMuestraForm(request.POST, request.FILES)
@@ -45,7 +47,7 @@ def recepcionMuestra(request):
         form = DescripcionMuestraForm()
 
     return render(request, 'recepcionMuestra.html', {'form': form})
-       
+@login_required       
 def verMuestra(request, muestra_id):
     
     muestra= get_object_or_404(Muestras, id= muestra_id)

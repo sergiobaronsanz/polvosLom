@@ -2,6 +2,7 @@ from django.db import models
 from muestras.models import Muestras, ListaEnsayos
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from calidad.models import Equipos
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -43,6 +44,7 @@ class Humedad(models.Model):
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True, null=True, blank=True)
     resultado= models.CharField(verbose_name="Resultado", max_length=100, null=True, blank=True) #99,99%
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="%", null=True, blank=True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     
@@ -95,6 +97,8 @@ class Granulometria(models.Model):
     d90= models.DecimalField(verbose_name="d90", max_digits=7, decimal_places=3,null= True, blank= True)#9999.999
     resultado= models.DecimalField(verbose_name="d50", max_digits=7, decimal_places=3,null= True, blank= True)#9999.999 es diempre la d50
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default= "um",null= True, blank= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
+
 
     archivo= models.FileField(upload_to="archivosGranulometria")
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
@@ -129,6 +133,7 @@ class TMIc (models.Model):
     funde= models.CharField(choices= funde_muestra,verbose_name="Funde", max_length=50, default="2", blank=True, null=True)
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="ºC", blank=True, null=True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", default="null", blank=True, null=True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
 
@@ -184,7 +189,8 @@ class TMIn (models.Model):
     resultado= models.CharField(verbose_name="Resultado",max_length=100, blank=True, null=True) #999,99
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="ºC", blank=True, null=True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank=True, null=True)
-    
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
+
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     
     class Meta():
@@ -242,6 +248,7 @@ class LIE (models.Model):
     resultado= models.CharField(verbose_name="Resultado", max_length=100, null=True, blank=True) #125, 250
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="g/m3", null=True, blank=True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion")
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
 
@@ -296,6 +303,7 @@ class EMI (models.Model):
     resultado= models.CharField(verbose_name="Resultado", max_length=100, blank= True, null= True) #9999,99
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ", blank= True, null= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
 
@@ -349,6 +357,7 @@ class EMIsin (models.Model):
     resultado= models.CharField(verbose_name="Resultado", max_length=100, blank= True, null= True) #9999,99
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ", blank= True, null= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
 
@@ -411,6 +420,7 @@ class Pmax (models.Model):
     unidadPmax= models.CharField(verbose_name="Unidad", max_length=50, default="bar", blank= True, null= True)
     unidadDpdt= models.CharField(verbose_name="Unidad", max_length=50, default="bar/s", blank= True, null= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
 
@@ -472,6 +482,7 @@ class CLO (models.Model):
     resultado= models.CharField(verbose_name="Resultado", max_length=100, null= True, blank= True) #9999,99
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="%", null= True, blank= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
 
@@ -539,6 +550,7 @@ class N1 (models.Model):
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
@@ -558,7 +570,7 @@ class ResultadosN1 (models.Model):
     ]
 
     ensayo= models.ForeignKey("N1", on_delete=models.CASCADE, verbose_name="Ensayo TMIn")
-    tiempo= models.IntegerField(verbose_name="Tiempo")
+    tiempo= models.IntegerField(verbose_name="Tiempo", null=True, blank=True)
     zonaHumeda= models.CharField(choices=rebasa, max_length=100, verbose_name="Tiempo zona húmeda", blank=True, null=True)
     
     class Meta():
@@ -587,6 +599,7 @@ class N2 (models.Model):
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
     resultado= models.CharField(choices=resultadosPosibles, verbose_name="resultado", max_length=100, blank= True, null= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
@@ -637,6 +650,7 @@ class N4 (models.Model):
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
     resultado= models.CharField(choices=resultadosPosibles, verbose_name="resultado", max_length=100, blank= True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
 
@@ -763,6 +777,7 @@ class O1 (models.Model):
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True, blank=True, null= True)
     resultado= models.CharField(max_length=50, choices= resultadosPosibles, verbose_name="Resultado", blank=True, null=True) #9999,99
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank=True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     
@@ -820,6 +835,7 @@ class REC (models.Model):
     resultado= models.DecimalField(verbose_name="Resultado", max_digits=12, decimal_places=2, null= True, blank= True) #9999,99
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="ohm·m", null= True, blank= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     
@@ -891,6 +907,8 @@ class Tratamiento (models.Model):
     equipoTamizado= models.ManyToManyField(Equipos,  verbose_name="Equipos de tamizado",related_name="tratamientos_equipoTamizado",default=None)
     fechaTamizadoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
     fechaTamizadoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
+
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     
