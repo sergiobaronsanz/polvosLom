@@ -40,10 +40,10 @@ def generadorPdf(request):
             # Determinar el nombre del archivo según la condición
 
             id_archivo= datosList[0]['muestra_nombre']
-            id_ensayo={datosList[0]['ensayo']}
+            id_ensayo= datosList[0]['ensayo']
             print(len(datosList))
 
-            nombre_archivo = f'{id_archivo}.zip' if len(datosList) > 1 else f"{id_archivo}{id_ensayo}.pdf"
+            nombre_archivo = f'{id_archivo}.zip' if len(datosList) > 1 else f"{id_archivo}-{id_ensayo}.pdf"
 
             print(nombre_archivo)
             # Construir la ruta completa del archivo
@@ -341,13 +341,13 @@ def humedad(request, muestra_id): #################################### Hay que c
                     })
                 
             form.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos})
             
         else:
             form = HumedadForm()
             form.fields['muestra'].queryset = muestras_queryset
 
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos})
             
 
     return render(request, 'ensayos/nuevosEnsayos/humedad.html', {
@@ -1970,7 +1970,7 @@ def rec (request, muestra_id):
             formRecResultadosSerie2=recResultadosSerie2FormSet(prefix='recResultadosSerie2', initial= default_data2)  
 
 
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})       
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos})       
 
 
     return render(request, 'ensayos/nuevosEnsayos/rec.html', {

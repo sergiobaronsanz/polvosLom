@@ -1,5 +1,6 @@
 from django.db import models
 from expedientes.models import Expedientes, Empresa
+from django.contrib.auth.models import User
 
 # Create your models here.  
 class ListaEnsayos(models.Model):
@@ -84,6 +85,7 @@ class DescripcionMuestra(models.Model):
     observacion=models.TextField(verbose_name="observaciones")
     imagenMuestra= models.ImageField(verbose_name="Imagen muestra", upload_to="imagenesMuestras", null=True, blank=True)
     imagenEnvoltorio= models.ImageField(verbose_name="Imagen envoltorio",upload_to="imagenesMuestras", null=True, blank=True)
+    usuario= models.ForeignKey(User, verbose_name="Recepcionado por", on_delete=models.CASCADE )
     
     class Meta():
         verbose_name="Descripcion muestra"

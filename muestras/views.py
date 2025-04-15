@@ -8,6 +8,8 @@ from django.urls import reverse
 import json
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+import traceback
 
 
 # Create your views here.
@@ -169,3 +171,48 @@ def verMuestra(request, muestra_id):
         "url_ensayosMuestras": url_ensayosMuestras,
         "usuarios": usuarios,
     })
+
+
+
+#Función para marcar los ensayos como revisados
+def revisionMuestra(request):
+    if request.method == "POST":
+        try:
+            #Recibimos los datos
+            datosJson= request.body.decode('utf-8')
+            idMuestra= datosJson
+            muestra= get_object_or_404(Muestras, id= idMuestra)
+
+            #Guardamos el nuevo estado de la muestra: Finalizada
+            muestra.estado= "5"
+            muestra.save()
+            print("Muestra revisada")
+
+            #Comprobamos si todas las muestras del estado de expedientes están terminadas
+            expediente= muestra.expediente
+            muestras= get_list_or_404(Muestras, expediente= expediente)
+
+            listadoEstadoMuestras= []
+            for muestra in muestras:
+                if muestra.estado=="5":
+                    listadoEstadoMuestras.append(True)
+            
+            if all(listadoEstadoMuestras):
+                expediente.estado="5"
+                expediente.save()
+
+            
+            return JsonResponse({'mensaje': 'revisiónRealizada'})
+
+        except Exception as e:
+            # Captura y devuelve la traza completa del error
+            traza_error = traceback.format_exc()
+            print(traza_error)  # Muestra la traza en la consola del servidor
+
+            return JsonResponse({
+                'error': 'Error interno del servidor',
+                'detalle': str(e),
+                'traza': traza_error  # Incluye la traza en la respuesta
+            }, status=500)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)

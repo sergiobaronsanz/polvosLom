@@ -113,7 +113,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {self.descripcion.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         

@@ -11,7 +11,28 @@
       <div class="row">
         <div class="col-lg-10 m-auto">
           <div class="card mb-4">
+			<div class= "col-12 p-0">
+				{%if muestra.estado == "5"%}
+					<p class="p-2 font-weight-bold text-secondary text-center bg-success text-light ">
+						{{ muestra.get_estado_display }}
+					</p>
+				{%else%}
+					{%if muestra.estado == "4"%}
+						<p class="p-2 font-weight-bold text-secondary text-center bg-warning text-light ">
+							{{ muestra.get_estado_display }}
+						</p>
+					{%else%}
+						<p class="p-2 font-weight-bold text-secondary text-center bg-primary text-light ">
+							{{ muestra.get_estado_display }}
+						</p>
+
+					{%endif%}
+
+				{%endif%}
+		    </div>
             <div class="card-body" id="content-verMuestra">
+			  
+			  
 			
               <div id="identificacion-muestra" class= "row col-12">             
                 <div id="nombre-muestra" class= "col-6">
@@ -76,36 +97,36 @@
                     <p class= "flex-fill text-center"> 
 						{%if resultado.ensayo|lower != 'tratamiento' %}
 							{%if resultado.ensayo|lower != 'pmax'%}
-								<a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a> 
 								{%if resultado.resultado|lower != "none" %}
+									<a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}}  </a>
 									{% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" or resultado.ensayo|lower == "o1" %}
 										{{resultado.get_resultado_display}}
 									{%else%}
 										{{resultado.resultado}} {{resultado.unidad}}
 									{%endif%} 
 								{%else%}
-								Sin ensayar 
+								<a class="text-danger">{{resultado.ensayo}} = Sin ensayar </a> 
 								{%endif%}
 							{%else%} 
-								<a href= {% url resultado.ensayo|lower muestra.id %}>Pmax = </a> 
+								 
 								{%if resultado.pmax|lower != "none" %}
-									{{resultado.pmax}} {{resultado.unidadPmax}} |
+									<a href= {% url resultado.ensayo|lower muestra.id %}>Pmax = {{resultado.pmax}} {{resultado.unidadPmax}} | </a> 
 								{%else%}
-									Sin ensayar
+									<a class="text-danger"> Pmax = Sin ensayar | </a> 
 								{%endif%}
 
-								<a href= {% url resultado.ensayo|lower muestra.id %}>dPdT = </a> 
+								
 								{%if resultado.dpdt|lower != "none" %}
-									{{resultado.dpdt}} {{resultado.unidadDpdt}} |
+									<a href= {% url resultado.ensayo|lower muestra.id %}>dPdT ={{resultado.dpdt}} {{resultado.unidadDpdt}} | </a> 
+									
 								{%else%}
-									Sin ensayar
+									<a class="text-danger">dPDt = Sin ensayar | </a> 
 								{%endif%}
 
-								<a href= {% url resultado.ensayo|lower muestra.id %}>kmax = </a> 
-								{%if resultado.kmax != "none" %}
-									{{resultado.kmax}}
+								{%if resultado.kmax|lower != "none" %}
+									<a href= {% url resultado.ensayo|lower muestra.id %}>kmax ={{resultado.kmax}} </a> 
 								{%else%}
-									Sin ensayar
+									<a class="text-danger">kmax= Sin ensayar | </a> 
 								{%endif%}
 							{%endif%}
 						{%else%}
@@ -120,50 +141,54 @@
 
                   {%endfor%}
                 </div>
-                <div class= "col-12 d-flex justify-content-between">
+                <div class= "col-12 mt-4 d-flex justify-content-between">
                   <div>
                     <button id="ensayosMuestrasButton" class= "btn btn-info"> Añadir ensayo </button>
-                    <button type="button" class="btn btn-primary" id="generarPdf" data-toggle="modal" data-target="#ensayosModal">
-                      Generar PDF
-                    </button>
-                    
-                    <!-- Modal PDF -->
-                    <div class="modal fade" id="ensayosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form id="checklistForm" method="POST">
-                              {% csrf_token %}  <!-- Token CSRF para proteger el formulario -->
-                              
-                              <!-- Iterar sobre los resultados y generar un checkbox para cada uno -->
-                              <div>
-                                {% for ensayo in ensayos %}
-                                  <label>
-                                    <input type="radio" name="ensayo" value="{{ ensayo.ensayo }}"> {{ ensayo.ensayo }}
-                                  </label><br>
-                                {% endfor %}
-                              </div>
-                            </form>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id= "saveChangesBtn" >Save changes</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div>
+					{%if muestra.estado == "4" %}
+							<button id="muestraRevisada" class= "btn btn-success"> Marcar como revisada </button>
+					{%endif%}
+				  </div>
+
+                  <div >
+					<button type="button" class="btn btn-primary" id="generarPdf" data-toggle="modal" data-target="#ensayosModal">
+						Generar PDF
+					  </button>
                     <button type= "button" id="generarZip" class= "btn btn-info" data-toggle= "modal" data-target="#modalMail" > Generar ZIP </button>
                   </div>
                 </div>
+
+				<!-- Modal PDF -->
+				<div class="modal fade" id="ensayosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+						  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						  </button>
+						</div>
+						<div class="modal-body">
+						  <form id="checklistForm" method="POST">
+							{% csrf_token %}  <!-- Token CSRF para proteger el formulario -->
+							
+							<!-- Iterar sobre los resultados y generar un checkbox para cada uno -->
+							<div>
+							  {% for ensayo in ensayos %}
+								<label>
+								  <input type="radio" name="ensayo" value="{{ ensayo.ensayo }}"> {{ ensayo.ensayo }}
+								</label><br>
+							  {% endfor %}
+							</div>
+						  </form>
+						</div>
+						<div class="modal-footer">
+						  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						  <button type="button" class="btn btn-primary" data-dismiss="modal" id= "saveChangesBtn" >Save changes</button>
+						</div>
+					  </div>
+					</div>
+				  </div>
 
                  <!-- Modal ZIP -->
                  <div class="modal fade" id="modalMail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -189,6 +214,52 @@
                     </div>
                   </div>
                 </div>
+
+				<!--Modal de Archivo generado-->
+				<div class="modal fade" id="archivoGuardado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content ">
+							<div class="modal-header">
+							<h5 class="modal-title" id="envioModalLabel">Ensayo Guardado</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="check-icon" style="font-size: 50px; color: #28a745;">&#x2714;</div>
+								<p>El ensayo se ha guardado correctamente.</p>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+							</div>
+						</div>
+					</div>
+				</div> 
+				
+				<!--Modal de Error al generar archivo-->
+				<div class="modal fade" id="errorArchivoGuardado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content ">
+							<div class="modal-header">
+							<h5 class="modal-title" id="envioModalLabel">El archivo no se ha guardado</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="check-icon" style="font-size: 50px; color: #dc3545;">&#10006;</div>
+								<p>Hubo un problema al guardar el ensayo</p>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+							</div>
+						</div>
+					</div>
+				</div>
               </div>
 
 
@@ -207,6 +278,7 @@
 
 <script src="{%static 'js/muestras/generarPdf.js'%}"></script> 
 <script src="{%static 'js/muestras/envioMail.js'%}"></script> 
+<script src="{%static 'js/muestras/muestraRevisada.js'%}"></script> 
 
 
 

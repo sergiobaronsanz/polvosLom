@@ -18,9 +18,13 @@ function solicitudPOST(datos){
     })
     .then(data => {
       console.log('Respuesta del servidor:', data);
+	  var myModal = new bootstrap.Modal(document.getElementById('archivoGuardado'));
+	  myModal.show();	
     })
     .catch(error => {
       console.error('Error en la solicitud:', error);
+	  var myModal = new bootstrap.Modal(document.getElementById('errorArchivoGuardado'));
+	  myModal.show();
     });
 
   // Función para obtener el CSRF token de las cookies (necesaria en Django)
