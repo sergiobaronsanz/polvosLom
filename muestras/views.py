@@ -49,23 +49,13 @@ def recepcionMuestra(request):
         form = DescripcionMuestraForm()
 
     return render(request, 'recepcionMuestra.html', {'form': form})
-@login_required       
-def verMuestra(request, muestra_id):
-    
-    muestra= get_object_or_404(Muestras, id= muestra_id)
 
-    usuarios= get_list_or_404(User)
-
-    print(usuarios)
-    
-    #Sacamos la descripción de la muestra
-    descripcion= get_object_or_404(DescripcionMuestra, muestra=muestra)   
-    
-    #Sacamos los resultados 
+#Devuelve una lista con los ensayos que están 
+def listaEnsayosMuestra(muestra):
+    #Para que aparezca el ensayo deberemos crear el ensayo (instanciandolo) en signals.py en Expedientes
     listaEnsayos= muestra.listaEnsayos.all()
     resultados= []
 
-    #Para que aparezca el ensayo deberemos crear el ensayo (instanciandolo) en signals.py en Expedientes
     if listaEnsayos.filter(ensayo= "humedad").exists():
         resultado= Humedad.objects.filter(muestra= muestra)
         resultados.extend(resultado)
@@ -122,10 +112,10 @@ def verMuestra(request, muestra_id):
         resultado= Tratamiento.objects.filter(muestra= muestra)
         print("tratamiento")
         resultados.extend(resultado)
-    
-    print(resultados)
-        
-    #print (resultados)
+
+    return resultados
+
+def listaEnsayosTerminados(resultados, muestra):
     #pasamos los datos a json para poder mandarlos al script de js
     ensayos=[]
     for resultado in resultados:
@@ -151,14 +141,31 @@ def verMuestra(request, muestra_id):
                 ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
                 ensayos.append(ensayo_dict)
 
+    return ensayos
+    
+@login_required       
+def verMuestra(request, muestra_id):
+    
+    muestra= get_object_or_404(Muestras, id= muestra_id)
+
+    usuarios= get_list_or_404(User)
+    
+    #Sacamos la descripción de la muestra
+    descripcion= get_object_or_404(DescripcionMuestra, muestra=muestra)   
+    
+    #Sacamos la lista de los ensayos de las muestras
+    resultados= listaEnsayosMuestra (muestra)
+    
+    #Sacamos la lista de los ensayos terminados
+    ensayos= listaEnsayosTerminados(resultados, muestra)
+    print(ensayos)
+
     #Sacamos los datos para js
     ensayos_json_str = json.dumps(ensayos)
     muestra_json_str= json.dumps(muestra_id)
 
     #Sacamos las url
     url_ensayosMuestras= reverse('ensayosMuestrasSimple', kwargs={'muestra': muestra_id})
-    
-
     
     
     return render(request, 'verMuestra.html', {
@@ -181,6 +188,7 @@ def revisionMuestra(request):
             #Recibimos los datos
             datosJson= request.body.decode('utf-8')
             idMuestra= datosJson
+            print(idMuestra)
             muestra= get_object_or_404(Muestras, id= idMuestra)
 
             #Guardamos el nuevo estado de la muestra: Finalizada
@@ -191,11 +199,17 @@ def revisionMuestra(request):
             #Comprobamos si todas las muestras del estado de expedientes están terminadas
             expediente= muestra.expediente
             muestras= get_list_or_404(Muestras, expediente= expediente)
+            print(muestras)
 
             listadoEstadoMuestras= []
             for muestra in muestras:
                 if muestra.estado=="5":
                     listadoEstadoMuestras.append(True)
+                else:
+                    listadoEstadoMuestras.append(False)
+
+            
+            print(listadoEstadoMuestras)
             
             if all(listadoEstadoMuestras):
                 expediente.estado="5"

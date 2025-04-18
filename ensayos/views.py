@@ -25,9 +25,10 @@ def generadorPdf(request):
             # Lógica para generar el archivo o procesar los datos
             datosJson= request.body.decode('utf-8')
             datosList= json.loads(datosJson)
+            print(f"la lista de datos es: {datosList}")
 
             pdf_gen= PDFGenerator(datosList)
-            output = pdf_gen.generate()
+            output = pdf_gen.generateMuestra()
 
             # Guardar el resultado según la cantidad de archivos
             # Obtener la ruta al escritorio

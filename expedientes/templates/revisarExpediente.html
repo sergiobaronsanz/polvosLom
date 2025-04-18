@@ -29,11 +29,14 @@
 					{%endif%}
 			</div>
 			<div class= "p-4">
-				<div class= "d-flex justify-content-between">
+				<div class= "d-flex justify-content-between align-items-center">
 				<h2 > Las muestras asignadas al expediente {{expediente.expediente}} </h2>
+				{%if expediente.estado == "5" %}
+					<button type= "button" id="generarZipExpediente" class="btn btn-primary p-2"> Generar zip </button>
+				{%endif%}
 				<form  id="eliminarExpediente" method="POST" action="{% url 'eliminarExpediente' expediente.expediente %}">
 					{%csrf_token%}
-					<button type= "button" class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar Expediente</button>
+					<button type= "button" class="btn btn-danger p-2" onclick="confirmarEliminacion()">Eliminar Expediente</button>
 				</form>
 				</div>
 
@@ -88,5 +91,12 @@
     }
   }
 </script>
+
+<script>
+	let ensayosMuestras= {{ensayosMuestras_json|safe}}
+</script>
+
+<script src="{%static 'js/expedientes/generarZipExpediente.js'%}"></script> 
+
 
 {%endblock%}

@@ -11,6 +11,9 @@ urlpatterns = [
     path('expedientes/muestras/<str:muestra>', views.ensayosMuestrasSimple, name= "ensayosMuestrasSimple"),
     path('expedientes/ver-expedientes', views.verExpedientes, name="verExpedientes"), 
     path('expedientes/ver-expedientes/revisar-expediente/<str:nExpediente>', views.expediente, name="revisarExpediente"),
-    path('expedientes/ver-expedientes/revisar-expediente/eliminar-expediente/<str:expediente>', views.eliminarExpediente, name="eliminarExpediente"),  
+    path('expedientes/ver-expedientes/revisar-expediente/eliminar-expediente/<str:expediente>', views.eliminarExpediente, name="eliminarExpediente"), 
+
+	#Generador de archivos ZIP
+	path('expedientes/ver-expedientes/generarZip', views.generadorZipConjunto, name="generarZip"),
     
 ]

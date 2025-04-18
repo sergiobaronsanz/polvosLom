@@ -63,12 +63,10 @@ class PDFGenerator:
     
     def generate_tratamiento_pdf(self):
         return self.plantilla.tratamiento()
-
-
-    # Método principal para gestionar múltiples PDFs
-    def generate(self):
+    
+    def filtroEnsayos(self):
         pdf_files = []
-        union_pdf_files= []
+        formateo_pdf_files= []
         #Si hay más de un archivo generamos el parte de recepción
         if len(self.request) >1:
                 pdf_bytes = self.generate_Recepcion_pdf()
@@ -112,8 +110,16 @@ class PDFGenerator:
             # Agregar más tipos de PDF aquí...
             pdf_files.append((nombre_archivo, pdf_bytes))
             #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
-            union_pdf_files.append(io.BytesIO(pdf_bytes))
-            
+            formateo_pdf_files.append(io.BytesIO(pdf_bytes))
+
+        return pdf_files, formateo_pdf_files
+
+
+    # Método principal para gestionar múltiples PDFs
+    def generateMuestra(self):
+        
+        #Sacamos los archivos pdf y el formateo de los mismos para que puedan ser unidos con el merge
+        pdf_files, formateo_pdf_files= self.filtroEnsayos()
         
         # Si solo hay un archivo, devolver el PDF directamente
         if len(pdf_files) == 1:
@@ -129,15 +135,17 @@ class PDFGenerator:
                 
             #Además unificamos todos los pdfs para que en el zip hay un archivo con todos los pdfs
             merger = PdfMerger()
-            for pdf in union_pdf_files:
+            for pdf in formateo_pdf_files:
                 merger.append(pdf) 
 
             merger.write(output_pdf)
             merger.close()   
 
             pdfResumen= output_pdf.getvalue()
-            zip_file.writestr((request['muestra_nombre'] + ".pdf"), pdfResumen)
+            zip_file.writestr(f"{self.request[0]['muestra_nombre']}.pdf", pdfResumen)
 
             
         zip_buffer.seek(0)
         return zip_buffer.getvalue()  # Retorna los bytes del ZIP
+
+    

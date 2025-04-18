@@ -30,9 +30,7 @@
 
 				{%endif%}
 		    </div>
-            <div class="card-body" id="content-verMuestra">
-			  
-			  
+            <div class="card-body" id="content-verMuestra">  
 			
               <div id="identificacion-muestra" class= "row col-12">             
                 <div id="nombre-muestra" class= "col-6">
@@ -130,11 +128,10 @@
 								{%endif%}
 							{%endif%}
 						{%else%}
-							<a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}} = </a>
 							{%if resultado.secado or resultado.molido or resultado.tamizado %}
-								Muestra tratada
+							<a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}}  </a>
 							{%else%}
-								Muestra sin tratar 
+							<a class="text-danger">{{resultado.ensayo}} = Muestra sin tratar  </a> 
 							{%endif%}
 						{%endif%}
                     </p>
