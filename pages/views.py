@@ -7,6 +7,12 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q, F, ExpressionWrapper, FloatField
+from django.db.models.functions import ExtractMonth
+from django.http import JsonResponse
+import json
+
+
 
 # Create your views here.
 @login_required
@@ -18,26 +24,72 @@ def inicio(request):
     año_actual = timezone.now().year
     
     #Resumen expedientes
-    nExpedientesEnsayando= Expedientes.objects.filter(fecha__year=año_actual).filter(estado="3").count()
-    nExpedientesPendientes= Expedientes.objects.filter(fecha__year=año_actual).filter(estado="4").count()
+    nExpedientesEnsayando= Expedientes.objects.filter(estado="3").count()
+    nExpedientesPendientes= Expedientes.objects.filter(estado="4").count()
     nExpedientesAbiertos=nExpedientesEnsayando + nExpedientesPendientes
     
-    nExpedientesTerminados= Expedientes.objects.filter(fecha__year=año_actual).filter(estado="4").count()
+    nExpedientesTerminados= Expedientes.objects.filter(fecha__year=año_actual).filter(estado="5").count()
     nMuestrasTotales= Muestras.objects.filter(expediente__fecha__year= año_actual).count()
     
     #Evolución ensayos
-    expedientes= Expedientes.objects.filter(fecha__year=año_actual, estado__in=["3", "4"])
-    print(expedientes)
+    evolucionExpedientes= Expedientes.objects.filter(estado__in=["3", "4"])
     
-    #muestrasExpedientes= Muestras.objects.filter(expediente= expedientes)
+    #Número de muestras realizadas por mes
+    # Agrupar por mes y contar
+    muestras_por_mes = (
+        Muestras.objects
+        .filter(expediente__fecha__year=año_actual)
+        .annotate(mes=ExtractMonth('expediente__fecha'))
+        .values('mes')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+    # Convertimos a json
+    muestrasPorMes = [item['total'] for item in muestras_por_mes]
+    muestrasPorMes_json= json.dumps(muestrasPorMes)
+
+    #Expedientes por empresas
+    top_empresas = Empresa.objects.filter(
+            muestras__fecha__year=año_actual
+        ).annotate(
+            total_muestras=Count('muestras')
+        ).order_by('-total_muestras')[:5]
+    
+    empresasTop= []
+    colores= ["primary", "success", "info", "secondary", "warning"]
+    bucle= 0
+    for empresa in top_empresas:
+        empresasTop.append({'empresa': empresa.empresa, 'nMuestras': empresa.total_muestras, 'color': colores[bucle]})
+        bucle = bucle + 1
+    
+    print(empresasTop)
+    top_empresas_json= json.dumps(empresasTop)
+
+
+    #Expedientes por mes 
+    expedientes_por_año = (Expedientes.objects
+                       .filter(fecha__year__gte=año_actual - 5, fecha__year__lte=año_actual)  # Filtrar los últimos 5 años
+                       .values('fecha__year')  # Agrupar por año
+                       .annotate(nExpedientes=Count('id'))  # Contar los expedientes
+                       .order_by('fecha__year')) 
+    # Convertimos a json
+    expedientes_por_año = [{'año': item['fecha__year'], 'nExpedientes': item['nExpedientes']} for item in expedientes_por_año]    
+    print(f"el expediente es {expedientes_por_año}")
+    expediente_por_año_json= json.dumps(expedientes_por_año)
+
     
     return render(request,'pages/inicio.html', { 
         "nExpedientesAbiertos": nExpedientesAbiertos,
         "nExpedientesPendientes": nExpedientesPendientes,
         "nExpedientesTerminados": nExpedientesTerminados,
         "nMuestrasTotales": nMuestrasTotales,
-        "expedientes": expedientes,
+        "evolucionExpedientes": evolucionExpedientes,
         "user": user,
+        "año": año_actual,
+        "muestrasPorMes": muestrasPorMes_json,
+        "top_empresas": empresasTop,
+        "top_empresas_json": top_empresas_json,
+        "expediente_por_año_json": expediente_por_año_json
         
     })
 

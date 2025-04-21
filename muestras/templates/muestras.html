@@ -37,7 +37,7 @@
                     {% for muestra in muestras%}
                       <tr>
                         
-                          <th scope="row"><a {%if muestra.estado != "1"%} href= "{%url 'verMuestra' muestra.id%}" {%endif%}>{{muestra.empresa.abreviatura}}</a></th>
+                          <th scope="row"><a {%if muestra.estado != "1" and muestra.tiene_descripcion %} href= "{%url 'verMuestra' muestra.id%}" {%endif%}>{{muestra.empresa.abreviatura}}</a></th>
                         
                         <td>{{muestra.id_muestra}}</a></td>
                         <td>{{muestra.expediente }}</td>

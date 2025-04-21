@@ -1,4 +1,4 @@
-from muestras.models import Muestras, ListaEnsayos
+from muestras.models import Muestras, ListaEnsayos, DescripcionMuestra
 from ensayos.models import *
 from expedientes.models import Expedientes
 from django.db.models.signals import post_save, m2m_changed
@@ -26,6 +26,8 @@ def crear_ensayos(sender, instance, action, **kwargs):
     #Sacamos los ensayos asignados a la muestra
     ensayos=instance.listaEnsayos.all()      
     expediente= instance.expediente
+    
+    descripcionMuestra= DescripcionMuestra.objects.filter(muestra= instance)
 
     if action == "post_add":
          
@@ -37,11 +39,18 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "%",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    #Vemos si la muestra tiene descripcion
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "Granulometria":
                 if not Granulometria.objects.filter(muestra= instance).exists():
@@ -50,11 +59,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "um",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
             
             if ensayo.ensayo == "TMIc":
                 if not TMIc.objects.filter(muestra= instance).exists():
@@ -63,11 +78,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "ºC",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
                 
             if ensayo.ensayo == "TMIn":
                 if not TMIn.objects.filter(muestra= instance).exists():
@@ -76,11 +97,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "ºC",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "LIE":
                 if not LIE.objects.filter(muestra= instance).exists():
@@ -89,11 +116,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "g/m3",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "EMI":
                 if not EMI.objects.filter(muestra= instance).exists():
@@ -102,11 +135,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "mJ",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
             
             if ensayo.ensayo == "EMIsin":
                 if not EMIsin.objects.filter(muestra= instance).exists():
@@ -115,11 +154,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "mJ",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "Pmax":
                 if not Pmax.objects.filter(muestra= instance).exists():
@@ -129,11 +174,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         unidadPmax= "g/m3",
                         unidadDpdt= "bar/s",
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "CLO":
                 if not CLO.objects.filter(muestra= instance).exists():
@@ -142,11 +193,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "%"
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "REC":
                 if not REC.objects.filter(muestra= instance).exists():
@@ -155,11 +212,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         ensayo= ensayo,
                         unidad= "Mohm"
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
             
             if ensayo.ensayo == "N1":
                 if not N1.objects.filter(muestra= instance).exists():
@@ -167,11 +230,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         muestra= instance,
                         ensayo= ensayo,
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "N2":
                 if not N2.objects.filter(muestra= instance).exists():
@@ -179,11 +248,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         muestra= instance,
                         ensayo= ensayo,
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "N4":
                 if not N4.objects.filter(muestra= instance).exists():
@@ -191,11 +266,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         muestra= instance,
                         ensayo= ensayo,
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "O1":
                 if not O1.objects.filter(muestra= instance).exists():
@@ -203,11 +284,17 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         muestra= instance,
                         ensayo= ensayo,
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
 
             if ensayo.ensayo == "Tratamiento":
                 if not Tratamiento.objects.filter(muestra= instance).exists():
@@ -215,12 +302,21 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         muestra= instance,
                         ensayo= ensayo,
                     )
-                    #Volvemos a poner la muestra y el expediente en estado de ensayando
-                    instance.estado= "3"
-                    instance.save()
-                    expediente.estado= "3"
-                    expediente.save()
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
                 
+        porcentaje= porcentajeExpediente(expediente=expediente)
+        expediente.porcentaje= porcentaje
+        expediente.save()   
 
     if action == "post_remove":
         print("borrar")
@@ -303,8 +399,11 @@ def crear_ensayos(sender, instance, action, **kwargs):
             ensayoObjeto= Tratamiento.objects.filter(muestra= instance)
             if ensayoObjeto.exists():
                 ensayoObjeto.delete()
-                    
-        chequeo_expedientes_terminados(muestra=instance)     
+        
+        chequeo_expedientes_terminados(muestra=instance)  
+        porcentaje= porcentajeExpediente(expediente=expediente)
+        expediente.porcentaje= porcentaje
+        expediente.save()   
 
 #Cambio estado expediente, para pasar la muestra de estado de ensayando a revisión
 def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
@@ -452,66 +551,316 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
     
     print(f"Las muestras son: {muestras}")
 
+#Ver porcentaje expediente
+def porcentajeExpediente(ensayo= None, expediente= None):
+    
+    if ensayo:
+        expediente= ensayo.muestra.expediente
+    if expediente:
+        expediente= expediente
+
+    
+
+    muestras= Muestras.objects.filter(expediente= expediente)
+
+    #Sumamos la totalidad de las horas y las de los ensyayos terminados(los que tienen resultado)
+    # Inicializar las listas de horas
+    
+    horasTotales = []
+    horasTerminadas = []
+    for muestra in muestras:
+        #Sacamos la lista de ensayos
+        listaEnsayos= muestra.listaEnsayos.all()
+        # Iterar sobre la lista de ensayos
+        for ensayo in listaEnsayos:    
+            # Verificar si el ensayo es "humedad"
+            if "humedad" in ensayo.ensayo.lower():
+                humedad = Humedad.objects.filter(muestra=muestra).first()
+                if humedad:
+                    # Añadir las horas a la lista de horasTotales
+                    horasTotales.append(humedad.horasEnsayo)
+                    # Si el ensayo tiene resultado, añadir las horas a la lista de horasTerminadas
+                    if humedad.resultado:
+                        horasTerminadas.append(humedad.horasEnsayo)
+
+            # Verificar si el ensayo es "granulometria"
+            if "granulometria" in ensayo.ensayo.lower():
+                granulometria = Granulometria.objects.filter(muestra=muestra).first()
+                if granulometria:
+                    horasTotales.append(granulometria.horasEnsayo)
+                    if granulometria.resultado:
+                        horasTerminadas.append(granulometria.horasEnsayo)
+
+            # Verificar si el ensayo es "tmic"
+            if "tmic" in ensayo.ensayo.lower():
+                tmic = TMIc.objects.filter(muestra=muestra).first()
+                if tmic:
+                    horasTotales.append(tmic.horasEnsayo)
+                    if tmic.resultado:
+                        horasTerminadas.append(tmic.horasEnsayo)
+
+            # Verificar si el ensayo es "tmin"
+            if "tmin" in ensayo.ensayo.lower():
+                tmin = TMIn.objects.filter(muestra=muestra).first()
+                if tmin:
+                    horasTotales.append(tmin.horasEnsayo)
+                    if tmin.resultado:
+                        horasTerminadas.append(tmin.horasEnsayo)
+
+            # Verificar si el ensayo es "lie"
+            if "lie" in ensayo.ensayo.lower():
+                lie = LIE.objects.filter(muestra=muestra).first()
+                if lie:
+                    horasTotales.append(lie.horasEnsayo)
+                    if lie.resultado:
+                        horasTerminadas.append(lie.horasEnsayo)
+
+            # Verificar si el ensayo es "emi"
+            if "emi" in ensayo.ensayo.lower():
+                emi = EMI.objects.filter(muestra=muestra).first()
+                if emi:
+                    horasTotales.append(emi.horasEnsayo)
+                    if emi.resultado:
+                        horasTerminadas.append(emi.horasEnsayo)
+
+            # Verificar si el ensayo es "pmax"
+            if "pmax" in ensayo.ensayo.lower():
+                pmax = Pmax.objects.filter(muestra=muestra).first()
+                if pmax:
+                    horasTotales.append(pmax.horasEnsayo)
+                    if pmax.pmax and pmax.dpdt and pmax.kmax:
+                        horasTerminadas.append(pmax.horasEnsayo)
+
+            # Verificar si el ensayo es "clo"
+            if "clo" in ensayo.ensayo.lower():
+                clo = CLO.objects.filter(muestra=muestra).first()
+                if clo:
+                    horasTotales.append(clo.horasEnsayo)
+                    if clo.resultado:
+                        horasTerminadas.append(clo.horasEnsayo)
+
+            # Verificar si el ensayo es "rec"
+            if "rec" in ensayo.ensayo.lower():
+                rec = REC.objects.filter(muestra=muestra).first()
+                if rec:
+                    horasTotales.append(rec.horasEnsayo)
+                    if rec.resultado:
+                        horasTerminadas.append(rec.horasEnsayo)
+
+            # Verificar si el ensayo es "n1"
+            if "n1" in ensayo.ensayo.lower():
+                n1 = N1.objects.filter(muestra=muestra).first()
+                if n1:
+                    horasTotales.append(n1.horasEnsayo)
+                    if n1.resultado:
+                        horasTerminadas.append(n1.horasEnsayo)
+
+            # Verificar si el ensayo es "n2"
+            if "n2" in ensayo.ensayo.lower():
+                n2 = N2.objects.filter(muestra=muestra).first()
+                if n2:
+                    horasTotales.append(n2.horasEnsayo)
+                    if n2.resultado:
+                        horasTerminadas.append(n2.horasEnsayo)
+
+            # Verificar si el ensayo es "n4"
+            if "n4" in ensayo.ensayo.lower():
+                n4 = N4.objects.filter(muestra=muestra).first()
+                if n4:
+                    horasTotales.append(n4.horasEnsayo)
+                    if n4.resultado:
+                        horasTerminadas.append(n4.horasEnsayo)
+
+            # Verificar si el ensayo es "o1"
+            if "o1" in ensayo.ensayo.lower():
+                o1 = O1.objects.filter(muestra=muestra).first()
+                if o1:
+                    horasTotales.append(o1.horasEnsayo)
+                    if o1.resultado:
+                        horasTerminadas.append(o1.horasEnsayo)
+
+            # Verificar si el ensayo es "tratamiento"
+            if "tratamiento" in ensayo.ensayo.lower():
+                tratamiento = Tratamiento.objects.filter(muestra=muestra).first()
+                if tratamiento:
+                    horasTotales.append(tratamiento.horasEnsayo)
+                    if tratamiento.tamizado or tratamiento.molido or tratamiento.secado:
+                        horasTerminadas.append(tratamiento.horasEnsayo)
+
+            # Verificar si el ensayo es "emisin"
+            if "emisin" in ensayo.ensayo.lower():
+                emisin = EMI.objects.filter(muestra=muestra).first()
+                if emisin:
+                    horasTotales.append(emisin.horasEnsayo)
+                    if emisin.resultado:
+                        horasTerminadas.append(emisin.horasEnsayo)
+
+        # Sumar todas las horas de los ensayos seleccionados
+        totalHorasMuestra = sum(horasTotales)
+
+        # Sumar solo las horas de los ensayos terminados
+        totalHorasTerminadasMuestra = sum(horasTerminadas)
+
+    horasTotales.append(totalHorasMuestra)
+    horasTerminadas.append(totalHorasTerminadasMuestra)
+
+    resultado= (sum(horasTerminadas)/sum(horasTotales))*100
+        
+
+    return resultado
+
+    
 @receiver(post_save, sender= Humedad)
 def cambio_humedad(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= Granulometria)
 def cambio_granulometria(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
+
 
 @receiver(post_save, sender= TMIc)
 def cambio_tmic(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= TMIn)
 def cambio_tmin(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= LIE)
 def cambio_lie(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= EMI)
 def cambio_emi(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= Pmax)
 def cambio_pmax(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 
 @receiver(post_save, sender= CLO)
 def cambio_clo(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= REC)
 def cambio_rec(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= N1)
 def cambio_n1(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= N2)
 def cambio_n2(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= N4)
 def cambio_n4(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= O1)
 def cambio_o1(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= Tratamiento)
 def cambio_tratamiento(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
 
 @receiver(post_save, sender= EMIsin)
 def cambio_emisin(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
     
 
 

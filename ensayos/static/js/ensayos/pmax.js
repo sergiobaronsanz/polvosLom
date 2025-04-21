@@ -396,7 +396,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		kmax();
 		
 	}
-
     
 	//Listener para habilitar botón envio archivo en el modal
 	fileInput.addEventListener('change',function(){

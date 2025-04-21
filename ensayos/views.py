@@ -69,44 +69,6 @@ def generadorPdf(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-@login_required
-def envioMail(request):
-    if request.method == 'POST':
-        try:
-            #Recibimos los datos
-            datosJson= request.body.decode('utf-8')
-            datosList= json.loads(datosJson)
-            id_muestra= datosList[0]['muestra']
-            muestra= Muestras.objects.get(id= id_muestra)
-            print(muestra)
-            abreviatura= muestra.empresa.abreviatura
-            numeroMuestra= muestra.id_muestra
-            expediente=muestra.expediente
-            empresa=muestra.empresa.empresa
-
-            asunto= f"Resultados de {abreviatura}-{numeroMuestra} de la empresa {empresa} para el expediente {expediente}" 
-            mensaje= f"Hola,\n\nYa tienes los resultados de {abreviatura}-{numeroMuestra}.\n\nUn saludo."
-            remitente = settings.EMAIL_HOST_USER
-            destinatarios = ['s.baronsanz@gmail.com']
-            print(mensaje)
-    
-            send_mail(asunto, mensaje, remitente, destinatarios, fail_silently=False)
-
-            return JsonResponse({'mensaje': 'Email enviado'})
-
-        except Exception as e:
-            # Captura y devuelve la traza completa del error
-            traza_error = traceback.format_exc()
-            print(traza_error)  # Muestra la traza en la consola del servidor
-
-            return JsonResponse({
-                'error': 'Error interno del servidor',
-                'detalle': str(e),
-                'traza': traza_error  # Incluye la traza en la respuesta
-            }, status=500)
-    else:
-        return JsonResponse({'error': 'Método no permitido'}, status=405)
-
 #Lista Ensayos
 @login_required
 def listaEnsayos(request):
@@ -164,7 +126,7 @@ def humedad(request, muestra_id): #################################### Hay que c
     if request.method == 'POST':
                
         form = HumedadForm(request.POST)
-        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equipos')
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equiposEnsayo')
         print(form.errors)
 
         if form.is_valid() and equiposEnsayo.is_valid():
@@ -270,7 +232,8 @@ def humedad(request, muestra_id): #################################### Hay que c
             datosGuardados= True
             print(f"datos guardados {datosGuardados}")
         else:
-            print("no valido")
+            print (form.errors)
+            form.add_error(None, f'Error en el formulario, revisa los datos {form.errors}')
     else:
         if muestra_id != "nueva":
             ensayo= Humedad.objects.get(muestra__id= muestra_id)
@@ -419,6 +382,8 @@ def granulometria(request, muestra_id):
 
             datosGuardados= True
             nombreArchivo= archivo
+        else:
+            form.add_error(None, f'Error en el formulario, revisa los datos {form.errors}')
     
     else:
         if muestra_id != 'nueva':
@@ -868,7 +833,7 @@ def lie (request, muestra_id):
             humedad= formLie.cleaned_data['humedad']
             cerillas= formLie.cleaned_data['cerillas']
             boquilla= formLie.cleaned_data['boquilla']
-            observacion=formLie.cleaned_data['observacion']
+            observacion = formLie.cleaned_data.get('observacion', '') #Corrige el problema de las comillas
 
             lie= LIE.objects.create(
                 muestra=muestra,
@@ -968,9 +933,9 @@ def lie (request, muestra_id):
             fechaFin= str(ensayo_LIE.fechaFin)
             temperaturaAmbiente= ensayo_LIE.temperaturaAmbiente
             humedad=ensayo_LIE.humedad
-            cerillas=ensayo_LIE.cerillas,
-            boquilla=ensayo_LIE.boquilla,
-            observacion= ensayo_LIE.observacion,
+            cerillas=ensayo_LIE.cerillas
+            boquilla=ensayo_LIE.boquilla
+            observacion= ensayo_LIE.observacion
             
             
             formLie = LieForm(prefix='lie', initial={
@@ -1208,7 +1173,7 @@ def emi (request, muestra_id):
             formEmi.fields['muestra'].queryset = muestras_queryset
 
             formEmiResultados=emiResultadosFormSet(prefix='emiResultados') 
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})           
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos})           
 
 
     return render(request, 'ensayos/nuevosEnsayos/emi.html', {
@@ -1381,7 +1346,7 @@ def emiSinInductancia(request, muestra_id):
             formEmi.fields['inductancia'].initial = "2"
 
             formEmiResultados=emiResultadosFormSet(prefix='emiResultados') 
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})           
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos})           
 
 
     return render(request, 'ensayos/nuevosEnsayos/emi.html', {
@@ -1581,7 +1546,7 @@ def pmax (request, muestra_id):
             formPmax.fields['muestra'].queryset = muestras_queryset
 
             formPmaxResultados=pmaxResultadosFormSet(prefix='pmaxResultados')     
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos}) 
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos}) 
                 
 
 
@@ -1628,7 +1593,8 @@ def clo (request, muestra_id):
             humedad= formClo.cleaned_data['humedad']
             cerillas= formClo.cleaned_data['cerillas']
             boquilla= formClo.cleaned_data['boquilla']
-            observacion=formClo.cleaned_data['observacion']
+            observacion = formClo.cleaned_data.get('observacion', '')
+            print(f"observacion es {observacion}")
 
             clo= CLO.objects.create(
                 muestra=muestra,
@@ -1713,9 +1679,9 @@ def clo (request, muestra_id):
             fechaFin= str(ensayo_CLO.fechaFin)
             temperaturaAmbiente= ensayo_CLO.temperaturaAmbiente
             humedad=ensayo_CLO.humedad
-            cerillas=ensayo_CLO.cerillas,
-            boquilla=ensayo_CLO.boquilla,
-            observacion= ensayo_CLO.observacion,
+            cerillas=ensayo_CLO.cerillas
+            boquilla=ensayo_CLO.boquilla
+            observacion= ensayo_CLO.observacion
             
             
             formClo = CloForm(prefix='clo', initial={
@@ -1756,7 +1722,7 @@ def clo (request, muestra_id):
             formClo.fields['muestra'].queryset = muestras_queryset
 
             formCloResultados=cloResultadosFormSet(prefix='cloResultados')   
-            equiposEnsayo = EquiposEnsayoForm(prefix='equipos',initial={'equiposEnsayo': equipos})
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos})
 
 
 
@@ -1906,7 +1872,7 @@ def rec (request, muestra_id):
             fechaFin= str(ensayo_REC.fechaFin)
             temperaturaAmbiente= ensayo_REC.temperaturaAmbiente
             humedad=ensayo_REC.humedad
-            observacion= ensayo_REC.observacion,
+            observacion= ensayo_REC.observacion
             
             
             formRec = RecForm(prefix='rec', initial={
@@ -2765,7 +2731,7 @@ def tratamiento (request, muestra_id):
                 fechaTamizadoInicio= fechaTamizadoInicio,
                 fechaTamizadoFin=fechaTamizadoFin,
                 
-				usuario= usuario,
+                usuario= usuario,
                 
             )
             if equipoSecado:

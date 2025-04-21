@@ -35,7 +35,8 @@
               <div id="identificacion-muestra" class= "row col-12">             
                 <div id="nombre-muestra" class= "col-6">
                   <h2> {{muestra.empresa.abreviatura}} - {{muestra.id_muestra}}</h2>
-                  <p> {{descripcion.id_fabricante}} </p>
+					<p class= "mb-1"> Id: {{descripcion.id_fabricante}}</p>
+					<a href= "{%url 'revisarExpediente' expediente.id %}"> Exp: {{expediente.expediente}} </a>
                 </div>
                 <div id="imagenes" class= "col-6">
                   {% if descripcion.imagenMuestra != 'null' and descripcion.imagenMuestra.url|length >= 1 %}
@@ -187,7 +188,7 @@
 					</div>
 				  </div>
 
-                 <!-- Modal ZIP -->
+                 <!-- Modal envio mail -->
                  <div class="modal fade" id="modalMail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">

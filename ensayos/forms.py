@@ -300,13 +300,6 @@ class TmicForm(forms.Form):
         label= "Tiempo máximo del ensayo",
         widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
-
-    funde= forms.ChoiceField(
-        choices=funde_muestra,
-        label= "Tipo ignición",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
-        required=False,
-    )
     
 
     observacion=forms.CharField(

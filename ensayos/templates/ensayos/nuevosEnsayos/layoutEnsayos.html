@@ -26,7 +26,7 @@
                 </div> 
 
 				<!--Modal de ensayo guardado-->
-				<div class="modal fade" id="ensayosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="ensayosModalGuardado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered" role="document">
 						<div class="modal-content ">
 							<div class="modal-header">
@@ -75,7 +75,7 @@
 		console.log("holaaaaaa");
 		
 		// Asegúrate de que el elemento existe en el DOM
-		var modalElement = document.getElementById('ensayosModal');
+		var modalElement = document.getElementById('ensayosModalGuardado');
 		if (modalElement) {
 			var envioModal = new bootstrap.Modal(modalElement);
 			envioModal.show();

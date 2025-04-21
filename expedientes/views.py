@@ -13,6 +13,10 @@ import os
 import zipfile
 import tempfile
 import shutil
+from django.conf import settings
+from django.core.mail import send_mail
+from django.db.models import Exists, OuterRef
+
 
 
 #Seleccion Expediente
@@ -21,10 +25,10 @@ def nuevoExpediente(request):
     if request.method == 'POST':
         form = ExpedientesForm(request.POST)
         if form.is_valid():
-            expedienteForm= request.POST["expediente"]
-            empresaForm= request.POST["empresa"]
-            nMuestrasForm= request.POST["nMuestras"]
-            abreviaturaForm= request.POST["abreviatura"]
+            expedienteForm= form.cleaned_data["expediente"].upper()
+            empresaForm= form.cleaned_data["empresa"].upper()
+            nMuestrasForm= form.cleaned_data["nMuestras"]
+            abreviaturaForm= form.cleaned_data["abreviatura"].upper()
             
             try:
                 empresa = Empresa.objects.get(empresa__icontains=empresaForm)
@@ -215,25 +219,36 @@ def generadorZipConjunto(request):##############################################
                     # Descomprimir el zip en el directorio temporal
                     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                         zip_ref.extractall(temp_unzip_dir)
+                    
+                    os.remove(zip_path)
 
                     # Copiar los archivos descomprimidos a la carpeta final
                     for filename in os.listdir(temp_unzip_dir):
                         filepath = os.path.join(temp_unzip_dir, filename)
                         if os.path.isfile(filepath):
-                            shutil.copy(filepath, os.path.join(final_folder, filename))
+                            extract_folder = os.path.join(final_folder, f"{resultadosMuestra[0]['muestra_nombre']}")
+                            os.makedirs(extract_folder, exist_ok=True)
+
+                            shutil.copy(filepath, os.path.join(extract_folder, filename))
 
             # Crear el zip final con todos los archivos combinados
             desktop = os.path.join(os.path.expanduser('~'), 'Desktop')  # o 'Desktop'
-            final_zip_path = os.path.join(desktop, 'resultado_final.zip')
-            with zipfile.ZipFile(final_zip_path, 'w') as zipf:
-                for filename in os.listdir(final_folder):
-                    filepath = os.path.join(final_folder, filename)
-                    zipf.write(filepath, arcname=filename)
+            muestra=Muestras.objects.get(id= int(resultadosMuestra[0]['muestra_id']))
+            expediente= muestra.expediente.expediente
+            final_zip_path = os.path.join(desktop, f"{expediente}.zip")
+            with zipfile.ZipFile(final_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for root, dirs, files in os.walk(final_folder):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        # Guardamos la ruta relativa para mantener la estructura dentro del ZIP
+                        arcname = os.path.relpath(file_path, final_folder)
+                        zipf.write(file_path, arcname=arcname)
 
             # Limpieza opcional
-            shutil.rmtree(final_folder)
+            '''shutil.rmtree(final_folder)'''
 
             print(f"ZIP final creado en: {final_zip_path}")
+            
             """for 
                 output = pdf_gen.generate()
 
@@ -277,12 +292,17 @@ def generadorZipConjunto(request):##############################################
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 @login_required
-def expediente (request, nExpediente):
+def expediente (request, expediente):
 
     #Sacamos el expediente
-    expediente= get_object_or_404(Expedientes, expediente=nExpediente)
+    expediente= get_object_or_404(Expedientes, id=expediente)
     #Sacamos las muestras asignadas a ese expediente
-    muestras= Muestras.objects.filter(expediente= expediente)
+    muestras = Muestras.objects.filter(expediente=expediente).annotate(
+        tiene_descripcion=Exists(DescripcionMuestra.objects.filter(muestra=OuterRef('pk')))
+    )
+    
+    usuarios= get_list_or_404(User)
+
 
     ensayosMuestras=[]
     for muestra in muestras:
@@ -293,20 +313,62 @@ def expediente (request, nExpediente):
         ensayos= listaEnsayosTerminados(resultados, muestra)
 
         ensayosMuestras.append(ensayos)
-
     print(ensayosMuestras)
     
     #pasamos la variable a json para que se pueda leer en js
     ensayosMuestras_json= json.dumps(ensayosMuestras)
-    '''        #Sacamos los datos para js
-    ensayos_json_str = json.dumps(ensayos)
-    muestra_json_str= json.dumps(muestra_id)###############'''
+    expediente_json= json.dumps(expediente.id)
         
     return render (request, "revisarExpediente.html", {
         'expediente': expediente,
         'muestras': muestras,
         'ensayosMuestras_json': ensayosMuestras_json, 
+        'expediente_json': expediente_json,
+        "usuarios": usuarios,
+
     })
+
+@login_required
+def envioMail(request):
+    if request.method == 'POST':
+        try:
+            #Recibimos los datos
+            datosJson= request.body.decode('utf-8')
+            datosList= json.loads(datosJson)
+            id_expediente= datosList[0]['expediente']
+            expediente= Expedientes.objects.get(id= id_expediente)
+            muestras= get_list_or_404(Muestras, expediente= expediente)
+            print(expediente)
+            asuntosMuestras= []
+            for muestra in muestras:
+                abreviatura= muestra.empresa.abreviatura
+                numeroMuestra= muestra.id_muestra
+                asuntosMuestras.append(f"{abreviatura}-{numeroMuestra}")
+            nExpediente=expediente.expediente
+            empresa=expediente.empresa
+
+            asunto= f"Resultados de {' , '.join(asuntosMuestras)} de la empresa {empresa} para el expediente {nExpediente}" 
+            mensaje= f"Hola,\n\nYa tienes los resultados de {' , '.join(asuntosMuestras)}.\n\nUn saludo."
+            remitente = settings.EMAIL_HOST_USER
+            destinatarios = ['s.baronsanz@gmail.com']
+            print(mensaje)
+    
+            send_mail(asunto, mensaje, remitente, destinatarios, fail_silently=False)
+
+            return JsonResponse({'mensaje': 'Email enviado'})
+
+        except Exception as e:
+            # Captura y devuelve la traza completa del error
+            traza_error = traceback.format_exc()
+            print(traza_error)  # Muestra la traza en la consola del servidor
+
+            return JsonResponse({
+                'error': 'Error interno del servidor',
+                'detalle': str(e),
+                'traza': traza_error  # Incluye la traza en la respuesta
+            }, status=500)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 @login_required

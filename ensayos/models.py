@@ -247,10 +247,10 @@ class LIE (models.Model):
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
     resultado= models.CharField(verbose_name="Resultado", max_length=100, null=True, blank=True) #125, 250
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="g/m3", null=True, blank=True)
-    observacion=models.CharField(max_length=1000, verbose_name="Observacion")
+    observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank=True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
 
-    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=2)
 
     class Meta():
         verbose_name="LIE"
@@ -484,7 +484,7 @@ class CLO (models.Model):
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank= True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
 
-    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=4)
 
     class Meta():
         verbose_name="LIE"
@@ -552,7 +552,7 @@ class N1 (models.Model):
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank= True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
 
-    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=3)
     """resultado= models.DecimalField(verbose_name="Resultado", max_digits=6, decimal_places=2, null=True) #9999,99
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""
     
@@ -837,7 +837,7 @@ class REC (models.Model):
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank= True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
 
-    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
     
     class Meta():
         verbose_name="REC"

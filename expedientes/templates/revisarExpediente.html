@@ -11,28 +11,31 @@
           <div class="card mb-4 col-lg-12 p-0">
 			<div class= "text-center">
 				{%if expediente.estado == "5"%}
-						<p class="p-2 col-12 text-secondary bg-success text-light ">
-							{{ expediente.get_estado_display }}
-						</p>
-					{%else%}
-						{%if expediente.estado == "4"%}
-							<p class="p-2 col-12 text-secondary bg-warning text-light ">
-								{{ expediente.get_estado_display }}
-							</p>
-						{%else%}
-							<p class="p-2 col-12 text-secondary bg-primary text-light">
-								{{ expediente.get_estado_display }}
-							</p>
-	
-						{%endif%}
-	
-					{%endif%}
+					<p class="p-2 text-secondary bg-success text-light rounded ">
+						{{ expediente.get_estado_display }}
+					</p>
+				
+				{%elif expediente.estado == "4"%}
+					<p class="p-2 text-secondary bg-warning text-light rounded">
+						{{ expediente.get_estado_display }}
+					</p>
+				{%elif expediente.estado == "3"%}
+					<p class="p-2 text-secondary bg-primary text-light rounded">
+						{{ expediente.get_estado_display }}
+					</p>
+				
+				{%elif expediente.estado == "1"%}
+					<p class="p-2 text-light bg-secondary text-light rounded">
+						{{ expediente.get_estado_display }}
+					</p>
+
+				{%endif%}
 			</div>
 			<div class= "p-4">
 				<div class= "d-flex justify-content-between align-items-center">
 				<h2 > Las muestras asignadas al expediente {{expediente.expediente}} </h2>
 				{%if expediente.estado == "5" %}
-					<button type= "button" id="generarZipExpediente" class="btn btn-primary p-2"> Generar zip </button>
+					<button type= "button" id="generarZipExpediente" data-toggle= "modal" data-target="#modalMail" class="btn btn-primary p-2"> Generar zip </button>
 				{%endif%}
 				<form  id="eliminarExpediente" method="POST" action="{% url 'eliminarExpediente' expediente.expediente %}">
 					{%csrf_token%}
@@ -44,10 +47,17 @@
 				{%for muestra in muestras%}
 					<div class= " d-flex justify-content-between align-items-center">
 						<div>
-							<a href= "{%url 'verMuestra' muestra.id %}">
-								<p class= "mb-0 fs-5">{{muestra.empresa.abreviatura}} - {{muestra.id_muestra}} </p>
-								
-							</a>
+							{%if muestra.tiene_descripcion%}
+								<a href= "{%url 'verMuestra' muestra.id %}">
+									<p class= "mb-0 fs-5">{{muestra.empresa.abreviatura}} - {{muestra.id_muestra}} </p>
+									
+								</a>
+							{%else%}
+								<a >
+									<p class= "mb-0 fs-5">{{muestra.empresa.abreviatura}} - {{muestra.id_muestra}} (Sin recibir) </p>
+									
+								</a>
+							{%endif%}
 							<p> 
 								Ensayos: {% for ensayo in muestra.listaEnsayos.all%} {{ensayo.ensayo}} | {%endfor%}
 							</p>
@@ -58,19 +68,23 @@
 								<p class="p-2 text-secondary bg-success text-light rounded ">
 									{{ muestra.get_estado_display }}
 								</p>
-							{%else%}
-								{%if muestra.estado == "4"%}
-									<p class="p-2 text-secondary bg-warning text-light rounded">
-										{{ muestra.get_estado_display }}
-									</p>
-								{%else%}
-									<p class="p-2 text-secondary bg-primary text-light rounded">
-										{{ muestra.get_estado_display }}
-									</p>
-			
-								{%endif%}
+							
+							{%elif muestra.estado == "4"%}
+								<p class="p-2 text-secondary bg-warning text-light rounded">
+									{{ muestra.get_estado_display }}
+								</p>
+							{%elif muestra.estado == "3"%}
+								<p class="p-2 text-secondary bg-primary text-light rounded">
+									{{ muestra.get_estado_display }}
+								</p>
+							
+							{%elif muestra.estado == "1"%}
+								<p class="p-2 text-light bg-secondary text-light rounded">
+									{{ muestra.get_estado_display }}
+								</p>
 			
 							{%endif%}
+			
 						</div>
 					</div>
 				{%endfor%}
@@ -79,6 +93,31 @@
           </div>
           
       </div>
+
+	  <!-- Modal envio mail -->
+	  <div class="modal fade" id="modalMail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLabel">¿Quieres enviar un mail con el resumen de los ensayos?</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			  <p> El mail se enviará a: </p>
+			  {%for usuario in usuarios%}
+				<p> {{usuario.get_full_name}} a la dirección <p class="emails"> <u> <strong>{{usuario.email}}</strong></u> </p> </p>
+			  {%endfor%}
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+			  <button type="button" class="btn btn-primary" id= "sendMail" >Enviar</button>
+			</div>
+
+		  </div>
+		</div>
+	  </div>
     </div>
 </div>
 
@@ -94,8 +133,11 @@
 
 <script>
 	let ensayosMuestras= {{ensayosMuestras_json|safe}}
+	let expediente= {{expediente_json|safe}}
+
 </script>
 
+<script src="{%static 'js/expedientes/envioMailExpediente.js'%}"></script> 
 <script src="{%static 'js/expedientes/generarZipExpediente.js'%}"></script> 
 
 

@@ -28,6 +28,7 @@ class Expedientes(models.Model):
     estado=models.CharField(choices=estados, max_length=300, verbose_name="Estado")
     nMuestras=models.IntegerField(verbose_name="Numero de muestras", blank=True, null=True)
     fecha= models.DateField(auto_now_add=True)
+    porcentaje= models.DecimalField(decimal_places=2, max_digits= 5, verbose_name="Porcentaje ensayado", default=0)
     
     
     class Meta():

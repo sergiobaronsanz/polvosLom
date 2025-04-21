@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var añadirFila = document.getElementById('añadir-fila');
     var borrarFila = document.getElementById('borrar-fila');
     var campoEs= this.getElementById("id_emi-resultado");
+	var inductancia= document.getElementById("id_emi-inductancia");
+
+	//Bloqueamos el campo inductancia
+	inductancia.style.pointerEvents = 'none';
+	inductancia.style.backgroundColor= "#e9ecef"
 
 
     function habilitarEs() {

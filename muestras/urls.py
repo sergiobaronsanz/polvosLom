@@ -9,6 +9,9 @@ urlpatterns = [
     path('muestras/ver-muestra/<str:muestra_id>', views.verMuestra, name="verMuestra"),
 
 	#Revisón muestra
-	path('muestra/revisionMuestra', views.revisionMuestra, name= "revisionMuestra")
+	path('muestra/revisionMuestra', views.revisionMuestra, name= "revisionMuestra"),
+
+	#Envio Email
+    path('muestra/envioMail', views.envioMail, name="envioMail"),
     
 ]

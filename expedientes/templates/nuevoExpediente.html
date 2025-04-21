@@ -10,23 +10,31 @@
           <div class="card mb-4 col-lg-8">
             <div class="card-body">
               <h2 class="text-center mb-5"> Ingresa los datos del expediente </h2>
-                <form method="post">
-                    {% csrf_token %}
-                    {% for campo in form %}
-                        <div class="my-4 row col-lg-12 align-items-center justify-content-center" >
-                            <label class="col-lg-5 mb-0" name= {{campo.label}}>{{ campo.label }}</label>
-                            <div class="col-lg-7">
-                                {{ campo }}
-                            </div>
-                            {%if campo.label == "Abreviatura"%} 
-                              <p id="abreviaturaError" style= "display:none; color: red"> La abreviatura está en uso </p>
-                            {%endif%}
-                        </div>
-                    {% endfor %}
-                    <div class="row justify-content-center">
-                        <button type="submit" class="btn btn-primary" id= "envioFormulario">Siguiente</button>
-                    </div>
-                </form>
+			  <form method="post">
+				{% csrf_token %}
+				{% for campo in form %}
+					<div class="my-4 row col-lg-12 align-items-center justify-content-center">
+						<label class="col-lg-5 mb-0" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+						<div class="col-lg-7">
+							{{ campo }}
+							{% if campo.errors %}
+								<div class="text-danger">
+									{% for error in campo.errors %}
+										<p>{{ error }}</p>
+									{% endfor %}
+								</div>
+							{% endif %}
+						</div>
+						{% if campo.label == "Abreviatura" %}
+							<p id="abreviaturaError" style="display:none; color: red"> La abreviatura está en uso </p>
+						{% endif %}
+					</div>
+				{% endfor %}
+				<div class="row justify-content-center">
+					<button type="submit" class="btn btn-primary" id="envioFormulario">Siguiente</button>
+				</div>
+			</form>
+			
             </div>
           </div>
       </div>

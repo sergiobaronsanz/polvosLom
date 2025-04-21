@@ -1,21 +1,16 @@
-
-
 //Funcion envío de mail
 botonEnvioMail= document.getElementById("sendMail");
 
 botonEnvioMail.addEventListener("click", function(){
-    console.log(muestra);
     emails= document.querySelectorAll(".emails");
     emails.forEach(element => {
         console.log(element.textContent);
     });
 
-    datos=[{"muestra": muestra}];
+    datos=[{"expediente": expediente}];
     console.log("Enviamos el correo");
 
-    //solicitudPOST()
-
-    fetch('/muestra/envioMail', {
+    fetch('/expedientes/envioMail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,4 +46,4 @@ botonEnvioMail.addEventListener("click", function(){
     }
     return cookieValue;
     }
-})
+  })

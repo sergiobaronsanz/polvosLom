@@ -10,6 +10,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import traceback
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db.models import Exists, OuterRef
+
+
 
 
 # Create your views here.
@@ -17,7 +22,9 @@ import traceback
 def muestras(request):
       #Sacamos las muestras
     try:
-        muestras= Muestras.objects.all().order_by('-fecha')
+        muestras= Muestras.objects.all().order_by('-fecha').annotate(
+            tiene_descripcion= Exists(DescripcionMuestra.objects.filter(muestra= OuterRef('pk')))
+        )
     except ObjectDoesNotExist:
         print("no hay muestras")
     
@@ -147,6 +154,7 @@ def listaEnsayosTerminados(resultados, muestra):
 def verMuestra(request, muestra_id):
     
     muestra= get_object_or_404(Muestras, id= muestra_id)
+    expediente= muestra.expediente
 
     usuarios= get_list_or_404(User)
     
@@ -177,8 +185,46 @@ def verMuestra(request, muestra_id):
         "ensayos": ensayos,
         "url_ensayosMuestras": url_ensayosMuestras,
         "usuarios": usuarios,
+        "expediente": expediente,
     })
 
+@login_required
+def envioMail(request):
+    if request.method == 'POST':
+        try:
+            #Recibimos los datos
+            datosJson= request.body.decode('utf-8')
+            datosList= json.loads(datosJson)
+            id_muestra= datosList[0]['muestra']
+            muestra= Muestras.objects.get(id= id_muestra)
+            print(muestra)
+            abreviatura= muestra.empresa.abreviatura
+            numeroMuestra= muestra.id_muestra
+            expediente=muestra.expediente
+            empresa=muestra.empresa.empresa
+
+            asunto= f"Resultados de {abreviatura}-{numeroMuestra} de la empresa {empresa} para el expediente {expediente}" 
+            mensaje= f"Hola,\n\nYa tienes los resultados de {abreviatura}-{numeroMuestra}.\n\nUn saludo."
+            remitente = settings.EMAIL_HOST_USER
+            destinatarios = ['s.baronsanz@gmail.com']
+            print(mensaje)
+    
+            send_mail(asunto, mensaje, remitente, destinatarios, fail_silently=False)
+
+            return JsonResponse({'mensaje': 'Email enviado'})
+
+        except Exception as e:
+            # Captura y devuelve la traza completa del error
+            traza_error = traceback.format_exc()
+            print(traza_error)  # Muestra la traza en la consola del servidor
+
+            return JsonResponse({
+                'error': 'Error interno del servidor',
+                'detalle': str(e),
+                'traza': traza_error  # Incluye la traza en la respuesta
+            }, status=500)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 #Función para marcar los ensayos como revisados
