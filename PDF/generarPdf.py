@@ -64,16 +64,20 @@ class PDFGenerator:
     def generate_tratamiento_pdf(self):
         return self.plantilla.tratamiento()
     
+    def generate_EmiSin_pdf(self):
+        return self.plantilla.emiSin()
+    
     def filtroEnsayos(self):
         pdf_files = []
         formateo_pdf_files= []
+        nombre_archivo= None
         #Si hay más de un archivo generamos el parte de recepción
         if len(self.request) >1:
                 pdf_bytes = self.generate_Recepcion_pdf()
                 nombre_archivo= (self.request[0]['muestra_nombre']) + "-" + ("Recepción.pdf")
                 pdf_files.append((nombre_archivo, pdf_bytes))
-
-                print(self.request)
+                #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
+                formateo_pdf_files.append(io.BytesIO(pdf_bytes))
 
         for request in self.request:
             if request['ensayo'] == 'Humedad':
@@ -104,14 +108,15 @@ class PDFGenerator:
                 pdf_bytes = self.generate_o1_pdf()
             if request['ensayo'] == 'Tratamiento':
                 pdf_bytes = self.generate_tratamiento_pdf()
-
+            if request['ensayo'] == 'EMIsin':
+                pdf_bytes = self.generate_EmiSin_pdf()
         
             nombre_archivo= (request['muestra_nombre']) + "-" + (request['ensayo'] + ".pdf")
             # Agregar más tipos de PDF aquí...
             pdf_files.append((nombre_archivo, pdf_bytes))
             #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
             formateo_pdf_files.append(io.BytesIO(pdf_bytes))
-
+        
         return pdf_files, formateo_pdf_files
 
 

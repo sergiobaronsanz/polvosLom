@@ -540,7 +540,9 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
     for muestra in muestras:
         if muestra.estado == "4":
             estadoListadoMuestras.append(True)
-    
+        else:
+            estadoListadoMuestras.append(False)
+            
     if all(estadoListadoMuestras):
         expediente.estado= "4"
         expediente.save()

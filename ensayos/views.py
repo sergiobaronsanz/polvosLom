@@ -467,6 +467,7 @@ def tmic(request, muestra_id):
             fechaFin= formTmic.cleaned_data['fechaFin']
             temperaturaAmbiente= formTmic.cleaned_data['temperaturaAmbiente']
             humedad= formTmic.cleaned_data['humedad']
+            presion= formTmic.cleaned_data['presion']
             tiempoMaxEnsayo= formTmic.cleaned_data['tiempoMaxEnsayo']
             observacion=formTmic.cleaned_data['observacion']
 
@@ -475,6 +476,7 @@ def tmic(request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
+                presion=presion,
                 fechaInicio= fechaInicio,
                 fechaFin= fechaFin,
                 tiempoMaxEnsayo=tiempoMaxEnsayo,
@@ -554,6 +556,7 @@ def tmic(request, muestra_id):
             fechaFin= str(ensayo_TMIc.fechaFin)
             temperaturaAmbiente= ensayo_TMIc.temperaturaAmbiente
             humedad=ensayo_TMIc.humedad
+            presion=ensayo_TMIc.presion
             tiempoMaxEnsayo= ensayo_TMIc.tiempoMaxEnsayo
             observacion= ensayo_TMIc.observacion
             
@@ -565,6 +568,7 @@ def tmic(request, muestra_id):
                 'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
+                'presion': presion,
                 'tiempoMaxEnsayo': tiempoMaxEnsayo,
                 'observacion': observacion,
                 })
@@ -642,6 +646,7 @@ def tmin (request, muestra_id):
             fechaFin= formTmin.cleaned_data['fechaFin']
             temperaturaAmbiente= formTmin.cleaned_data['temperaturaAmbiente']
             humedad= formTmin.cleaned_data['humedad']
+            presion= formTmin.cleaned_data['presion']
             observacion=formTmin.cleaned_data['observacion']
 
             tmin= TMIn.objects.create(
@@ -649,6 +654,7 @@ def tmin (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
+                presion=presion,
                 fechaInicio= fechaInicio,
                 fechaFin= fechaFin,
                 observacion= observacion,
@@ -721,6 +727,7 @@ def tmin (request, muestra_id):
             fechaFin= str(ensayo_TMIn.fechaFin)
             temperaturaAmbiente= ensayo_TMIn.temperaturaAmbiente
             humedad=ensayo_TMIn.humedad
+            presion= ensayo_TMIn.presion
             observacion= ensayo_TMIn.observacion
             
             
@@ -730,6 +737,7 @@ def tmin (request, muestra_id):
                 'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
+                'presion': presion,
                 'observacion': observacion,
                 })
             
@@ -830,6 +838,7 @@ def lie (request, muestra_id):
             fechaInicio= formLie.cleaned_data['fechaInicio']
             fechaFin= formLie.cleaned_data['fechaFin']
             temperaturaAmbiente= formLie.cleaned_data['temperaturaAmbiente']
+            temperaturaEsfera= formLie.cleaned_data['temperaturaEsfera']
             humedad= formLie.cleaned_data['humedad']
             cerillas= formLie.cleaned_data['cerillas']
             boquilla= formLie.cleaned_data['boquilla']
@@ -839,6 +848,7 @@ def lie (request, muestra_id):
                 muestra=muestra,
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
+                temperaturaEsfera= temperaturaEsfera,
                 humedad= humedad,
                 cerillas= cerillas,
                 boquilla= boquilla,
@@ -932,6 +942,7 @@ def lie (request, muestra_id):
             fechaInicio= str(ensayo_LIE.fechaInicio)
             fechaFin= str(ensayo_LIE.fechaFin)
             temperaturaAmbiente= ensayo_LIE.temperaturaAmbiente
+            temperaturaEsfera= ensayo_LIE.temperaturaEsfera
             humedad=ensayo_LIE.humedad
             cerillas=ensayo_LIE.cerillas
             boquilla=ensayo_LIE.boquilla
@@ -943,6 +954,7 @@ def lie (request, muestra_id):
                 'fechaInicio': fechaInicio,
                 'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
+                'temperaturaEsfera': temperaturaEsfera,
                 'humedad': humedad,
                 'cerillas': cerillas,
                 'boquilla': boquilla,
@@ -1023,7 +1035,7 @@ def emi (request, muestra_id):
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(emi__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="emi") & ~Q(estado=1)
+        Q(emi__resultado__isnull=True) & Q(listaEnsayos__ensayo__iexact="emi") & ~Q(estado=1)
     )
 
     if request.method == 'POST':
@@ -1415,6 +1427,7 @@ def pmax (request, muestra_id):
             fechaInicio= formPmax.cleaned_data['fechaInicio']
             fechaFin= formPmax.cleaned_data['fechaFin']
             temperaturaAmbiente= formPmax.cleaned_data['temperaturaAmbiente']
+            temperaturaEsfera= formPmax.cleaned_data['temperaturaEsfera']
             humedad= formPmax.cleaned_data['humedad']
             cerillas= formPmax.cleaned_data['cerillas']
             boquilla= formPmax.cleaned_data['boquilla']
@@ -1427,6 +1440,7 @@ def pmax (request, muestra_id):
                 muestra=muestra,
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
+                temperaturaEsfera= temperaturaEsfera,
                 humedad= humedad,
                 cerillas= cerillas,
                 boquilla= boquilla,
@@ -1498,6 +1512,7 @@ def pmax (request, muestra_id):
             fechaInicio= str(ensayo_Pmax.fechaInicio)
             fechaFin= str(ensayo_Pmax.fechaFin)
             temperaturaAmbiente= ensayo_Pmax.temperaturaAmbiente
+            temperaturaEsfera= ensayo_Pmax.temperaturaEsfera
             humedad=ensayo_Pmax.humedad
             cerillas=ensayo_Pmax.cerillas
             boquilla=ensayo_Pmax.boquilla
@@ -1512,6 +1527,7 @@ def pmax (request, muestra_id):
                 'fechaInicio': fechaInicio,
                 'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
+                'temperaturaEsfera': temperaturaEsfera,
                 'humedad': humedad,
                 'cerillas': cerillas,
                 'boquilla': boquilla,
@@ -1590,6 +1606,7 @@ def clo (request, muestra_id):
             fechaInicio= formClo.cleaned_data['fechaInicio']
             fechaFin= formClo.cleaned_data['fechaFin']
             temperaturaAmbiente= formClo.cleaned_data['temperaturaAmbiente']
+            temperaturaEsfera= formClo.cleaned_data['temperaturaEsfera']
             humedad= formClo.cleaned_data['humedad']
             cerillas= formClo.cleaned_data['cerillas']
             boquilla= formClo.cleaned_data['boquilla']
@@ -1600,6 +1617,7 @@ def clo (request, muestra_id):
                 muestra=muestra,
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
+                temperaturaEsfera= temperaturaEsfera,
                 humedad= humedad,
                 cerillas= cerillas,
                 boquilla= boquilla,
@@ -1678,6 +1696,7 @@ def clo (request, muestra_id):
             fechaInicio= str(ensayo_CLO.fechaInicio)
             fechaFin= str(ensayo_CLO.fechaFin)
             temperaturaAmbiente= ensayo_CLO.temperaturaAmbiente
+            temperaturaEsfera= ensayo_CLO.temperaturaEsfera
             humedad=ensayo_CLO.humedad
             cerillas=ensayo_CLO.cerillas
             boquilla=ensayo_CLO.boquilla
@@ -1689,6 +1708,7 @@ def clo (request, muestra_id):
                 'fechaInicio': fechaInicio,
                 'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
+                'temperaturaEsfera': temperaturaEsfera,
                 'humedad': humedad,
                 'cerillas': cerillas,
                 'boquilla': boquilla,
@@ -1770,6 +1790,7 @@ def rec (request, muestra_id):
             fechaFin= formRec.cleaned_data['fechaFin']
             temperaturaAmbiente= formRec.cleaned_data['temperaturaAmbiente']
             humedad= formRec.cleaned_data['humedad']
+            presion= formRec.cleaned_data['presion']
             observacion=formRec.cleaned_data['observacion']
 
             rec= REC.objects.create(
@@ -1777,6 +1798,7 @@ def rec (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
+                presion= presion,
                 fechaInicio= fechaInicio,
                 fechaFin= fechaFin,
                 observacion= observacion,
@@ -1872,6 +1894,7 @@ def rec (request, muestra_id):
             fechaFin= str(ensayo_REC.fechaFin)
             temperaturaAmbiente= ensayo_REC.temperaturaAmbiente
             humedad=ensayo_REC.humedad
+            presion= ensayo_REC.presion
             observacion= ensayo_REC.observacion
             
             
@@ -1881,6 +1904,7 @@ def rec (request, muestra_id):
                 'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
+                'presion': presion,
                 'observacion': observacion,
                 })
             

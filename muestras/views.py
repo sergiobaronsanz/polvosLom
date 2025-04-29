@@ -48,6 +48,20 @@ def recepcionMuestra(request):
             muestra= Muestras.objects.get(id= id_muestra)
             muestra.estado= "3"
             muestra.save()
+            
+
+            #Cambiamos el estado de estado de expedienes si todas las muestras asignadas al expediente están en estado "3"
+            expediente= muestra.expediente
+            muestras= Muestras.objects.filter(expediente= expediente)
+
+            estadoMuestras=[]
+            for muestra in muestras:
+                if muestra.estado != "3":
+                    estadoMuestras.append(True)
+
+            if all(estadoMuestras):
+                expediente.estado= "3"
+
 
             redirect('muestras')
             

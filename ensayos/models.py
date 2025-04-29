@@ -27,13 +27,22 @@ from django.contrib.auth.models import User
 #Humedad
 class Humedad(models.Model):
     #Obtenemos el valor del ensayo de humedad
+    
+    criterios= [
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5'),
+        ('manual', 'Manual'),
+    ]
 
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", null=True, blank=True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=4, verbose_name="Humedad Ambiente", null=True, blank=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
-    criterio= models.CharField(default="5", max_length=50, verbose_name="Criterio", null=True, blank=True)
+    criterio= models.CharField(choices=criterios, default="5", max_length=50, verbose_name="Criterio", null=True, blank=True)
     tDesecacion= models.IntegerField(default=105, verbose_name="Temperatura de Desecación", null=True, blank=True)
     desviacion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Desviación", null=True, blank=True)
     tiempoEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", null= True, blank= True)
@@ -123,6 +132,7 @@ class TMIc (models.Model):
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank=True, null=True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank=True, null=True)
+    presion=  models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Presión", blank=True, null=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     tiempoMaxEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo máximo del ensayo", blank=True, null=True)
     fechaInicio= models.DateField(verbose_name="FechaInicio", blank=True, null=True)
@@ -181,6 +191,7 @@ class TMIn (models.Model):
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank=True, null=True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank=True, null=True)
+    presion=  models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Presión", blank=True, null=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
     fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
@@ -237,6 +248,7 @@ class LIE (models.Model):
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", null=True, blank=True)
+    temperaturaEsfera= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Esfera", null=True, blank=True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", null=True, blank=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas", null=True, blank=True)
@@ -406,6 +418,7 @@ class Pmax (models.Model):
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
+    temperaturaEsfera= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Esfera", null=True, blank=True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas", blank= True, null= True)
@@ -471,6 +484,7 @@ class CLO (models.Model):
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", null= True, blank= True)
+    temperaturaEsfera= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Esfera", null=True, blank=True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", null= True, blank= True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas", null= True, blank= True)
@@ -827,6 +841,7 @@ class REC (models.Model):
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura Ambiente", null= True, blank= True)
     humedad=  models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Humedad Ambiente", null= True, blank= True)
+    presion=  models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Presión", blank=True, null=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
     fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)

@@ -293,6 +293,13 @@ class TmicForm(forms.Form):
         label="Humedad Ambiente",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
     )
+    
+    presion= forms.DecimalField(
+        decimal_places=2,
+        max_digits=6,
+        label="Presión",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    ) 
 
     tiempoMaxEnsayo=forms.DecimalField(
         decimal_places=2,
@@ -412,6 +419,13 @@ class TminForm(forms.Form):
         label="Humedad Ambiente",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
     )  
+    
+    presion= forms.DecimalField(
+        decimal_places=2,
+        max_digits=6,
+        label="Presión",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    ) 
 
     observacion=forms.CharField(
         label= "Observación",
@@ -503,6 +517,13 @@ class LieForm(forms.Form):
         decimal_places=2,
         max_digits=5,
         label="Temperatura Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    temperaturaEsfera = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Esfera",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
     )
 
@@ -630,6 +651,7 @@ class EmiForm(forms.Form):
         label="Temperatura Ambiente",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
     )
+    
 
     humedad= forms.DecimalField(
         decimal_places=2,
@@ -756,6 +778,13 @@ class PmaxForm(forms.Form):
         decimal_places=2,
         max_digits=5,
         label="Temperatura Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    temperaturaEsfera = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Esfera",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
     )
 
@@ -900,6 +929,13 @@ class CloForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
     )
 
+    temperaturaEsfera = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Esfera",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
     humedad= forms.DecimalField(
         decimal_places=2,
         max_digits=5,
@@ -1034,6 +1070,13 @@ class RecForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
         required=True,
     )  
+
+    presion= forms.DecimalField(
+        decimal_places=2,
+        max_digits=6,
+        label="Presión",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    ) 
 
     observacion=forms.CharField(
         label= "Observación",

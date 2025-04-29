@@ -24,7 +24,7 @@ class DescripcionMuestraForm(forms.ModelForm):
         self.fields['etiquetado'].widget.attrs.update({'class': 'form-control'})
         self.fields['envolturaExt'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['envolturaInt'].widget = forms.TextInput(attrs={'class': 'form-control'})
-        self.fields['peso'].widget = forms.NumberInput(attrs={'class': 'form-control'})
+        self.fields['peso'].widget = forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01' })
         self.fields['procedencia'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['estadoEnvio'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['aspectoMuestra'].widget = forms.TextInput(attrs={'class': 'form-control'})
