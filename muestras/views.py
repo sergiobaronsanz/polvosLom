@@ -151,11 +151,11 @@ def listaEnsayosTerminados(resultados, muestra):
             #Si hay resultado agregamos las hojas 
             else:
                 resultado_valor= resultado.resultado
-                if resultado_valor:
+                if resultado_valor is not None:
                     ensayo_dict= {"ensayo":ensayo.ensayo, "muestra_id": muestra_id, "muestra_nombre": muestra_nombre} 
                     ensayos.append(ensayo_dict)
         else:
-            if resultado.pmax:
+            if resultado.pmax is not None:
                 ensayo= resultado.ensayo
                 muestra_id= muestra.id
                 muestra_nombre= muestra.empresa.abreviatura + "-" + str(muestra.id_muestra)

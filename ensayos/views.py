@@ -1661,22 +1661,24 @@ def clo (request, muestra_id):
                         resultado=resultadoPrueba,
                     )
 
-                    if resultadoPrueba == "2":
+                    if resultadoPrueba == "1":
                         listaResultados.append(oxigeno)
+                        print(listaResultados)
                     
 
             #Guardamos en el modelo CLO el resultado del ensayo
             if listaResultados:
-                valor_buscado = max(listaResultados)
-
-                clo.resultado= valor_buscado
+                valor_buscado = min(listaResultados)
+                resultado= valor_buscado - 1
+                clo.resultado= resultado
+                print(valor_buscado) 
                 clo.save()
             else:
                 resultado= "N/D"
                 clo.resultado= resultado
                 clo.save()
 
-            datosGuardados= True            
+            datosGuardados= True 
         else:
             print (formClo.errors)
             formClo.add_error(None, 'Error en el formulario, revisa los datos')

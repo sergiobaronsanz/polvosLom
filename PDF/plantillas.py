@@ -844,6 +844,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
+
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
         #TEXTO 
@@ -1016,17 +1017,18 @@ class PlantillasEnsayo():
         pmMaxima= max(pmax1, pmax2, pmax3)
         dPdTMaxima= max(dpdt1,dpdt2,dpdt3)
 
-        concentracionesPmax= []
-        concentracionesDpdt= []
+        concentracionesPmax= ["-"]
+        concentracionesDpdt= ["-"]
 
         #Buscamos la concentracion
-        for resultado in resultados:
-            if resultado.pm == pmMaxima:
-                  concentracionesPmax.append(resultado.concentracion)
-            if resultado.dpdt == dPdTMaxima:
-                  concentracionesDpdt.append(resultado.concentracion)
-            
-        print(concentracionesPmax, concentracionesDpdt)
+        if ensayo.pmax != 0.0:
+            for resultado in resultados:
+                if resultado.pm == pmMaxima:
+                    concentracionesPmax.append(resultado.concentracion)
+                if resultado.dpdt == dPdTMaxima:
+                    concentracionesDpdt.append(resultado.concentracion)
+                
+            print(concentracionesPmax, concentracionesDpdt)
 
 
         self.pdf.cell(w=5, h= 6,border= "L", fill = 0)
@@ -1823,7 +1825,7 @@ class PlantillasEnsayo():
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(float(fila.pm)),
                     fill = 0)
-            self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(float(fila.dpdt)),
+            self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(int(fila.dpdt)),
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(int(fila.oxigeno)),
                     fill = 0)
@@ -1841,28 +1843,43 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
                 align= "J", fill = 0)
         
+        def calculoConcentraciones(oxigeno):
+            listaConcentraciones=[]
+            for resultado in resultados:
+                if resultado.oxigeno == int(oxigeno):
+                    listaConcentraciones.append(int(resultado.concentracion))
+                    listaConcentraciones = list(set(listaConcentraciones))
+
+            return (listaConcentraciones)
+        
         if ensayo.resultado != "N/D":
-              concentracionNo= str(ensayo.resultado)
-              concentracionSi= str(int(ensayo.resultado) + 1)
+              oxigenoNo= str(ensayo.resultado)
+              oxigenoSi= str(int(ensayo.resultado) + 1)
+              
+              concentracionesNo=calculoConcentraciones(oxigenoNo)
+              concentracionesSi=calculoConcentraciones(oxigenoSi)
+              
+              
                 
         else:
-              concentracionNo= "N/D"
-              concentracionSi= "N/D"
-              
+              oxigenoNo= "N/D"
+              oxigenoSi= "N/D"
+        
+        
 
         
         self.pdf.set_font('Arial', '', 12) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"El ensayo ha sido realizado con cerillas {ensayo.get_cerillas_display()}",
                 align= "J", fill = 0)
         
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor concentración de oxígeno a la que hay explosión: {concentracionSi}%",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor concentración de oxígeno a la que hay explosión: {oxigenoSi}% a las concentraciones de {','.join(map(str, concentracionesSi))}",
                 align= "J", fill = 0)
         
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mayor concentración de oxígeno a la que no hay explosión: {concentracionNo}%",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mayor concentración de oxígeno a la que no hay explosión: {oxigenoNo}% a las concentraciones de {','.join(map(str, concentracionesNo))}",
                 align= "J", fill = 0)
         
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {concentracionNo} %",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {oxigenoNo} %",
                 align= "J", fill = 0)
         
              

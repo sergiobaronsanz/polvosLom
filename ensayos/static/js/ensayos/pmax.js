@@ -78,7 +78,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (item === 0){
                 numValores= numValores -1;
             }
-			pm_media.value = (Math.ceil(valor_maximo / numValores * 10) / 10).toFixed(1);
+			let resultado=0;
+			
+			if (valor_maximo){
+				resultado= (Math.round(valor_maximo / numValores * 10) / 10).toFixed(1);
+			}
+			
+			pm_media.value = resultado;
+			
         });
         
     };
@@ -149,7 +156,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (item === 0){
                 numValores= numValores -1;
             }
-            dpdt_media.value= (Math.round(valor_maximo / numValores).toFixed(0));
+			let resultado= 0
+			if (valor_maximo){
+				resultado= (Math.round(valor_maximo / numValores).toFixed(0));
+			}
+            dpdt_media.value= resultado;
         });
         
     };
