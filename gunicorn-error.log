@@ -1,0 +1,414 @@
+[2025-05-09 14:13:20 +0100] [3152] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/home/sergio/proyectos/mi_proyecto/polvosLom/polvosLom.sock']
+  backlog: 2048
+  workers: 3
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/sergio/proyectos/mi_proyecto/polvosLom
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1000
+  group: 1000
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-access.log
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-error.log
+  loglevel: debug
+  capture_output: False
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: polvosLom.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f91370720>
+  on_reload: <function OnReload.on_reload at 0x7f91370860>
+  when_ready: <function WhenReady.when_ready at 0x7f913709a0>
+  pre_fork: <function Prefork.pre_fork at 0x7f91370ae0>
+  post_fork: <function Postfork.post_fork at 0x7f91370c20>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f91370d60>
+  worker_int: <function WorkerInt.worker_int at 0x7f91370ea0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f91370fe0>
+  pre_exec: <function PreExec.pre_exec at 0x7f91371120>
+  pre_request: <function PreRequest.pre_request at 0x7f91371260>
+  post_request: <function PostRequest.post_request at 0x7f91371300>
+  child_exit: <function ChildExit.child_exit at 0x7f91371440>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f91371580>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f913716c0>
+  on_exit: <function OnExit.on_exit at 0x7f91371800>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f913719e0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-05-09 14:13:20 +0100] [3152] [INFO] Starting gunicorn 23.0.0
+[2025-05-09 14:13:20 +0100] [3152] [DEBUG] Arbiter booted
+[2025-05-09 14:13:20 +0100] [3152] [INFO] Listening at: unix:/home/sergio/proyectos/mi_proyecto/polvosLom/polvosLom.sock (3152)
+[2025-05-09 14:13:20 +0100] [3152] [INFO] Using worker: sync
+[2025-05-09 14:13:20 +0100] [3153] [INFO] Booting worker with pid: 3153
+[2025-05-09 14:13:20 +0100] [3154] [INFO] Booting worker with pid: 3154
+[2025-05-09 14:13:20 +0100] [3155] [INFO] Booting worker with pid: 3155
+[2025-05-09 14:13:20 +0100] [3152] [DEBUG] 3 workers
+[2025-05-09 14:13:36 +0100] [3152] [INFO] Handling signal: int
+[2025-05-09 13:13:36 +0000] [3153] [INFO] Worker exiting (pid: 3153)
+[2025-05-09 13:13:36 +0000] [3154] [INFO] Worker exiting (pid: 3154)
+[2025-05-09 13:13:36 +0000] [3155] [INFO] Worker exiting (pid: 3155)
+[2025-05-09 14:13:36 +0100] [3152] [INFO] Shutting down: Master
+[2025-05-09 14:13:42 +0100] [3157] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/home/sergio/proyectos/mi_proyecto/polvosLom/polvosLom.sock']
+  backlog: 2048
+  workers: 3
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/sergio/proyectos/mi_proyecto/polvosLom
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1000
+  group: 1000
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-access.log
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-error.log
+  loglevel: debug
+  capture_output: False
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: polvosLom.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f8c420720>
+  on_reload: <function OnReload.on_reload at 0x7f8c420860>
+  when_ready: <function WhenReady.when_ready at 0x7f8c4209a0>
+  pre_fork: <function Prefork.pre_fork at 0x7f8c420ae0>
+  post_fork: <function Postfork.post_fork at 0x7f8c420c20>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f8c420d60>
+  worker_int: <function WorkerInt.worker_int at 0x7f8c420ea0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f8c420fe0>
+  pre_exec: <function PreExec.pre_exec at 0x7f8c421120>
+  pre_request: <function PreRequest.pre_request at 0x7f8c421260>
+  post_request: <function PostRequest.post_request at 0x7f8c421300>
+  child_exit: <function ChildExit.child_exit at 0x7f8c421440>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f8c421580>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f8c4216c0>
+  on_exit: <function OnExit.on_exit at 0x7f8c421800>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f8c4219e0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-05-09 14:13:42 +0100] [3157] [INFO] Starting gunicorn 23.0.0
+[2025-05-09 14:13:42 +0100] [3157] [DEBUG] Arbiter booted
+[2025-05-09 14:13:42 +0100] [3157] [INFO] Listening at: unix:/home/sergio/proyectos/mi_proyecto/polvosLom/polvosLom.sock (3157)
+[2025-05-09 14:13:42 +0100] [3157] [INFO] Using worker: sync
+[2025-05-09 14:13:42 +0100] [3158] [INFO] Booting worker with pid: 3158
+[2025-05-09 14:13:42 +0100] [3159] [INFO] Booting worker with pid: 3159
+[2025-05-09 14:13:42 +0100] [3160] [INFO] Booting worker with pid: 3160
+[2025-05-09 14:13:42 +0100] [3157] [DEBUG] 3 workers
+[2025-05-09 14:14:05 +0100] [3157] [INFO] Handling signal: hup
+[2025-05-09 14:14:05 +0100] [3157] [INFO] Hang up: Master
+[2025-05-09 14:14:05 +0100] [3157] [ERROR] Worker (pid:3159) was sent SIGHUP!
+[2025-05-09 14:14:05 +0100] [3157] [ERROR] Worker (pid:3160) was sent SIGHUP!
+[2025-05-09 14:14:05 +0100] [3157] [ERROR] Worker (pid:3158) was sent SIGHUP!
+[2025-05-09 14:14:05 +0100] [3157] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/home/sergio/proyectos/mi_proyecto/polvosLom/polvosLom.sock']
+  backlog: 2048
+  workers: 3
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/sergio/proyectos/mi_proyecto/polvosLom
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1000
+  group: 1000
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-access.log
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-error.log
+  loglevel: debug
+  capture_output: False
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: polvosLom.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f8c420720>
+  on_reload: <function OnReload.on_reload at 0x7f8c420860>
+  when_ready: <function WhenReady.when_ready at 0x7f8c4209a0>
+  pre_fork: <function Prefork.pre_fork at 0x7f8c420ae0>
+  post_fork: <function Postfork.post_fork at 0x7f8c420c20>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f8c420d60>
+  worker_int: <function WorkerInt.worker_int at 0x7f8c420ea0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f8c420fe0>
+  pre_exec: <function PreExec.pre_exec at 0x7f8c421120>
+  pre_request: <function PreRequest.pre_request at 0x7f8c421260>
+  post_request: <function PostRequest.post_request at 0x7f8c421300>
+  child_exit: <function ChildExit.child_exit at 0x7f8c421440>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f8c421580>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f8c4216c0>
+  on_exit: <function OnExit.on_exit at 0x7f8c421800>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f8c4219e0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-05-09 14:14:05 +0100] [3161] [INFO] Booting worker with pid: 3161
+[2025-05-09 14:14:05 +0100] [3162] [INFO] Booting worker with pid: 3162
+[2025-05-09 14:14:05 +0100] [3157] [INFO] Handling signal: hup
+[2025-05-09 14:14:05 +0100] [3157] [INFO] Hang up: Master
+[2025-05-09 14:14:05 +0100] [3163] [INFO] Booting worker with pid: 3163
+[2025-05-09 14:14:05 +0100] [3157] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/home/sergio/proyectos/mi_proyecto/polvosLom/polvosLom.sock']
+  backlog: 2048
+  workers: 3
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/sergio/proyectos/mi_proyecto/polvosLom
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1000
+  group: 1000
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-access.log
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/sergio/proyectos/mi_proyecto/polvosLom/gunicorn-error.log
+  loglevel: debug
+  capture_output: False
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: polvosLom.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f8c420720>
+  on_reload: <function OnReload.on_reload at 0x7f8c420860>
+  when_ready: <function WhenReady.when_ready at 0x7f8c4209a0>
+  pre_fork: <function Prefork.pre_fork at 0x7f8c420ae0>
+  post_fork: <function Postfork.post_fork at 0x7f8c420c20>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f8c420d60>
+  worker_int: <function WorkerInt.worker_int at 0x7f8c420ea0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f8c420fe0>
+  pre_exec: <function PreExec.pre_exec at 0x7f8c421120>
+  pre_request: <function PreRequest.pre_request at 0x7f8c421260>
+  post_request: <function PostRequest.post_request at 0x7f8c421300>
+  child_exit: <function ChildExit.child_exit at 0x7f8c421440>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f8c421580>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f8c4216c0>
+  on_exit: <function OnExit.on_exit at 0x7f8c421800>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f8c4219e0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-05-09 14:14:05 +0100] [3164] [INFO] Booting worker with pid: 3164
+[2025-05-09 14:14:05 +0100] [3165] [INFO] Booting worker with pid: 3165
+[2025-05-09 14:14:05 +0100] [3166] [INFO] Booting worker with pid: 3166
+[2025-05-09 13:14:06 +0000] [3162] [INFO] Worker exiting (pid: 3162)
+[2025-05-09 13:14:06 +0000] [3161] [INFO] Worker exiting (pid: 3161)
+[2025-05-09 14:14:07 +0100] [3157] [ERROR] Worker (pid:3161) was sent SIGTERM!
+[2025-05-09 13:14:07 +0000] [3163] [INFO] Worker exiting (pid: 3163)
