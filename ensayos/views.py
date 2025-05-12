@@ -79,7 +79,7 @@ def listaEnsayos(request):
     })
 @login_required
 def ensayosRealizados(request, ensayo):
-    ensayo_id= ListaEnsayos.objects.get(ensayo=ensayo)
+    ensayo_id= get_object_or_404(ListaEnsayos, ensayo__iexact= ensayo)
     print(ensayo_id.ensayo)
     #filtramos por tipo de ensayo
 
@@ -112,7 +112,7 @@ def ensayosRealizados(request, ensayo):
 @login_required
 def humedad(request, muestra_id): #################################### Hay que cambiar muestras_id por humedad_id para así poder tener varias humedades en una misma muestra
     #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "humedad")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "humedad")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False 
     usuario= request.user
@@ -324,7 +324,7 @@ def humedad(request, muestra_id): #################################### Hay que c
 @login_required
 def granulometria(request, muestra_id):
     #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "granulometria")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "granulometria")
     equipos= get_object_or_404(Equipos, ensayos= ensayo)
     id_ensayo= muestra_id
     datosGuardados= False  
@@ -436,7 +436,7 @@ def granulometria(request, muestra_id):
 @login_required
 def tmic(request, muestra_id):
     #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIc")   
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "TMIc")   
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user 
@@ -615,7 +615,7 @@ def tmic(request, muestra_id):
 @login_required
 def tmin (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "TMIn")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "TMIn")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -808,7 +808,7 @@ def gestorArchivoLie(request):
 @login_required
 def lie (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "LIE")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "LIE")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -1028,7 +1028,7 @@ def gestorArchivoEmi(request):
 @login_required
 def emi (request, muestra_id):
     #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMI")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "EMI")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -1198,7 +1198,7 @@ def emi (request, muestra_id):
 @login_required
 def emiSinInductancia(request, muestra_id):
     #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "EMIsin")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "EMIsin")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -1397,7 +1397,7 @@ def gestorArchivoPmax(request):
 @login_required
 def pmax (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "Pmax")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "Pmax")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -1577,7 +1577,7 @@ def pmax (request, muestra_id):
 @login_required
 def clo (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "CLO")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "CLO")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -1759,7 +1759,7 @@ def clo (request, muestra_id):
 @login_required
 def rec (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "REC")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "REC")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -1978,7 +1978,7 @@ def rec (request, muestra_id):
 @login_required
 def n1 (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "N1")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "N1")
     equipos=get_list_or_404(Equipos, ensayos= ensayo) 
     datosGuardados=False  
     usuario= request.user
@@ -2168,7 +2168,7 @@ def n1 (request, muestra_id):
 @login_required
 def n2 (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "N2")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "N2")
     equipos= get_list_or_404(Equipos, ensayos=ensayo)
     datosGuardados= False
     usuario= request.user
@@ -2313,7 +2313,7 @@ def n2 (request, muestra_id):
 @login_required
 def n4 (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "N4")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "N4")
     equipos= get_list_or_404(Equipos, ensayos=ensayo)
     datosGuardados= False
     usuario= request.user
@@ -2504,7 +2504,7 @@ def n4 (request, muestra_id):
 @login_required
 def o1 (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "O1")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "O1")
     equipos= get_list_or_404(Equipos, ensayos=ensayo)
     datosGuardados= False
     usuario= request.user
@@ -2701,7 +2701,7 @@ def o1 (request, muestra_id):
 @login_required
 def tratamiento (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(ListaEnsayos, ensayo= "Tratamiento")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "Tratamiento")
     datosGuardados= False
     usuario= request.user
   
