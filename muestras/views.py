@@ -77,59 +77,59 @@ def listaEnsayosMuestra(muestra):
     listaEnsayos= muestra.listaEnsayos.all()
     resultados= []
 
-    if listaEnsayos.filter(ensayo= "humedad").exists():
+    if listaEnsayos.filter(ensayo__iexact= "humedad").exists():
         resultado= Humedad.objects.filter(muestra= muestra)
         resultados.extend(resultado)
-    if listaEnsayos.filter(ensayo= "granulometria").exists():
+    if listaEnsayos.filter(ensayo__iexact= "granulometria").exists():
         resultado= Granulometria.objects.filter(muestra= muestra)
         resultados.extend(resultado)
-    if listaEnsayos.filter(ensayo= "tmic").exists():
+    if listaEnsayos.filter(ensayo__iexact= "tmic").exists():
         resultado= TMIc.objects.filter(muestra= muestra)
         resultados.extend(resultado)
-    if listaEnsayos.filter(ensayo= "tmin").exists():
+    if listaEnsayos.filter(ensayo__iexact= "tmin").exists():
         resultado= TMIn.objects.filter(muestra= muestra)
         resultados.extend(resultado)
-    if listaEnsayos.filter(ensayo= "LIE").exists():
+    if listaEnsayos.filter(ensayo__iexact= "LIE").exists():
         resultado= LIE.objects.filter(muestra= muestra)
         print(resultado)
         resultados.extend(resultado)     
-    if listaEnsayos.filter(ensayo= "EMI").exists():
+    if listaEnsayos.filter(ensayo__iexact= "EMI").exists():
         resultado= EMI.objects.filter(muestra= muestra)
         print(resultado)
         resultados.extend(resultado)
-    if listaEnsayos.filter(ensayo= "EMIsin").exists():
+    if listaEnsayos.filter(ensayo__iexact= "EMIsin").exists():
         resultado= EMIsin.objects.filter(muestra= muestra)
         print(resultado)
         resultados.extend(resultado)   
-    if listaEnsayos.filter(ensayo= "Pmax").exists():
+    if listaEnsayos.filter(ensayo__iexact= "Pmax").exists():
         resultado= Pmax.objects.filter(muestra= muestra)
         print(resultado)
         resultados.extend(resultado) 
-    if listaEnsayos.filter(ensayo= "CLO").exists():
+    if listaEnsayos.filter(ensayo__iexact= "CLO").exists():
         resultado= CLO.objects.filter(muestra= muestra)
         print("CLO")
         resultados.extend(resultado)  
-    if listaEnsayos.filter(ensayo= "REC").exists():
+    if listaEnsayos.filter(ensayo__iexact= "REC").exists():
         resultado= REC.objects.filter(muestra= muestra)
         print("REC")
         resultados.extend(resultado) 
-    if listaEnsayos.filter(ensayo= "N1").exists():
+    if listaEnsayos.filter(ensayo__iexact= "N1").exists():
         resultado= N1.objects.filter(muestra= muestra)
         print("N1")
         resultados.extend(resultado) 
-    if listaEnsayos.filter(ensayo= "N2").exists():
+    if listaEnsayos.filter(ensayo__iexact= "N2").exists():
         resultado= N2.objects.filter(muestra= muestra)
         print("N2")
         resultados.extend(resultado) 
-    if listaEnsayos.filter(ensayo= "N4").exists():
+    if listaEnsayos.filter(ensayo__iexact= "N4").exists():
         resultado= N4.objects.filter(muestra= muestra)
         print("N4")
         resultados.extend(resultado)
-    if listaEnsayos.filter(ensayo= "O1").exists():
+    if listaEnsayos.filter(ensayo__iexact= "O1").exists():
         resultado= O1.objects.filter(muestra= muestra)
         print("O1")
         resultados.extend(resultado)
-    if listaEnsayos.filter(ensayo= "tratamiento").exists():
+    if listaEnsayos.filter(ensayo__iexact= "tratamiento").exists():
         resultado= Tratamiento.objects.filter(muestra= muestra)
         print("tratamiento")
         resultados.extend(resultado)

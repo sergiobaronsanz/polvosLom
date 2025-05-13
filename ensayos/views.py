@@ -324,8 +324,9 @@ def humedad(request, muestra_id): #################################### Hay que c
 @login_required
 def granulometria(request, muestra_id):
     #Sacamos el ensayo
+    print("hola")
     ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "granulometria")
-    equipos= get_object_or_404(Equipos, ensayos= ensayo)
+    equipos= get_list_or_404(Equipos, ensayos= ensayo)
     id_ensayo= muestra_id
     datosGuardados= False  
     nombreArchivo= None
