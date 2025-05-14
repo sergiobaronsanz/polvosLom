@@ -15,6 +15,9 @@ from django.conf import settings
 from django.urls import reverse
 from calidad.models import Equipos
 from calidad.forms import *
+import traceback
+from django.http import HttpResponse, JsonResponse
+from django.utils.encoding import smart_str
 
 from django.contrib.auth.decorators import login_required
 
@@ -23,49 +26,36 @@ def generadorPdf(request):
     if request.method == 'POST':
         try:
             # Lógica para generar el archivo o procesar los datos
-            datosJson= request.body.decode('utf-8')
-            datosList= json.loads(datosJson)
-            print(f"la lista de datos es: {datosList}")
+            datosJson = request.body.decode('utf-8')
+            datosList = json.loads(datosJson)
+            print(f"La lista de datos es: {datosList}")
 
-            pdf_gen= PDFGenerator(datosList)
+            pdf_gen = PDFGenerator(datosList)
             output = pdf_gen.generateMuestra()
 
-            # Guardar el resultado según la cantidad de archivos
-            # Obtener la ruta al escritorio
-            ruta_escritorio = os.path.join(os.path.expanduser("~"), "Desktop")
-
-            # Verificar si la ruta del escritorio existe (por seguridad)
-            if not os.path.exists(ruta_escritorio):
-                raise FileNotFoundError("No se pudo encontrar el escritorio del usuario.")
-
-            # Determinar el nombre del archivo según la condición
-
-            id_archivo= datosList[0]['muestra_nombre']
-            id_ensayo= datosList[0]['ensayo']
-            print(len(datosList))
-
-            nombre_archivo = f'{id_archivo}.zip' if len(datosList) > 1 else f"{id_archivo}-{id_ensayo}.pdf"
-
-            print(nombre_archivo)
-            # Construir la ruta completa del archivo
-            ruta_archivo = os.path.join(ruta_escritorio, nombre_archivo)
-
+            # Determinar el nombre del archivo según la cantidad
+            id_archivo = datosList[0]['muestra_nombre']
+            id_ensayo = datosList[0]['ensayo']
+            es_zip = len(datosList) > 1
             
+            # Definimos el nombre y el tipo de contenido
+            nombre_archivo = f'{id_archivo}.zip' if es_zip else f"{id_archivo}-{id_ensayo}.pdf"
+            content_type = 'application/zip' if es_zip else 'application/pdf'
 
-            # Guardar el archivo en la ruta especificada
-            with open(ruta_archivo, 'wb') as f:
-                f.write(output)               
+            # Preparar la respuesta para enviar el archivo al cliente
+            response = HttpResponse(output, content_type=content_type)
+            response['Content-Disposition'] = f'attachment; filename="{smart_str(nombre_archivo)}"'
 
-            return JsonResponse({'mensaje': 'Archivo generado correctamente'})
+            return response
+
         except Exception as e:
-                # Captura y devuelve la traza completa del error
-                traza_error = traceback.format_exc()
-                print(traza_error)  # Muestra la traza en la consola del servidor
-                return JsonResponse({
-                    'error': 'Error interno del servidor',
-                    'detalle': str(e),
-                    'traza': traza_error  # Incluye la traza en la respuesta
-                }, status=500)
+            traza_error = traceback.format_exc()
+            print(traza_error)
+            return JsonResponse({
+                'error': 'Error interno del servidor',
+                'detalle': str(e),
+                'traza': traza_error
+            }, status=500)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 

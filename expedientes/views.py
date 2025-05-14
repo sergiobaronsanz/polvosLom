@@ -17,6 +17,10 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Exists, OuterRef
 
+import traceback
+from django.http import HttpResponse, JsonResponse
+from io import BytesIO
+
 
 
 #Seleccion Expediente
@@ -187,21 +191,22 @@ def verExpedientes(request):
         'expedientes': expedientes
     } )
 
+
 @login_required
-def generadorZipConjunto(request):#############################################################
+def generadorZipConjunto(request):
     if request.method == 'POST':
         try:
             # Lógica para generar el archivo o procesar los datos
-            datosJson= request.body.decode('utf-8')
-            datosList= json.loads(datosJson)
+            datosJson = request.body.decode('utf-8')
+            datosList = json.loads(datosJson)
 
-            #creamos una caroeta temporal donde se almacenarán todos los archivos
+            # Creamos una carpeta temporal donde se almacenarán todos los archivos
             final_folder = tempfile.mkdtemp()
 
             for resultadosMuestra in datosList:
                 print(f"La lista es {resultadosMuestra}\n")
                 pdf_gen = PDFGenerator(resultadosMuestra)
-                
+
                 # output es un archivo ZIP (BytesIO o path)
                 output = pdf_gen.generateMuestra()
 
@@ -219,7 +224,7 @@ def generadorZipConjunto(request):##############################################
                     # Descomprimir el zip en el directorio temporal
                     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                         zip_ref.extractall(temp_unzip_dir)
-                    
+
                     os.remove(zip_path)
 
                     # Copiar los archivos descomprimidos a la carpeta final
@@ -228,15 +233,17 @@ def generadorZipConjunto(request):##############################################
                         if os.path.isfile(filepath):
                             extract_folder = os.path.join(final_folder, f"{resultadosMuestra[0]['muestra_nombre']}")
                             os.makedirs(extract_folder, exist_ok=True)
-
                             shutil.copy(filepath, os.path.join(extract_folder, filename))
 
             # Crear el zip final con todos los archivos combinados
-            desktop = os.path.join(os.path.expanduser('~'), 'Desktop')  # o 'Desktop'
-            muestra=Muestras.objects.get(id= int(resultadosMuestra[0]['muestra_id']))
-            expediente= muestra.expediente.expediente
-            final_zip_path = os.path.join(desktop, f"{expediente}.zip")
-            with zipfile.ZipFile(final_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            muestra = Muestras.objects.get(id=int(resultadosMuestra[0]['muestra_id']))
+            expediente = muestra.expediente.expediente
+            final_zip_name = f"{expediente}.zip"
+
+            # Crear un archivo en memoria (en lugar de guardarlo en el disco)
+            zip_buffer = BytesIO()
+
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
                 for root, dirs, files in os.walk(final_folder):
                     for file in files:
                         file_path = os.path.join(root, file)
@@ -244,52 +251,32 @@ def generadorZipConjunto(request):##############################################
                         arcname = os.path.relpath(file_path, final_folder)
                         zipf.write(file_path, arcname=arcname)
 
-            # Limpieza opcional
-            '''shutil.rmtree(final_folder)'''
+            # Aseguramos que la posición del archivo en memoria esté al principio
+            zip_buffer.seek(0)
 
-            print(f"ZIP final creado en: {final_zip_path}")
-            
-            """for 
-                output = pdf_gen.generate()
+            # Crear una respuesta HttpResponse con el archivo ZIP en memoria
+            response = HttpResponse(zip_buffer, content_type='application/zip')
+            response['Content-Disposition'] = f'attachment; filename="{final_zip_name}"'
 
-            # Guardar el resultado según la cantidad de archivos
-            # Obtener la ruta al escritorio
-            ruta_escritorio = os.path.join(os.path.expanduser("~"), "Desktop")
+            # Limpiar carpeta temporal final
+            shutil.rmtree(final_folder)
 
-            # Verificar si la ruta del escritorio existe (por seguridad)
-            if not os.path.exists(ruta_escritorio):
-                raise FileNotFoundError("No se pudo encontrar el escritorio del usuario.")
+            print(f"ZIP final creado en memoria con nombre: {final_zip_name}")
 
-            # Determinar el nombre del archivo según la condición
+            return response
 
-            id_archivo= datosList[0]['muestra_nombre']
-            id_ensayo= datosList[0]['ensayo']
-            print(len(datosList))
-
-            nombre_archivo = f'{id_archivo}.zip' if len(datosList) > 1 else f"{id_archivo}-{id_ensayo}.pdf"
-
-            print(nombre_archivo)
-            # Construir la ruta completa del archivo
-            ruta_archivo = os.path.join(ruta_escritorio, nombre_archivo)
-
-            
-
-            # Guardar el archivo en la ruta especificada
-            with open(ruta_archivo, 'wb') as f:
-                f.write(output) """              
-
-            return JsonResponse({'mensaje': 'Archivo generado correctamente'})
         except Exception as e:
-                # Captura y devuelve la traza completa del error
-                traza_error = traceback.format_exc()
-                print(traza_error)  # Muestra la traza en la consola del servidor
-                return JsonResponse({
-                    'error': 'Error interno del servidor',
-                    'detalle': str(e),
-                    'traza': traza_error  # Incluye la traza en la respuesta
-                }, status=500)
+            # Captura y devuelve la traza completa del error
+            traza_error = traceback.format_exc()
+            print(traza_error)  # Muestra la traza en la consola del servidor
+            return JsonResponse({
+                'error': 'Error interno del servidor',
+                'detalle': str(e),
+                'traza': traza_error  # Incluye la traza en la respuesta
+            }, status=500)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 
 @login_required
 def expediente (request, expediente):
