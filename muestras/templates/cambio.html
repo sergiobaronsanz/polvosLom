@@ -1,0 +1,33 @@
+{% extends 'pages/layout.html'%}
+{%load static%}
+
+{%block style%} <link rel="stylesheet" href="{% static "css/muestras/estilos.css" %}"> {%endblock%}
+
+{%block content%}
+<div id="content-wrapper" class="d-flex flex-column">
+    <div class="container py-5">  
+      <div class="row justify-content-center">
+          <div class="card mb-4 col-lg-12">
+            <div id= "filtros" class="mt-2">
+              <form method="POST" class="">
+                {% csrf_token %}
+				<div class= "d-flex align-items-center justify-content-center">
+					<div>
+						<h2 class= "mb-4"> Cambia el id de la muestra {{muestra.empresa.abreviatura}}-{{muestra.id_muestra}}</h2>
+						<div class= "m-auto col-8 d-flex align-items-center justify-content-center">
+							<label class= "mb-0 col-4 fs-4"for= "nuevoId">{{muestra.empresa.abreviatura}}</label>
+							<input type="text" name="nuevoId" class="col-8 form-control form-control-m" style="text-align: center;" required id="nuevoId">
+						</div>
+						<div class= "my-4 col d-flex align-items-center justify-content-center">
+							<button class= "btn btn-primary"> Confirmar </button>
+						</div>
+					</div>
+				</div>
+              </form>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+{%endblock%}

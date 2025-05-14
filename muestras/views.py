@@ -290,3 +290,21 @@ def revisionMuestra(request):
             }, status=500)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+@login_required
+def cambiarIdMuestra(request, id_muestra):
+    print("borrar")
+    muestra= get_object_or_404(Muestras, id= id_muestra)
+    
+    if request.method == "POST":
+        nuevoId= request.POST["nuevoId"]
+
+        muestra.id_muestra= nuevoId
+        muestra.save()
+        
+        return redirect ('verMuestra', muestra.id)
+    
+    return render(request, 'cambio.html', {
+        'muestra': muestra,
+    })
+    

@@ -35,8 +35,9 @@
               <div id="identificacion-muestra" class= "row col-12">             
                 <div id="nombre-muestra" class= "col-6">
                   <h2> {{muestra.empresa.abreviatura}} - {{muestra.id_muestra}}</h2>
-					<p class= "mb-1"> Id: {{descripcion.id_fabricante}}</p>
-					<a href= "{%url 'revisarExpediente' expediente.id %}"> Exp: {{expediente.expediente}} </a>
+				  <a href= "{%url 'cambioId' muestra.id %}"> Cambio id </a>
+				  <p class= "mb-1"> Id: {{descripcion.id_fabricante}}</p>
+				  <a href= "{%url 'revisarExpediente' expediente.id %}"> Exp: {{expediente.expediente}} </a>
                 </div>
                 <div id="imagenes" class= "col-6">
                   {% if descripcion.imagenMuestra != 'null' and descripcion.imagenMuestra.url|length >= 1 %}

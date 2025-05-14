@@ -13,5 +13,10 @@ urlpatterns = [
 
 	#Envio Email
     path('muestra/envioMail', views.envioMail, name="envioMail"),
+
+	#CambioIdMuestra
+    path('muestra/cambioId/<str:id_muestra>', views.cambiarIdMuestra, name="cambioId"),
+
+
     
 ]
