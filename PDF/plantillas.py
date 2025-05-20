@@ -140,8 +140,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -318,8 +320,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -504,8 +508,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -683,8 +689,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -742,7 +750,9 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
                 align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12)
-        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = f"Cerillas: {ensayo.get_cerillas_display()} (2kJ)",
                 align= "J", fill = 0)
 
 
@@ -811,8 +821,6 @@ class PlantillasEnsayo():
 
         
         self.pdf.set_font('Arial', '', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"El ensayo ha sido realizado con cerillas {ensayo.get_cerillas_display()}",
-                align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor concentración a la que hay inflamación: {concentracionSi} g/m3",
                 align= "J", fill = 0)
@@ -848,15 +856,17 @@ class PlantillasEnsayo():
         self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
         self.pdf.add_page()
         #TEXTO 
-        self.pdf.set_font('Arial', '', 12)
+        self.pdf.set_font('Arial', '', 10)
         #IMAGEN
         image_path = os.path.join(self.rutaAbsoluta, 'Imagenes', 'LOGO.png')
         self.pdf.image(image_path, x=8, y=8, w=30, h=30, link="http://www.lom.upm.es", type='PNG')
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -914,7 +924,9 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
                 align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12)
-        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = f"Cerillas: {ensayo.get_cerillas_display()} (10kJ)",
                 align= "J", fill = 0)
 
 
@@ -994,31 +1006,31 @@ class PlantillasEnsayo():
         dpdt3= 0
 
         for resultado in resultados:
-                if resultado.serie == "1":
-                        valoresPm1.append(resultado.pm)
-                        valoresDpdt1.append(resultado.dpdt)
-                        pmax1= max(valoresPm1)
-                        dpdt1= max(valoresDpdt1)
-                        
+            if resultado.serie == "1":
+                valoresPm1.append(resultado.pm)
+                valoresDpdt1.append(resultado.dpdt)
+                pmax1= max(valoresPm1)
+                dpdt1= max(valoresDpdt1)
+                    
 
-                elif resultado.serie== "2":
-                        valoresPm2.append(resultado.pm)
-                        valoresDpdt2.append(resultado.dpdt)
-                        pmax2= max(valoresPm2)
-                        dpdt2= max(valoresDpdt2)
+            elif resultado.serie== "2":
+                valoresPm2.append(resultado.pm)
+                valoresDpdt2.append(resultado.dpdt)
+                pmax2= max(valoresPm2)
+                dpdt2= max(valoresDpdt2)
 
-                if resultado.serie== "3":
-                        valoresPm3.append(resultado.pm)
-                        valoresDpdt3.append(resultado.dpdt)
-                        pmax3= max(valoresPm3)
-                        dpdt3= max(valoresDpdt3)
+            if resultado.serie== "3":
+                valoresPm3.append(resultado.pm)
+                valoresDpdt3.append(resultado.dpdt)
+                pmax3= max(valoresPm3)
+                dpdt3= max(valoresDpdt3)
                 
         #Sacamos el valor de pmax y dpdt del ensayo
         pmMaxima= max(pmax1, pmax2, pmax3)
         dPdTMaxima= max(dpdt1,dpdt2,dpdt3)
 
-        concentracionesPmax= ["-"]
-        concentracionesDpdt= ["-"]
+        concentracionesPmax= []
+        concentracionesDpdt= []
 
         #Buscamos la concentracion
         if ensayo.pmax != 0.0:
@@ -1029,6 +1041,9 @@ class PlantillasEnsayo():
                     concentracionesDpdt.append(resultado.concentracion)
                 
             print(concentracionesPmax, concentracionesDpdt)
+        else:
+            concentracionesPmax= ["-"]
+            concentracionesDpdt= ["-"]
 
 
         self.pdf.cell(w=5, h= 6,border= "L", fill = 0)
@@ -1106,8 +1121,6 @@ class PlantillasEnsayo():
                       
         
         self.pdf.set_font('Arial', '', 12)
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"El ensayo ha sido realizado con cerillas {ensayo.get_cerillas_display()}",
-                align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"""La mayor Pmax registrada es de {pmMaxima} bar a una concentración de {', '.join(str(c) for c in concentracionesPmax)} g/m3; la mayor dPdT registrada es de {dPdTMaxima} bar/s a una concentración de {', '.join(str(c) for c in concentracionesDpdt)} g/m3""",   
                 align= "J", fill = 0)
@@ -1152,8 +1165,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -1339,8 +1354,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -1526,8 +1543,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -1723,7 +1742,7 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
-        self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
+        self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} \n ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
@@ -1782,7 +1801,9 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
                 align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12)
-        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = f"Cerillas: {ensayo.get_cerillas_display()} (2kJ)",
                 align= "J", fill = 0)
 
 
@@ -1869,8 +1890,6 @@ class PlantillasEnsayo():
 
         
         self.pdf.set_font('Arial', '', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"El ensayo ha sido realizado con cerillas {ensayo.get_cerillas_display()}",
-                align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor concentración de oxígeno a la que hay explosión: {oxigenoSi}% a las concentraciones de {','.join(map(str, concentracionesSi))}",
                 align= "J", fill = 0)
@@ -1930,8 +1949,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -2180,8 +2201,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -2321,8 +2344,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -2506,8 +2531,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
             self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
                     align= "L", fill = 0)
@@ -2682,8 +2709,10 @@ class PlantillasEnsayo():
         #Celdas Cabecera
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
         self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
         self.pdf.multi_cell(w=55, h= 12, txt = "Fecha:", border= "RT", 
                 align= "L", fill = 0)
 

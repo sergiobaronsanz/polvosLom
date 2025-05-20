@@ -177,18 +177,21 @@ def ensayosMuestrasSimple(request, muestra):
 def verExpedientes(request):
 
     #Sacamos los expedientes
-    try:
-        expedientes= Expedientes.objects.all().order_by('-fecha')
-    except ObjectDoesNotExist:
-        print("no hay expedientes")
+    expedientes= Expedientes.objects.all().order_by('-fecha')
+        
+    query_year= Expedientes.objects.values("fecha__year").distinct().order_by("-fecha__year")
+    listaYears = [año['fecha__year'] for año in query_year]
     
     if request.POST:
         filtro= request.POST["filtro"]
+        
+        
         expedientes= Expedientes.objects.filter(expediente__icontains=filtro).order_by('-fecha')
 
     
     return render(request, "verExpedientes.html",{
-        'expedientes': expedientes
+        'expedientes': expedientes,
+        'listaYears': listaYears,
     } )
 
 
@@ -333,11 +336,13 @@ def envioMail(request):
                 asuntosMuestras.append(f"{abreviatura}-{numeroMuestra}")
             nExpediente=expediente.expediente
             empresa=expediente.empresa
+            listaDestinatarios = [user.email for user in User.objects.all()]
+
 
             asunto= f"Resultados de {' , '.join(asuntosMuestras)} de la empresa {empresa} para el expediente {nExpediente}" 
             mensaje= f"Hola,\n\nYa tienes los resultados de {' , '.join(asuntosMuestras)}.\n\nUn saludo."
             remitente = settings.EMAIL_HOST_USER
-            destinatarios = ['s.baronsanz@gmail.com']
+            destinatarios = listaDestinatarios
             print(mensaje)
     
             send_mail(asunto, mensaje, remitente, destinatarios, fail_silently=False)

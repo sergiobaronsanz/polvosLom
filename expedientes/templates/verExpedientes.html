@@ -9,14 +9,28 @@
       <div class="row justify-content-center">
           <div class="card mb-4 col-lg-12">
             <div id= "filtros" class="mt-2">
-              <form method="POST" class="d-flex justify-content-end align-items-center">
+              <form method="POST" class="m-auto col-9 d-flex justify-content-between align-items-center">
                 {% csrf_token %}
-                <div id= "búsqueda" >
-                  <label class= "mb-0 mr-3"> Buscar </label>
-                  <input name= "filtro"></input>
-                  <button type= "submit" class= "btn" >
-                    <img class= "img-fluid" style="width:40px;" src= {%static 'img/expedientes/search.png'%}>
-                  </button>
+				<div class= "col-3 d-flex align-items-center justify-content-start"id= "year">
+						<select class= "form-control form-control-sm" name="year">
+							<option value="">Selecciona año</option>
+							{%for year in listaYears%}
+								<option value={{year}}>{{year}}</option>
+							{%endfor%}
+						</select>
+						<button type= "submit" class= "btn" >
+							<img class= "img-fluid" style="width:45px;" src= {%static 'img/expedientes/search.png'%}>
+						</button>
+				</div>
+                <div  class= "col-4 d-flex align-items-center justify-content-between" id= "búsqueda" >
+                  <label class= "mb-0"> Buscar </label>
+				  <div class= "d-flex align-items-center justify-content-center">
+					<input class= "form-control form-control-sm col-4" name= "filtro"></input>
+					<button type= "submit" class= "btn" >
+						<img class= "img-fluid" style="width:30px;" src= {%static 'img/expedientes/search.png'%}>
+					</button>
+				  </div>
+					
                 </div>
               </form>
             </div>
