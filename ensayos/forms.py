@@ -469,6 +469,12 @@ class TminResultadosForm(forms.Form):
 
     )
     
+    repeticiones= forms.IntegerField(
+        label= "Repeticiones",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+    
 
 tminResultadosFormSet= formset_factory(TminResultadosForm, extra=7)
 

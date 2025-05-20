@@ -11,6 +11,11 @@ from ensayos.models import *
 from muestras.models import *
 from .plantillas import PlantillasEnsayo
 from PyPDF2 import PdfMerger
+from muestras.models import DescripcionMuestra
+import os
+import os
+from django.conf import settings
+
 
 class PDFGenerator:
     def __init__(self, request):
@@ -73,11 +78,27 @@ class PDFGenerator:
         nombre_archivo= None
         #Si hay más de un archivo generamos el parte de recepción
         if len(self.request) >1:
-                pdf_bytes = self.generate_Recepcion_pdf()
-                nombre_archivo= (self.request[0]['muestra_nombre']) + "-" + ("Recepción.pdf")
-                pdf_files.append((nombre_archivo, pdf_bytes))
-                #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
-                formateo_pdf_files.append(io.BytesIO(pdf_bytes))
+            pdf_bytes = self.generate_Recepcion_pdf()
+            nombre_archivo= (self.request[0]['muestra_nombre']) + "-" + ("Recepción.pdf")
+            pdf_files.append((nombre_archivo, pdf_bytes))
+            #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
+            formateo_pdf_files.append(io.BytesIO(pdf_bytes))
+
+            ensayo_obj = DescripcionMuestra.objects.get(muestra=self.request[0]['muestra_id'])
+            if ensayo_obj.imagenMuestra:
+                image_path = os.path.join(settings.MEDIA_ROOT, ensayo_obj.imagenMuestra.name)
+                with open(image_path, 'rb') as img_file:
+                    image_bytes = img_file.read()
+                image_filename = os.path.basename(ensayo_obj.imagenMuestra.name)
+                pdf_files.append((image_filename, image_bytes))
+
+            if ensayo_obj.imagenEnvoltorio:
+                image_path = os.path.join(settings.MEDIA_ROOT, ensayo_obj.imagenEnvoltorio.name)
+                with open(image_path, 'rb') as img_file:
+                    image_bytes = img_file.read()
+                image_filename = os.path.basename(ensayo_obj.imagenMuestra.name)
+                pdf_files.append((image_filename, image_bytes))
+
 
         for request in self.request:
             if request['ensayo'] == 'Humedad':

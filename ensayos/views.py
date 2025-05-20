@@ -670,6 +670,7 @@ def tmin (request, muestra_id):
                     peso = form.cleaned_data['peso']
                     presion= form.cleaned_data['presion']
                     resultadoPrueba= form.cleaned_data['resultadoPrueba']
+                    repeticiones= form.cleaned_data['repeticiones']
 
                     resultadosTmin=ResultadosTMIn.objects.create(
                         ensayo= tmin,
@@ -677,6 +678,7 @@ def tmin (request, muestra_id):
                         peso= peso,
                         presion=presion,
                         resultado=resultadoPrueba,
+                        repeticiones= repeticiones
                     )
 
                     if resultadoPrueba == "1":
@@ -705,7 +707,7 @@ def tmin (request, muestra_id):
                 'formTmin': formTmin,
                 'formTminResultados': formTminResultados,
                 'equiposEnsayo': equiposEnsayo,
-        'datosGuardados': datosGuardados,
+        		'datosGuardados': datosGuardados,
             })
     else:
         if muestra_id != 'nueva':
@@ -743,6 +745,7 @@ def tmin (request, muestra_id):
                     'peso': resultado.peso,
                     'presion': resultado.presion,
                     'resultadoPrueba': resultado.resultado,
+                    'repeticiones': resultado.repeticiones
                 })
             
             # Crear el formset con los datos iniciales
