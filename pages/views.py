@@ -36,7 +36,7 @@ def inicio(request):
     
     #Número de muestras realizadas por mes
     # Agrupar por mes y contar
-    muestras_por_mes = (
+    muestras_por_mes_qs = (
         Muestras.objects
         .filter(expediente__fecha__year=año_actual)
         .annotate(mes=ExtractMonth('expediente__fecha'))
@@ -44,8 +44,15 @@ def inicio(request):
         .annotate(total=Count('id'))
         .order_by('mes')
     )
+
+    muestras_por_mes_dict= {mes:0 for mes in range(1,13)}
+
+    for item in muestra_por_mes:
+	muestra_por_mes_dict[item['mes']= item['total']]
+   
+    muestrasPorMes = [muestras_por_mes_dict[mes] for mes in range(1, 13)]
+
     # Convertimos a json
-    muestrasPorMes = [item['total'] for item in muestras_por_mes]
     muestrasPorMes_json= json.dumps(muestrasPorMes)
 
     #Expedientes por empresas
