@@ -48,7 +48,7 @@ def inicio(request):
     muestras_por_mes_dict= {mes:0 for mes in range(1,13)}
 
     for item in muestra_por_mes:
-	muestra_por_mes_dict[item['mes']= item['total']]
+	muestras_por_mes_dict[item['mes']]= item['total']]
    
     muestrasPorMes = [muestras_por_mes_dict[mes] for mes in range(1, 13)]
 
