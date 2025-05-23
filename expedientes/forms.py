@@ -40,3 +40,9 @@ class EnsayosMuestras(forms.ModelForm):
         widgets = {
             'listaEnsayos': forms.CheckboxSelectMultiple
         }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ordenar listaEnsayos según el campo 'orden'
+        self.fields['listaEnsayos'].queryset = ListaEnsayos.objects.all().order_by('orden')
+        
