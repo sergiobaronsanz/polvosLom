@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Llamar la función al inicio para configurar los eventos en los elementos existentes
     actualizarCampos();
+	habilitarEs();
 
 
 
