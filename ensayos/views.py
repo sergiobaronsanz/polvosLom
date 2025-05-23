@@ -1104,11 +1104,9 @@ def emi (request, muestra_id):
                     if resultadoPrueba == "1":
                         listaResultados.append(energia)
                     
-
             #Guardamos en el modelo EMI el resultado del ensayo
             if listaResultados:
                 resultado= resultado
-                
                 emi.resultado= resultado
                 emi.save()
             else:
@@ -1116,7 +1114,7 @@ def emi (request, muestra_id):
                 emi.resultado= resultado
                 emi.save()
                 
-            datosGuardados= True        
+            datosGuardados= True  
         else:
             
             return render(request, 'ensayos/nuevosEnsayos/emi.html', {
@@ -1124,7 +1122,7 @@ def emi (request, muestra_id):
                 'formEmi': formEmi,
                 'formEmiResultados': formEmiResultados,
                 'equiposEnsayo': equiposEnsayo,
-        'datosGuardados': datosGuardados,
+        		'datosGuardados': datosGuardados,
             })
     else:
         if muestra_id != 'nueva':

@@ -140,6 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				
 				var copiaFilaDatos = filaDatos[0].cloneNode(true); // Copia completa con contenido
 				tBody.appendChild(copiaFilaDatos); // Agrega la copia al tbody
+				actualizarCampos();
+				habilitarEs();
 				
 				//Agregamos datos
 				let inputs = copiaFilaDatos.querySelectorAll("input");
@@ -193,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				numeroEnsayos.value= numeroResultado;
 
 			}
+			//Sacamos la media
 			else{
 				console.log(element[0])
 				if (element[0] === 'Es (mJ):' && element.length > 1 ){
@@ -211,7 +214,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 			
-			
+			// Eliminamos el archivo:
+			document.getElementById("fileInput").value = "";
+			$('#ensayosModal').modal('hide');
+
 			
 		})		
 	}

@@ -684,7 +684,7 @@ class EmiForm(forms.Form):
     resultado= forms.IntegerField(
         label="Resultado (Es)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
-        required=True,
+        required=False,
     )
 
     observacion=forms.CharField(
