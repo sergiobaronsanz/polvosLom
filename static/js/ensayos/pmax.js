@@ -405,6 +405,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		presionMedia();
 		dpdtMedia();
 		kmax();
+
+		document.getElementById("fileInput").value = "";
+		$('#ensayosModal').modal('hide');
 		
 	}
     

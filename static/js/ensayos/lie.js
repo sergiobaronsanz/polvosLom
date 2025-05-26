@@ -211,11 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			numeroEnsayos.value= numeroResultado;
 		})
 
-		//Recalculamos las medias
-		listener();
-		presionMedia();
-		dpdtMedia();
-		kmax();
+		document.getElementById("fileInput").value = "";
+		$('#ensayosModal').modal('hide');
 		
 	}
     
