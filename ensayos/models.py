@@ -222,7 +222,7 @@ class ResultadosTMIn (models.Model):
     peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso")
     presion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Presión")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
-    repeticiones= models.IntegerField(verbose_name="Repeticiones")
+    repeticiones= models.IntegerField(verbose_name="Repeticiones", blank= True, null=True)
     
     class Meta():
         verbose_name="Resultado TMIn"
