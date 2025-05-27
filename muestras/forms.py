@@ -9,10 +9,7 @@ class DescripcionMuestraForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Filtrar las muestras que no tienen una descripción asociada
-        self.fields['muestra'].queryset = Muestras.objects.filter(descripcionmuestra__isnull=True)
-        
+        super().__init__(*args, **kwargs)        
         # Establecer el widget para 'muestra' y darle la clase 'form-control'
         self.fields['muestra'].widget.attrs.update({'class': 'form-control'})
 

@@ -84,6 +84,7 @@
                     La muestra se ensaya <spam class= "text-dark font-weight-bold"> {{descripcion.formaEnsayo}} </spam>
                   </p>
                 </div>
+				<button id="botonDescripcionMuestra" class= "btn btn-info"> Editar</button>
 
               </div>
 
@@ -285,10 +286,16 @@
 <script>
   console.log("bien")
   var url_ensayosMuestras= '{{url_ensayosMuestras}}';
+  var url_descripcionMuestra= '{{url_descripcionMuestra}}';
   var botonEnsayosMuestras= document.getElementById('ensayosMuestrasButton');
+  var botonDescripcionMuestra= document.getElementById('botonDescripcionMuestra');
 
   botonEnsayosMuestras.onclick= function(){
     window.location.href=url_ensayosMuestras;
   };
+
+  botonDescripcionMuestra.onclick= function(){
+	window.location.href=url_descripcionMuestra;
+  }
 </script>
 {%endblock%}

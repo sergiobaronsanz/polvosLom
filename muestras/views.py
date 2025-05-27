@@ -14,9 +14,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Exists, OuterRef
 
-
-
-
 # Create your views here.
 @login_required
 def muestras(request):
@@ -36,38 +33,51 @@ def muestras(request):
         'muestras': muestras
     })
 @login_required
-def recepcionMuestra(request):
+def recepcionMuestra(request, muestra="nueva"):
     if request.method == 'POST':
-        form = DescripcionMuestraForm(request.POST, request.FILES)
+        if muestra != "nueva":
+            muestra_obj = Muestras.objects.get(id=muestra)
+            descripcion_existente = DescripcionMuestra.objects.get(muestra=muestra_obj)
+            form = DescripcionMuestraForm(request.POST, request.FILES, instance=descripcion_existente)
+        else:
+            form = DescripcionMuestraForm(request.POST, request.FILES)
+
         if form.is_valid():
-            # Guardar el formulario si es válido
-            form.save()
-            
-            #Actualizar el estado de la muestra
-            id_muestra= request.POST['muestra']
-            muestra= Muestras.objects.get(id= id_muestra)
-            muestra.estado= "3"
-            muestra.save()
-            
+            descripcion = form.save(commit=False)
 
-            #Cambiamos el estado de estado de expedienes si todas las muestras asignadas al expediente están en estado "3"
-            expediente= muestra.expediente
-            muestras= Muestras.objects.filter(expediente= expediente)
+            # Si no se subieron nuevas imágenes, conservar las anteriores
+            if muestra != "nueva":
+                if not request.FILES.get('imagenMuestra'):
+                    descripcion.imagenMuestra = descripcion_existente.imagenMuestra
+                if not request.FILES.get('imagenEnvoltorio'):
+                    descripcion.imagenEnvoltorio = descripcion_existente.imagenEnvoltorio
 
-            estadoMuestras=[]
-            for muestra in muestras:
-                if muestra.estado != "3":
-                    estadoMuestras.append(True)
+            descripcion.save()
 
-            if all(estadoMuestras):
-                expediente.estado= "3"
+            if muestra == "nueva":
+                # Actualizar estado de la muestra
+                muestra_obj = descripcion.muestra
+                muestra_obj.estado = "3"
+                muestra_obj.save()
 
+                # Cambiar estado del expediente si todas las muestras están en estado "3"
+                expediente = muestra_obj.expediente
+                muestras = Muestras.objects.filter(expediente=expediente)
+                if all(m.estado == "3" for m in muestras):
+                    expediente.estado = "3"
+                    expediente.save()
 
-            redirect('muestras')
-            
-            
+            return redirect('verMuestra', str(muestra_obj.id))
+
     else:
-        form = DescripcionMuestraForm()
+        if muestra != "nueva":
+            muestraEnsayo = Muestras.objects.get(id=muestra)
+            descripcion = DescripcionMuestra.objects.get(muestra=muestraEnsayo)
+            form = DescripcionMuestraForm(instance=descripcion)
+            form.fields['muestra'].queryset = Muestras.objects.filter(id=muestraEnsayo.id)
+        else:
+            form = DescripcionMuestraForm()
+            form.fields['muestra'].queryset = Muestras.objects.filter(descripcionmuestra__isnull=True)
 
     return render(request, 'recepcionMuestra.html', {'form': form})
 
@@ -188,6 +198,8 @@ def verMuestra(request, muestra_id):
 
     #Sacamos las url
     url_ensayosMuestras= reverse('ensayosMuestrasSimple', kwargs={'muestra': muestra_id})
+    url_descripcionMuestra= reverse('recepcionMuestra', kwargs={'muestra': muestra_id})
+    
     
     
     return render(request, 'verMuestra.html', {
@@ -198,6 +210,7 @@ def verMuestra(request, muestra_id):
         "ensayos_json":ensayos_json_str,
         "ensayos": ensayos,
         "url_ensayosMuestras": url_ensayosMuestras,
+        "url_descripcionMuestra": url_descripcionMuestra,
         "usuarios": usuarios,
         "expediente": expediente,
     })
