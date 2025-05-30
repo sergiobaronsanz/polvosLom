@@ -50,7 +50,7 @@
                 </div>
 
 				<div id="eliminarMuestra" class="col d-flex justify-content-end">
-					<form method="POST" action="{% url 'eliminarMuestra' muestra.id%}" onsubmit="return confirm('¿Seguro que deseas eliminar este equipo?');">
+					<form method="POST" action="{% url 'eliminarMuestra' muestra.id%}" onsubmit="return confirm('¿Seguro que deseas eliminar esta muestra?');">
 						{%csrf_token%}
 						<button class= "ml-3 btn btn-danger"type="submit">Eliminar</button>
 					</form>

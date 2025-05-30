@@ -86,7 +86,6 @@ def abreviaturaExistente(request):
 #Seleccion de los ensayos para cada muestra
 @login_required
 def ensayosMuestras(request,expediente, empresa, nMuestras):
-
     #Extraemos los objetos de expediente y empresa
     try:
         expediente= Expedientes.objects.get(expediente=expediente)
@@ -141,6 +140,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         'abreviaturaCompleta': abreviaturaCompleta,
         'form': form
     })
+
 @login_required
 def ensayosMuestrasSimple(request, muestra):
     muestra= Muestras.objects.get(id= muestra)
