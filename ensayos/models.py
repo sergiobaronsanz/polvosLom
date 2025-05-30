@@ -279,11 +279,11 @@ class ResultadosLIE (models.Model):
     ]
     
     ensayo= models.ForeignKey("LIE", on_delete=models.CASCADE, verbose_name="Ensayo LIE")
-    concentracion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Concentración")
+    concentracion= models.IntegerField(verbose_name="Concentración")
     peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso equivalente")
     pex= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PEX")
     pm= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PM")
-    dpdt= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="dP/dT")
+    dpdt=  models.IntegerField(verbose_name="dPdT")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
     
     
@@ -516,11 +516,12 @@ class ResultadosCLO (models.Model):
 
     
     ensayo= models.ForeignKey("CLO", on_delete=models.CASCADE, verbose_name="Ensayo LIE")
-    concentracion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Concentración")
+    concentracion= models.IntegerField(verbose_name="Concentración")
     peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso equivalente")
     pex= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PEX")
     pm= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PM")
-    dpdt= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="dP/dT")
+    dpdt=  models.IntegerField(verbose_name="dPdT")
+
     oxigeno= models.IntegerField(verbose_name= "Oxígeno")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
     

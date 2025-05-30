@@ -95,7 +95,7 @@
 					</div>
 					<div class="card-body">
 						{%for expediente in evolucionExpedientes%}
-							<h4 class="small font-weight-bold">{{expediente.expediente}}<span
+							<h4 class="small font-weight-bold"><a href= {%url 'revisarExpediente' expediente.id%}>{{expediente.expediente}} | {{expediente.empresa}}</a><span
 									class="float-right">{{expediente.porcentaje}}%</span></h4>
 							<div class="progress mb-4">
 								<div class="progress-bar bg-danger" role="progressbar" style="width: {{ expediente.porcentaje|floatformat:0 }}%"

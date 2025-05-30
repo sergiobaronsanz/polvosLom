@@ -572,42 +572,42 @@ class LieResultadosForm(forms.Form):
     concentracion= forms.DecimalField(
         decimal_places=2,  
         label="Concentración (g/m3)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
     peso= forms.DecimalField(
         decimal_places=2,  
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
     pex= forms.DecimalField(
         decimal_places=2,  
         label= "Pex (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
     pm= forms.DecimalField(
         decimal_places=2,  
         label= "Pm (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
     dpdt= forms.DecimalField(
         decimal_places=2,  
         label= "dP/dT (bar/s)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
     resultadoPrueba= forms.ChoiceField(
         choices=resultadosPosibles,
         label= "Resultado",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
 
     )

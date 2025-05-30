@@ -428,7 +428,7 @@ class PlantillasEnsayo():
                 self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
                 self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(int(fila.tHorno)), 
                         fill = 0)
-                self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
+                self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(fila.peso),
                         fill = 0)
                 self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(int(fila.presion)),
                         fill = 0)
@@ -785,7 +785,7 @@ class PlantillasEnsayo():
             print(fila)
         for fila in resultados:
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-            self.pdf.cell(w=50, h= 8,border= 1,align= "C",txt= str(int(fila.concentracion)), 
+            self.pdf.cell(w=50, h= 8,border= 1,align= "C",txt= str(fila.concentracion), 
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
                     fill = 0)
@@ -793,7 +793,7 @@ class PlantillasEnsayo():
                     fill = 0)
             self.pdf.cell(w=25, h= 8,border= 1, align= "C",txt= str(float(fila.pm)),
                     fill = 0)
-            self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(float(fila.dpdt)),
+            self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(fila.dpdt),
                     fill = 0)
             self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= fila.get_resultado_display(),
                     fill = 0)
@@ -1838,7 +1838,7 @@ class PlantillasEnsayo():
             print(fila)
         for fila in resultados:
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-            self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(int(fila.concentracion)), 
+            self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(fila.concentracion), 
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
                     fill = 0)
@@ -1846,7 +1846,7 @@ class PlantillasEnsayo():
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(float(fila.pm)),
                     fill = 0)
-            self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(int(fila.dpdt)),
+            self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(fila.dpdt),
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(int(fila.oxigeno)),
                     fill = 0)
