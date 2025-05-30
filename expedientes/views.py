@@ -130,11 +130,12 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
 
              #Al ser una mny to many no se puede ingresar directamentec como las otras
             nuevaMuestra.listaEnsayos.set(listaEnsayos)
-            
+    
             if nMuestras>1:
                 return redirect('ensayosMuestras', nMuestras=nMuestras-1, empresa= empresa, expediente=expediente) 
             else:
                 return redirect('verExpedientes')    
+            
     
     return render(request, 'ensayosMuestras.html',{
         'abreviaturaCompleta': abreviaturaCompleta,
@@ -182,12 +183,19 @@ def verExpedientes(request):
     query_year= Expedientes.objects.values("fecha__year").distinct().order_by("-fecha__year")
     listaYears = [año['fecha__year'] for año in query_year]
     
-    if request.POST:
-        filtro= request.POST["filtro"]
-        
-        
-        expedientes= Expedientes.objects.filter(expediente__icontains=filtro).order_by('-fecha')
+    if request.method == "POST":
 
+        filtro = request.POST.get("filtro")
+        year = request.POST.get("year")
+
+        expedientes= Expedientes.objects.all()
+
+        if filtro:       
+            expedientes= expedientes.filter(expediente__icontains=filtro)
+        if year:
+            expedientes= expedientes.filter(fecha__year= year)
+
+        expedientes = expedientes.order_by('-fecha')
     
     return render(request, "verExpedientes.html",{
         'expedientes': expedientes,
