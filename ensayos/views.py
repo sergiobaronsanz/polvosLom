@@ -707,7 +707,7 @@ def tmin (request, muestra_id):
                 'formTmin': formTmin,
                 'formTminResultados': formTminResultados,
                 'equiposEnsayo': equiposEnsayo,
-        		'datosGuardados': datosGuardados,
+                'datosGuardados': datosGuardados,
             })
     else:
         if muestra_id != 'nueva':
@@ -788,7 +788,10 @@ def gestorArchivoLie(request):
                 
                 # Quitamos la primera fila y procesamos las demás
                 for fila in filas[1:]:
-                    filaLimpia = fila.strip(';').split(';')
+                    if '\t' in fila:
+                        filaLimpia = fila.strip().split('\t')
+                    else:
+                        filaLimpia = fila.strip().split(';')
                     serie = [valor.strip() for valor in filaLimpia if valor.strip()]
                     resultados.append(serie)
                 print(resultados)
@@ -1008,7 +1011,10 @@ def gestorArchivoEmi(request):
                 
                 # Quitamos la primera fila y procesamos las demás
                 for fila in filas[1:]:
-                    filaLimpia = fila.strip(';').split(';')
+                    if '\t' in fila:
+                        filaLimpia = fila.strip().split('\t')
+                    else:
+                        filaLimpia = fila.strip().split(';')
                     serie = [valor.strip() for valor in filaLimpia if valor.strip()]
                     resultados.append(serie)
                 print(resultados)
@@ -1122,7 +1128,7 @@ def emi (request, muestra_id):
                 'formEmi': formEmi,
                 'formEmiResultados': formEmiResultados,
                 'equiposEnsayo': equiposEnsayo,
-        		'datosGuardados': datosGuardados,
+                'datosGuardados': datosGuardados,
             })
     else:
         if muestra_id != 'nueva':
@@ -1375,7 +1381,11 @@ def gestorArchivoPmax(request):
                 
                 # Quitamos la primera fila y procesamos las demás
                 for fila in filas[1:]:
-                    filaLimpia = fila.strip(';').split(';')
+                    if '\t' in fila:
+                        filaLimpia = fila.strip().split('\t')
+                    else:
+                        filaLimpia = fila.strip().split(';')
+
                     serie = [valor.strip() for valor in filaLimpia if valor.strip()]
                     resultados.append(serie)
                 print(resultados)
