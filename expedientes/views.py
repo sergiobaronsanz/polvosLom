@@ -362,10 +362,11 @@ def envioMail(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-
 @login_required
 def eliminarExpediente (request, expediente):
     if request.POST:
         expediente= get_object_or_404(Expedientes, expediente=expediente)
         expediente.delete()
     return redirect("verExpedientes")
+
+

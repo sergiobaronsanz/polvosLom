@@ -63,28 +63,28 @@
 							</p>
 						</div>
 
-						<div>
+						<div class= "d-flex align-items-center justify-content-between">
+							
 							{%if muestra.estado == "5"%}
-								<p class="p-2 text-secondary bg-success text-light rounded ">
+								<p class="p-2 text-secondary bg-success text-light rounded mb-0 ">
 									{{ muestra.get_estado_display }}
 								</p>
 							
 							{%elif muestra.estado == "4"%}
-								<p class="p-2 text-secondary bg-warning text-light rounded">
+								<p class="p-2 text-secondary bg-warning text-light rounded mb-0">
 									{{ muestra.get_estado_display }}
 								</p>
 							{%elif muestra.estado == "3"%}
-								<p class="p-2 text-secondary bg-primary text-light rounded">
+								<p class="p-2 text-secondary bg-primary text-light rounded mb-0">
 									{{ muestra.get_estado_display }}
 								</p>
 							
 							{%elif muestra.estado == "1"%}
-								<p class="p-2 text-light bg-secondary text-light rounded">
+								<p class="p-2 text-light bg-secondary text-light rounded mb-0">
 									{{ muestra.get_estado_display }}
 								</p>
 			
-							{%endif%}
-			
+							{%endif%}			
 						</div>
 					</div>
 				{%endfor%}

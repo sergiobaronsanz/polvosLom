@@ -18,5 +18,6 @@ urlpatterns = [
 
 	#Envio Email
     path('expedientes/envioMail', views.envioMail, name="envioMailExpedientes"),
+
     
 ]

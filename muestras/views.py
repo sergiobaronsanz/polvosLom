@@ -321,3 +321,20 @@ def cambiarIdMuestra(request, id_muestra):
         'muestra': muestra,
     })
     
+
+@login_required
+def eliminarMuestra (request, muestra):
+    muestra= get_object_or_404(Muestras, id= muestra)
+    expediente= muestra.expediente
+    muestra.delete()
+
+    nMuestras= Muestras.objects.filter(expediente= expediente)
+
+    if nMuestras:
+        return redirect('revisarExpediente', expediente.id)
+    
+    else:
+        expediente.delete()
+        return redirect('inicio')
+
+    

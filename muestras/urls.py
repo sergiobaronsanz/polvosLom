@@ -16,7 +16,8 @@ urlpatterns = [
 
 	#CambioIdMuestra
     path('muestra/cambioId/<str:id_muestra>', views.cambiarIdMuestra, name="cambioId"),
-
-
+	
+	#Eliminar muestra
+	path('muestra/borrar-muestra/<str:muestra>', views.eliminarMuestra, name= "eliminarMuestra"),
     
 ]
