@@ -37,7 +37,7 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 12,border= "LRT", txt=f"Expediente: {expediente.expediente}", align= "L", fill = 0)
 
         self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Procedencia: {self.descripcion.procedencia}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Recibida por: *cambiar*", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Recibida por: {self.descripcion.usuario.firmas.firma}", align= "L", fill = 0)
 
         self.pdf.cell(w=95, h= 12,border= "LR", txt= f"¿Se adjunta documentación? {self.descripcion.get_documentacion_display()}", align= "L", fill = 0)
         self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Etiquetado: {self.descripcion.get_etiquetado_display()}", align= "L", fill = 0)
