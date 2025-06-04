@@ -32,6 +32,25 @@ def crear_ensayos(sender, instance, action, **kwargs):
     if action == "post_add":
          
         for ensayo in ensayos:
+            if ensayo.ensayo == "Humedad":
+                if not Humedad.objects.filter(muestra= instance).exists():
+                    resultados= Humedad.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidad= "%",
+                    )
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
+            
             if ensayo.ensayo == "Granulometria":
                 if not Granulometria.objects.filter(muestra= instance).exists():
                     resultados= Granulometria.objects.create(
