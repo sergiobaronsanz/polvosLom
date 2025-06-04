@@ -405,42 +405,42 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
 
         if "humedad" in nombres:
             ensayo = Humedad.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "granulometria" in nombres:
             ensayo = Granulometria.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "tmic" in nombres:
             ensayo = TMIc.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "tmin" in nombres:
             ensayo = TMIn.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "lie" in nombres:
             ensayo = LIE.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
         
         if "emi" in nombres:
             ensayo = EMI.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
@@ -454,42 +454,42 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
 
         if "clo" in nombres:
             ensayo = CLO.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "rec" in nombres:
             ensayo = REC.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "n1" in nombres:
             ensayo = N1.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "n2" in nombres:
             ensayo = N2.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "n4" in nombres:
             ensayo = N4.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
 
         if "o1" in nombres:
             ensayo = O1.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
@@ -504,7 +504,7 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
         
         if "emisin" in nombres:
             ensayo = EMI.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado:
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
