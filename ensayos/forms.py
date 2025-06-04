@@ -728,7 +728,7 @@ class EmiResultadosForm(forms.Form):
 
     numeroEnsayo = forms.IntegerField(
         label="Nº Ensayo",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm resultadosPruebas', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
         required=False,
         min_value=1,
         max_value=10,
@@ -849,15 +849,13 @@ class PmaxResultadosForm(forms.Form):
         ("3", "3"),
     ]
 
-    concentracion= forms.DecimalField(
-        decimal_places=2,  
+    concentracion= forms.IntegerField(
         label="Concentración (g/m3)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
         required=False,
     )
 
-    peso= forms.DecimalField(
-        decimal_places=2,  
+    peso= forms.IntegerField(  
         label="Peso (g)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center;'}),
         required=False,
@@ -1118,20 +1116,20 @@ class RecResultadosForm(forms.Form):
 
     resultadoPrueba= forms.DecimalField(
         decimal_places=2,
-        max_digits= 8,
+        max_digits= 15,
         label= "Resultado (Mohm)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
 
     )
     
 default_data1 = [
-    {'nPrueba': '1', 'tension': 100, 'tiempo': 60, 'resultadoPrueba': 1.23},
+    {'nPrueba': '1', 'tension': 105, 'tiempo': 60, 'resultadoPrueba': 1.23},
     {'nPrueba': '1', 'tension': 500, 'tiempo': 60, 'resultadoPrueba': 1.23},
     {'nPrueba': '1',  'tension': 1000, 'tiempo': 60, 'resultadoPrueba': 1.23},
 ]
 
 default_data2 = [
-    {'nPrueba': '2', 'tension': 100, 'tiempo': 60,},
+    {'nPrueba': '2', 'tension': 105, 'tiempo': 60,},
     {'nPrueba': '2', 'tension': 500, 'tiempo': 60,},
     {'nPrueba': '2',  'tension': 1000, 'tiempo': 60,},
 ]

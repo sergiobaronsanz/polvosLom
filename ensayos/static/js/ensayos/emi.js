@@ -11,17 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function habilitarEs() {
-        console.log("dentroooo");
         let resultados=document.querySelectorAll(".resultadosPruebas");
-        for (let e of resultados) {
-            console.log(e.value);
-            if (e.value === "1") {
-                campoEs.disabled = false;
-                break; // Sale del bucle cuando encuentra el primer "1"
-            }
-            campoEs.disabled = true;
-            campoEs.value= "";
-        }
+        const hayUno = Array.from(resultados).some(e => e.value === "1");
+		if (hayUno) {
+			campoEs.disabled = false;
+		} else {
+			campoEs.disabled = true;
+			campoEs.value = "";
+		}
     }
 
     // Función para actualizar los campos y asegurarse de que solo se agregue el evento una vez
@@ -56,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// *En el modal* Detectamos si hay archivo o no para habilitar el botón de enviar
     function habilitarEnvioModal(){
-		console.log("hola");
 		if (fileInput.files.length > 0) {
 			botonEnviar.style.display= "flex";
 		  } else {
@@ -146,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				
 				//Agregamos datos
 				let inputs = copiaFilaDatos.querySelectorAll("input");
-				console.log("el numero de ensayo es" + inputs)
 				let selects = copiaFilaDatos.querySelectorAll("select");
 				inputs.forEach(input => {
 					input.value = "";
@@ -198,14 +193,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			//Sacamos la media
 			else{
-				console.log(element[0])
 				if (element[0] === 'Es (mJ):' && element.length > 1 ){
 					let valores= [];
 					valores.push(parseInt(element[1]));
 					valores.push(parseInt(element[2]));
 					valores.push(parseInt(element[3]));
 					let valorMinimo= Math.min(...valores);
-					console.log(element)
 					resultadoEs = valorMinimo;
 
 					let inputResultadoEs= document.getElementById("id_emi-resultado");
@@ -239,10 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			// Verifica que `resultados` no sea null o undefined
 			if (resultados) {
 				resultados.forEach(resultado => {
-					console.log(resultado);  // Imprime cada resultado
 				});
 				procesarArchivo(resultados)
-				console.log(resultados)
 			} else {
 				console.error('No se encontraron resultados.');
 			}

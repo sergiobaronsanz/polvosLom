@@ -217,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		document.getElementById("fileInput").value = "";
 		$('#ensayosModal').modal('hide');
+		listener();
 		
 	}
     

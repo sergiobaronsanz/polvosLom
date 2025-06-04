@@ -7,6 +7,7 @@ class ListaEnsayos(models.Model):
     ensayo= models.CharField(max_length=300, verbose_name="Ensayo")
     normativa= models.CharField(max_length=300, verbose_name="Normativa")
     poens= models.CharField(max_length=300, verbose_name="POENS")
+    fechaAprobacion= models.DateField(verbose_name="Fecha aprobación")
     orden= models.IntegerField(verbose_name="Orden")
     
     class Meta():

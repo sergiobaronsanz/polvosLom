@@ -402,8 +402,6 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
         estadoListadoEnsayos=[]
         ensayos_asignados = muestra.listaEnsayos.all()
         nombres = [e.ensayo.lower() for e in ensayos_asignados]
-        print(ensayos_asignados)
-        print(muestra)
 
         if "humedad" in nombres:
             ensayo = Humedad.objects.filter(muestra=muestra).first()
@@ -449,7 +447,7 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
 
         if "pmax" in nombres:
             ensayo = Pmax.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.pmax and ensayo.dpdt and ensayo.kmax:
+            if ensayo and ensayo.pmax is not None and ensayo.dpdt is not None and ensayo.kmax is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
@@ -512,8 +510,11 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
                 estadoListadoEnsayos.append(False)
 
         if all(estadoListadoEnsayos):
+            print(muestra)
             muestra.estado = "4"
             muestra.save()
+        else:
+            print(muestra)
         print(f"La lista de estado es: {estadoListadoEnsayos}")
 
     estadoListadoMuestras=[]

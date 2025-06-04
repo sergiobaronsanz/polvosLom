@@ -1145,6 +1145,8 @@ def emi (request, muestra_id):
             presion= ensayo_EMI.presion
             observacion= ensayo_EMI.observacion
             
+            print(f"El resultado es {resultado}")
+            
             
             formEmi = EmiForm(prefix='emi', initial={
                 'muestra': muestra,
@@ -1950,13 +1952,13 @@ def rec (request, muestra_id):
             formRec.fields['muestra'].queryset = muestras_queryset
             
             default_data1 = [
-                {'nPrueba': '1', 'tension': 100, 'tiempo': 60, },
+                {'nPrueba': '1', 'tension': 105, 'tiempo': 60, },
                 {'nPrueba': '1', 'tension': 500, 'tiempo': 60, },
                 {'nPrueba': '1',  'tension': 1000, 'tiempo': 60,},
             ]
 
             default_data2 = [
-                {'nPrueba': '2', 'tension': 100, 'tiempo': 60,},
+                {'nPrueba': '2', 'tension': 105, 'tiempo': 60,},
                 {'nPrueba': '2', 'tension': 500, 'tiempo': 60,},
                 {'nPrueba': '2',  'tension': 1000, 'tiempo': 60,},
             ]

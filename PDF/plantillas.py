@@ -12,6 +12,14 @@ class PlantillasEnsayo():
         self.rutaAbsoluta = os.path.dirname(__file__)
 
 
+    def piePagina(self,pdf, ensayo):
+        self.pdf.set_font('Arial', 'B', 7) 
+        self.pdf.cell(w=95, h= 8, txt= f"RCPOENS {ensayo.ensayo.poens}",
+                align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 8, txt= f"Fecha: {ensayo.ensayo.fechaAprobacion}",
+                align= "R", fill = 0)
+        
+
     def recepcion(self):
         fecha= self.descripcion.fecha_recepcion
         empresa= self.muestra.empresa
@@ -118,6 +126,9 @@ class PlantillasEnsayo():
         
         
         # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes 
     
 
@@ -172,7 +183,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -208,7 +219,7 @@ class PlantillasEnsayo():
 
         #Celda Procedimiento
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIMIENTO",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "RESULTADOS",
                 align= "J", fill = 0)
         #Leyenda superior
         self.pdf.cell(w=5, h= 8,border= "L", fill = 0)    
@@ -268,9 +279,6 @@ class PlantillasEnsayo():
 
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12) 
         
         if ti == ">400":
@@ -286,11 +294,13 @@ class PlantillasEnsayo():
         #Celda resultado final       
         self.pdf.set_font('Arial', 'B', 14) 
         if ti == ">400":
-            self.pdf.multi_cell(w=190, h= 8,border= 1, txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN CAPA:     {ti} ºC ",
-                    align= "C", fill = 0)
+            self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN CAPA:     {ti} ºC ",
+                    align= "J", fill = 0)
         else:
-            self.pdf.multi_cell(w=190, h= 8,border= 1, txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN CAPA:     {str(ti)} ºC ",
-                    align= "C", fill = 0)
+            self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN CAPA:     {str(ti)} ºC ",
+                    align= "J", fill = 0)
+            
+        
         #Firma
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
@@ -298,6 +308,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
         
@@ -352,7 +366,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -388,37 +402,25 @@ class PlantillasEnsayo():
 
         #Celda Procedimiento
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIMIENTO",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "RESULTADOS",
                 align= "J", fill = 0)
-        #Leyenda Masa de polvo
-        self.pdf.cell(w=5, h= 8,border= "L", fill = 0)    
-        self.pdf.set_font('Arial', '', 12)
-        self.pdf.cell(w=30, h= 8,border= "LT", txt= "Masas:", fill = 0, align= "C")
-        self.pdf.cell(w=60, h= 8,border= "TR",txt= "0,05; 0,1; 0,2; 0,3; 0,5 g", fill = 0,align= "C")
-        self.pdf.cell(w=30, h= 8,border= "LT", txt= "Presiones:", fill = 0, align= "C")
-        self.pdf.cell(w=60, h= 8,border= "TR",txt= "10; 20; 30; 50 kPa", fill = 0, align= "C")
-        self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
-
-        #Leyenda Presión
-        self.pdf.cell(w=5, h= 8,border= "L", fill = 0)    
-        self.pdf.set_font('Arial', '', 12)
-        self.pdf.cell(w=60, h= 8,border= "LTRB",txt= "Incrementos: +50 ºC", fill = 0, align= "C")
-        self.pdf.cell(w=120, h= 8,border= "TRB",txt= "*Decrementos: Tª>300ºC: -20ºC  |  Tª<300ºC: -10ºC", fill = 0, align= "C")
-        self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
+    
 
         #Espacio
         self.pdf.multi_cell(w=190, h= 8,border= "LR", fill = 0)
         
         #Parámetros tabla
         self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-        self.pdf.cell(w=45, h= 8,border= 1,align= "C", 
+        self.pdf.cell(w=36, h= 8,border= 1,align= "C", 
                 txt= "Tª Horno(ºC)", fill = 0)
-        self.pdf.cell(w=45, h= 8,border= 1,align= "C", 
+        self.pdf.cell(w=36, h= 8,border= 1,align= "C", 
                 txt= "Peso(g)", fill = 0)
-        self.pdf.cell(w=45, h= 8,border= 1,align= "C", 
+        self.pdf.cell(w=36, h= 8,border= 1,align= "C", 
                 txt= "Presión (kPa)", fill = 0)
-        self.pdf.cell(w=45, h= 8,border= 1, align= "C",
+        self.pdf.cell(w=36, h= 8,border= 1, align= "C",
                 txt= "Resultado", fill = 0)
+        self.pdf.cell(w=36, h= 8,border= 1, align= "C",
+                txt= "Repeticiones", fill = 0)
 
         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
@@ -426,13 +428,15 @@ class PlantillasEnsayo():
 
         for fila in resultados:
                 self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-                self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(int(fila.tHorno)), 
+                self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(int(fila.tHorno)), 
                         fill = 0)
-                self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(fila.peso),
+                self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(fila.peso),
                         fill = 0)
-                self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(int(fila.presion)),
+                self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(int(fila.presion)),
                         fill = 0)
-                self.pdf.cell(w=45, h= 8,border= 1, align= "C",txt= str(fila.get_resultado_display()),
+                self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= str(fila.get_resultado_display()),
+                        fill = 0)
+                self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= str(fila.repeticiones),
                         fill = 0)
                 self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
@@ -450,35 +454,15 @@ class PlantillasEnsayo():
 
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor temperatura a la que se produce ignición (ti):     {str(ta)} ºC ",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor temperatura a la que se produce ignición:     {str(ta)} ºC ",
+                align= "J", fill = 0)
+    
+        #Celda resultado final       
+        self.pdf.set_font('Arial', 'B', 14) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN NUBE:     {str(ti)} ºC ",
                 align= "J", fill = 0)
         
-        try:
-                if ti > 300:
-                        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"*Temperatura minima de ignición en nube, al ser mayor de 300ºC:      {str(ti)} ºC ",
-                                align= "J", fill = 0)
-                        #Celda resultado final       
-                        self.pdf.set_font('Arial', 'B', 14) 
-                        self.pdf.multi_cell(w=190, h= 8,border= 1, txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN NUBE:     {str(ti)} ºC ",
-                                align= "C", fill = 0)
-                else:
-                        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"*Temperatura minima de ignición en nube, al ser menor de 300ºC:     {str(ti)} ºC ",
-                                align= "J", fill = 0)
-                        #Celda resultado final       
-                        self.pdf.set_font('Arial', 'B', 14) 
-                        self.pdf.multi_cell(w=190, h= 8,border= 1, txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN NUBE:     {str(ti)} ºC ",
-                                align= "C", fill = 0)
-        except:
-                self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"*Temperatura mínima de ignición en nube:      {str(ti)} ºC ",
-                                align= "J", fill = 0)
-                        #Celda resultado final       
-                self.pdf.set_font('Arial', 'B', 14) 
-                self.pdf.multi_cell(w=190, h= 8,border= 1, txt= f"TEMPERATURA MÍNIMA DE IGNICIÓN EN NUBE:     {str(ti)} ºC ",
-                        align= "C", fill = 0)
         #Firma
         self.pdf.set_font('Arial', '', 14) 
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
@@ -486,6 +470,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -509,7 +497,7 @@ class PlantillasEnsayo():
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.set_font('Arial', '', 11)
-        self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
+        self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo}', border= 1, 
                 align= "C", fill = 0)
         self.pdf.set_font('Arial', '', 12)
         if fechaInicio!= fechaFin:
@@ -540,7 +528,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -653,6 +641,10 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
+        # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
 
@@ -721,7 +713,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -735,15 +727,9 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
-        self.pdf.cell(w=60, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaAmbiente} ºC",
-                align= "C", fill = 0)
         
-        self.pdf.cell(w=70, h= 8,border= "", txt= f"Temperatura en esfera: {ensayo.temperaturaEsfera} ºC",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Temperatura en esfera: {ensayo.temperaturaEsfera} ºC",
                 align= "C", fill = 0)
-
-        self.pdf.multi_cell(w=60, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
-                align= "C", fill = 0)
-
 
         #Celda Equipos
         self.pdf.set_font('Arial', 'B', 12) 
@@ -806,8 +792,6 @@ class PlantillasEnsayo():
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
         
         if ensayo.resultado != "N/D":
                 posiblesValores= [10, 20, 30, 60, 125, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750, 4000]
@@ -840,6 +824,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
@@ -895,7 +883,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -909,13 +897,8 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
-        self.pdf.cell(w=60, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaAmbiente} ºC",
-                align= "C", fill = 0)
         
-        self.pdf.cell(w=70, h= 8,border= "", txt= f"Temperatura en esfera: {ensayo.temperaturaEsfera} ºC",
-                align= "C", fill = 0)
-
-        self.pdf.multi_cell(w=60, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Temperatura en esfera: {ensayo.temperaturaEsfera} ºC",
                 align= "C", fill = 0)
 
 
@@ -1113,14 +1096,7 @@ class PlantillasEnsayo():
 
         self.pdf.multi_cell(w=190, h= 6,border= "LR", fill = 0)
 
-
-        self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 6,border= "LRT", txt= "RESUMEN",
-                align= "J", fill = 0)
                       
-        
-        self.pdf.set_font('Arial', '', 12)
         self.pdf.set_font('Arial', '', 12) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"""La mayor Pmax registrada es de {pmMaxima} bar a una concentración de {', '.join(str(c) for c in concentracionesPmax)} g/m3; la mayor dPdT registrada es de {dPdTMaxima} bar/s a una concentración de {', '.join(str(c) for c in concentracionesDpdt)} g/m3""",   
                 align= "J", fill = 0)
@@ -1143,6 +1119,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 6,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -1197,7 +1177,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -1206,7 +1186,7 @@ class PlantillasEnsayo():
         
         #Celda Tipo ensayo 
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "TIPO ENSAYO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES ENSAYO",
                 align= "J", fill = 0)
         if ensayo.inductancia == "1":
             self.pdf.set_font('Arial', '', 12)    
@@ -1287,9 +1267,7 @@ class PlantillasEnsayo():
 
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
+        self.pdf.set_font('Arial', 'B', 12)         
         
         
         resultadoEmi= str(ensayo.resultado)
@@ -1330,8 +1308,11 @@ class PlantillasEnsayo():
         self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
-                align= "J", fill = 0)
+                align= "L", fill = 0)
         
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -1386,7 +1367,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -1395,7 +1376,7 @@ class PlantillasEnsayo():
         
         #Celda Tipo ensayo 
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "TIPO ENSAYO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES ENSAYO",
                 align= "J", fill = 0)
         if ensayo.inductancia == "1":
             self.pdf.set_font('Arial', '', 12)    
@@ -1477,8 +1458,7 @@ class PlantillasEnsayo():
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
+        
         
         
         resultadoEmi= str(ensayo.resultado)
@@ -1521,6 +1501,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -1576,7 +1560,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -1655,9 +1639,6 @@ class PlantillasEnsayo():
 
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
         
         
         resultado= ensayo.resultado
@@ -1721,6 +1702,10 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
+        # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
         
    
@@ -1772,7 +1757,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -1786,13 +1771,8 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
-        self.pdf.cell(w=60, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaAmbiente} ºC",
-                align= "C", fill = 0)
-        
-        self.pdf.cell(w=70, h= 8,border= "", txt= f"Temperatura en esfera: {ensayo.temperaturaEsfera} ºC",
-                align= "C", fill = 0)
 
-        self.pdf.multi_cell(w=60, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Temperatura en esfera: {ensayo.temperaturaEsfera} ºC",
                 align= "C", fill = 0)
 
 
@@ -1857,12 +1837,6 @@ class PlantillasEnsayo():
         #Si el ensayo se ha podido hacer
 
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
-
-        #Celda con Resultados
-        self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
         
         def calculoConcentraciones(oxigeno):
             listaConcentraciones=[]
@@ -1909,6 +1883,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
@@ -1989,18 +1967,6 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
 
 
-        #Celda Condiciones ambientales  
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "CONDICIONES AMBIENTALES",
-                align= "J", fill = 0)
-
-        self.pdf.set_font('Arial', '', 12)    
-        self.pdf.cell(w=95, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaAmbiente} ºC",
-                align= "C", fill = 0)
-
-        self.pdf.multi_cell(w=95, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
-                align= "C", fill = 0)
-
 
         #Celda Equipos
         self.pdf.set_font('Arial', 'B', 12) 
@@ -2013,7 +1979,7 @@ class PlantillasEnsayo():
 
         #Celda Resultados
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIMIENTO",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "RESULTADOS",
                 align= "J", fill = 0)
         
         
@@ -2159,12 +2125,8 @@ class PlantillasEnsayo():
         
 
                 
-
-
-        #Celda con Resultados
-        self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LTR", txt= "RESULTADOS",
-                align= "J", fill = 0)
+        self.pdf.multi_cell(w=190, h= 8,border= "LR",
+                        align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
                 align= "J", fill = 0)
@@ -2181,6 +2143,7 @@ class PlantillasEnsayo():
         
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+
 
 
     def N2(self):
@@ -2233,7 +2196,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -2265,7 +2228,7 @@ class PlantillasEnsayo():
 
         #Celda Resultados
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIEMIENTO",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "RESULTADOS",
                 align= "J", fill = 0)
         
 
@@ -2303,9 +2266,7 @@ class PlantillasEnsayo():
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
-        
+
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
                 align= "J", fill = 0)
         
@@ -2322,6 +2283,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -2376,7 +2341,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -2408,7 +2373,7 @@ class PlantillasEnsayo():
 
         #Celda Resultados
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "PROCEDIEMIENTO",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "RESULTADOS",
                 align= "J", fill = 0)
         
         self.pdf.set_font('Arial', '', 12) 
@@ -2490,8 +2455,6 @@ class PlantillasEnsayo():
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
                 align= "J", fill = 0)
@@ -2509,6 +2472,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -2563,7 +2530,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -2591,11 +2558,15 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 12)
         self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
                 align= "J", fill = 0)
+        
 
+        #RESULTADOS
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
+                align= "J", fill = 0)
 
         #Celda Resultados muestra referencia
-        self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
-        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.set_font('Arial', 'B', 11) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "ENSAYO REFERENCIA",
                 align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12) 
@@ -2637,7 +2608,7 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
         
         #Celda Resultados muestra problema
-        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.set_font('Arial', 'B', 11) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "ENSAYO MUESTRA PROBLEMA",
                 align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12) 
@@ -2672,8 +2643,6 @@ class PlantillasEnsayo():
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
-                align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Clasificación: {ensayo.get_resultado_display()}",
                 align= "J", fill = 0)
@@ -2691,6 +2660,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -2710,18 +2683,15 @@ class PlantillasEnsayo():
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.set_font('Arial', '', 11)
-        self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
+        self.pdf.multi_cell(w= 155, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
                 align= "C", fill = 0)
-        self.pdf.set_font('Arial', '', 12)
-        self.pdf.multi_cell(w=55, h= 12, txt = "Fecha:", border= "RT", 
-                align= "L", fill = 0)
+
 
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
-        self.pdf.cell(w=100, h= 12, txt = f'Nº Expediente: {ensayo.muestra.expediente.expediente}',border= "LRB", 
+        self.pdf.multi_cell(w=155, h= 12, txt = f'Nº Expediente: {ensayo.muestra.expediente.expediente}',border= "LRB", 
                 align= "C", fill = 0)
-        self.pdf.multi_cell(w=55, h= 12, border= "RB", 
-                align= "C", fill = 0)
+
 
         #Celda I/D muestra
         self.pdf.multi_cell(w=0, h= 5,border= 0,
@@ -2823,5 +2793,9 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes

@@ -455,10 +455,10 @@ class ResultadosPmax (models.Model):
     
     ensayo= models.ForeignKey("Pmax", on_delete=models.CASCADE, verbose_name="Ensayo Pmax")
     concentracion= models.IntegerField(verbose_name="Concentración")
-    peso= models.DecimalField(decimal_places=2, max_digits=7, verbose_name="Peso equivalente")
+    peso= models.IntegerField(verbose_name="Peso equivalente")
     serie= models.CharField(max_length=300, choices=seriesPosibles, verbose_name= "Serie")
     pm= models.DecimalField(decimal_places=1, max_digits=7, verbose_name="PM")
-    dpdt= models.IntegerField( verbose_name="dP/dT")
+    dpdt= models.IntegerField(verbose_name="dP/dT")
     
     class Meta():
         verbose_name="Resultado Pmax"
@@ -876,7 +876,7 @@ class ResultadosREC (models.Model):
     nPrueba= models.CharField(verbose_name="Numero Prueba", choices= nPruebas, max_length= 50)
     tension= models.IntegerField(verbose_name= "Resultado", blank=True, null= True)
     tiempo= models.IntegerField(verbose_name="Tiempo")
-    resultado= models.DecimalField(decimal_places=2, max_digits=8, verbose_name= "Resultado", blank=True, null= True)
+    resultado= models.DecimalField(decimal_places=2, max_digits=15, verbose_name= "Resultado", blank=True, null= True)
     
     class Meta():
         verbose_name="Resultado REC"
