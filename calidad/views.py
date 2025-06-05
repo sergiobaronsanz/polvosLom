@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from .forms import *
 from django.contrib.auth.decorators import login_required
 
@@ -39,6 +39,8 @@ def nuevoEquipo (request):
 def editarEquipo (request, id_equipo):
      
     equipo= get_object_or_404(Equipos, id=id_equipo)
+    equiposAsociados = EquipoAsociado.objects.filter(equipoAsociado=equipo)
+    print(equipoAsociado)
 
     if request.method =="POST":
         form = EquiposForm(request.POST, instance=equipo)
@@ -53,8 +55,9 @@ def editarEquipo (request, id_equipo):
         form = EquiposForm(instance=equipo)
     
     return render (request, "equipos/configurarEquipo.html",{
-        'equipos': equipos,
+        'equipo': equipo,
         'form': form,
+        'equiposAsociados': equiposAsociados
         
     })
 
@@ -72,3 +75,42 @@ def eliminarEquipo(request, id_equipo):
         return redirect('equipos')
 
     
+@login_required
+def equipoAsociado(request, id_equipoAsociado):
+    equipoAsociado= get_object_or_404(Equipos, id= id_equipoAsociado)
+    form= EquiposAsociadosForm()
+    print(equipoAsociado)
+    
+    if request.method == "POST":
+        form = EquiposAsociadosForm(request.POST)
+        print("POST recibido:", request.POST)
+        print("is_valid:", form.is_valid())  # Esto es lo raro
+        print("Errores:", form.errors)
+        
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.equipoAsociado = equipoAsociado
+            obj.save()
+            print("guardado")
+            
+            return redirect("editarEquipo", equipoAsociado.id )
+        else:
+            print("No valido")
+
+        
+    
+    return render (request, 'equipos/equipoAsociado.html',{
+        "equipoAsociado": equipoAsociado,
+        "form": form
+    })
+
+
+@login_required
+def eliminarEquipoAsociado(request, id_equipo):
+    equipoAsociado= EquipoAsociado.objects.get(id= id_equipo)
+    equipo= equipoAsociado.equipoAsociado
+
+    equipoAsociado.delete()
+    print("Borrado")
+
+    return redirect("editarEquipo", equipo.id )

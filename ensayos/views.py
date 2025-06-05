@@ -2741,6 +2741,7 @@ def tratamiento (request, muestra_id):
 
                 tamizado= formTratamiento.cleaned_data["tamizado"]
                 equipoTamizado= formTratamiento.cleaned_data["equipoTamizado"]
+                tamiz= formTratamiento.cleaned_data["tamiz"]
                 fechaTamizadoInicio= formTratamiento.cleaned_data["fechaTamizadoInicio"]
                 fechaTamizadoFin=formTratamiento.cleaned_data["fechaTamizadoFin"]
 
@@ -2759,6 +2760,7 @@ def tratamiento (request, muestra_id):
 
                 tamizado= tamizado,
                 fechaTamizadoInicio= fechaTamizadoInicio,
+                tamiz=tamiz,
                 fechaTamizadoFin=fechaTamizadoFin,
                 
                 usuario= usuario,
@@ -2812,6 +2814,7 @@ def tratamiento (request, muestra_id):
 
             tamizado= ensayo_tratamiento.tamizado
             equipoTamizado= list(ensayo_tratamiento.equipoTamizado.values_list('id', flat=True))
+            tamiz= list(ensayo_tratamiento.tamiz)
             fechaTamizadoInicio= str(ensayo_tratamiento.fechaTamizadoInicio)
             fechaTamizadoFin=str(ensayo_tratamiento.fechaTamizadoFin)
             
@@ -2826,6 +2829,7 @@ def tratamiento (request, muestra_id):
                 "fechaMolidoInicio": fechaMolidoInicio,
                 "fechaMolidoFin": fechaMolidoFin,
                 "tamizado": tamizado,
+                "tamiz": tamiz,
                 "fechaTamizadoInicio": fechaTamizadoInicio,
                 "fechaTamizadoFin":fechaTamizadoFin,
                 "equipoSecado": equipoSecado,

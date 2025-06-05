@@ -922,6 +922,7 @@ class Tratamiento (models.Model):
 
     tamizado= models.CharField(verbose_name="Tamizado", choices=preseleccion, max_length=500, default=None, blank= True, null= True)
     equipoTamizado= models.ManyToManyField(Equipos,  verbose_name="Equipos de tamizado",related_name="tratamientos_equipoTamizado",default=None)
+    tamiz= models.CharField(verbose_name="Tamiz", choices=preseleccion, max_length=500, default=None, blank= True, null= True)
     fechaTamizadoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
     fechaTamizadoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
 

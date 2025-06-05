@@ -10,21 +10,23 @@ class Equipos (models.Model):
     fechaCalibracion= models.DateField(verbose_name="Fecha de Calibración")
     fechaCaducidadCalibracion= models.DateField(verbose_name="Fecha próxima calibración")
     
-    equipo_padre = models.ForeignKey(
-        'self', 
-        on_delete=models.CASCADE, 
-        null=True, 
-        blank=True, 
-        related_name="subequipos", 
-        verbose_name="Equipo Padre"
-    )
-    
     class Meta():
         verbose_name="Equipo"
         verbose_name_plural="Equipos"
         
     def __str__(self):
-        if self.equipo_padre:
-            return f"{self.equipo_padre} | {self.codigo} | {self.equipo}"
-        else:
-            return f"{self.equipo} | {self.codigo}"
+        return f"{self.equipo} | {self.codigo}"
+    
+
+class EquipoAsociado(models.Model):
+    codigo= models.CharField(max_length=300, verbose_name="Codigo")
+    equipo= models.CharField(max_length=300, verbose_name="Equipo")
+    equipoAsociado= models.ForeignKey(Equipos, verbose_name="Equipo Asociado", on_delete=models.CASCADE, null=True, blank=True)
+    descripcion= models.TextField( verbose_name="Descripcion")
+    
+    class Meta():
+        verbose_name="Equipo asociado"
+        verbose_name_plural="Equipos asociados"
+        
+    def __str__(self):
+        return f"{self.equipoAsociado} | {self.equipo} | {self.codigo}"

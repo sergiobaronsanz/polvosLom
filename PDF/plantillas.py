@@ -2772,7 +2772,7 @@ class PlantillasEnsayo():
             self.pdf.multi_cell(w=10, h= 8, border="R")
 
             self.pdf.cell(w=10, h= 8, border="L")
-            self.pdf.cell(w=170, h= 8,border= "", txt= f"Tamizado: {ensayo.equipoTamizado.get().equipo_padre.codigo} | {ensayo.equipoTamizado.get().codigo} | {ensayo.equipoTamizado.get().equipo}",
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"Tamizado: {ensayo.tamiz}",
                     align= "J", fill = 0)
             self.pdf.multi_cell(w=10, h= 8, border="R")
             self.pdf.multi_cell(w=190, h= 8, border="LR")   

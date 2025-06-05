@@ -2,7 +2,7 @@ from django import forms
 from ensayos.models import Humedad, Granulometria 
 from muestras.models import ListaEnsayos
 from muestras.models import Muestras
-from .models import Equipos
+from calidad.models import Equipos, EquipoAsociado
 from django.db.models import Q
 from django.shortcuts import  get_object_or_404, get_list_or_404
 from django.forms import formset_factory
@@ -1553,16 +1553,6 @@ class TratamientoForm(forms.Form):
         ("2", "SI")
     ]
 
-    tamices = [
-        ("0", ""),
-        ("1", "500"),
-        ("2", "1000"),
-        ("3", "250"),
-        ("4", "800"),
-        ("5", "125"),
-        ("6", "63"),
-    ]
-
     muestra = forms.ModelChoiceField(
         queryset=Muestras.objects.none(),  # Se asignará en __init__
         label="Muestra",
@@ -1650,6 +1640,13 @@ class TratamientoForm(forms.Form):
         required=False,
         widget=forms.Select(attrs={'class': 'form-control form-control-sm tamizado', 'style': 'text-align: center;'})
     )
+    
+    tamiz = forms.ModelChoiceField(
+        queryset= EquipoAsociado.objects.all(),
+        label="Tamiz",
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm tamizado', 'style': 'text-align: center;'})
+    )
 
     fechaTamizadoInicio = forms.DateField(
         label="Fecha inicio",
@@ -1671,12 +1668,13 @@ class TratamientoForm(forms.Form):
 
         # Obtener el ensayo correspondiente
         ensayo = ListaEnsayos.objects.filter(ensayo="Tratamiento").first()
+
         if ensayo:
             self.fields['equipoSecado'].queryset = Equipos.objects.filter(ensayos=ensayo)
             self.fields['equipoMolido'].queryset = Equipos.objects.filter(ensayos=ensayo)
             self.fields['equipoTamizado'].queryset = Equipos.objects.filter(ensayos=ensayo)
 
         # Obtener los equipos específicos para tamizado
-        tamiz_tratamiento = Equipos.objects.filter(descripcion="tamices tratamiento").first()
+        """tamiz_tratamiento = Equipos.objects.filter(descripcion="tamices tratamiento").first()
         if tamiz_tratamiento:
-            self.fields['equipoTamizado'].queryset = Equipos.objects.filter(equipo_padre=tamiz_tratamiento)
+            self.fields['equipoTamizado'].queryset = Equipos.objects.filter(equipo_padre=tamiz_tratamiento)"""

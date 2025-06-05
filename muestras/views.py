@@ -190,7 +190,6 @@ def verMuestra(request, muestra_id):
     
     #Sacamos la lista de los ensayos terminados
     ensayos= listaEnsayosTerminados(resultados, muestra)
-    print(f" los esnayos son {resultados}")
 
     #Sacamos los datos para js
     ensayos_json_str = json.dumps(ensayos)
