@@ -1642,7 +1642,7 @@ class TratamientoForm(forms.Form):
     )
     
     tamiz = forms.ModelChoiceField(
-        queryset= EquipoAsociado.objects.all(),
+        queryset=EquipoAsociado.objects.all(),
         label="Tamiz",
         required=False,
         widget=forms.Select(attrs={'class': 'form-control form-control-sm tamizado', 'style': 'text-align: center;'})

@@ -29,4 +29,4 @@ class EquipoAsociado(models.Model):
         verbose_name_plural="Equipos asociados"
         
     def __str__(self):
-        return f"{self.equipoAsociado} | {self.equipo} | {self.codigo}"
+        return f"{self.codigo} | {self.equipo}"

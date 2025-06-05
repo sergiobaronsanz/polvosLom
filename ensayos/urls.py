@@ -34,5 +34,8 @@ urlpatterns = [
 	path('ensayos/gestorArchivos/emi/', views.gestorArchivoEmi, name="gestorArchivosEmi"),
 
 
+	#Cambio lista tamices
+	path('ensayos/listaTamices/', views.listaTamices, name="listaTamices"),
+
     
 ]

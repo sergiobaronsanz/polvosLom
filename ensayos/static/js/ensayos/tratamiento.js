@@ -81,3 +81,75 @@ tamizado.addEventListener("change", function () {
 	}
 });
 
+
+
+//Cambio lista tamices
+campoEquipo= document.getElementById("id_tratamiento-equipoTamizado")
+
+//Envío data post
+async function cambioLista(equipo) {
+	const formData = new FormData();
+	formData.append("equipo", equipo)
+
+	try {
+		const response = await fetch('/ensayos/listaTamices/', {
+			method: "POST",
+			body: formData,
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+		});
+
+		const data = await response.json();
+		console.log("Respuesta del servidor:", data);
+
+		if (data.resultados) {
+			console.log("Datos procesados:", data.resultados);
+			return data.resultados;  
+		} else {
+			console.error("No se encontraron resultados en la respuesta");
+			return null;
+		}
+	} catch (error) {
+		console.error("Hubo un problema con la subida:", error);
+		return null;
+	}
+
+	function getCookie(name) {
+		let cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			const cookies = document.cookie.split(';');
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i].trim();
+				if (cookie.substring(0, name.length + 1) === (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+};
+
+campoEquipo.addEventListener("change", async function(){
+	let equipo= campoEquipo.value
+	let tamices = document.getElementById("id_tratamiento-tamiz")
+	
+	//Limpiamos la lista de tamices
+	tamices.innerHTML = "";
+	const primeraOpcion= document.createElement("option")
+	primeraOpcion.value= 0;
+	primeraOpcion.textContent= "-"
+	tamices.appendChild(primeraOpcion)
+
+	console.log(equipo);
+
+	const resultados = await cambioLista(equipo);
+
+	resultados.forEach(resultado => {
+		const option = document.createElement("option");
+		option.value = resultado.id;
+		option.textContent = resultado.nombre;
+		tamices.appendChild(option);
+	});
+})

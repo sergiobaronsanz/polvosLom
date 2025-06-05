@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
-from calidad.models import Equipos
+from calidad.models import Equipos, EquipoAsociado
 from calidad.forms import *
 import traceback
 from django.http import HttpResponse, JsonResponse
@@ -2703,6 +2703,20 @@ def o1 (request, muestra_id):
     })
 
 @login_required
+def listaTamices(request):
+    if request.method == "POST":
+        print("hol")
+        equipo_id = request.POST.get("equipo")  # 
+        equipo= Equipos.objects.get(id= equipo_id)
+
+        queryListadoEquipos= EquipoAsociado.objects.filter(equipoAsociado= equipo)
+        listadoEquipos = [{"id": equipo.id, "nombre": f"{equipo.codigo} | {equipo.equipo}"} for equipo in queryListadoEquipos]
+
+        
+
+        return JsonResponse({'resultados': listadoEquipos})
+
+@login_required
 def tratamiento (request, muestra_id):
      #Sacamos el ensayo
     ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "Tratamiento")
@@ -2744,6 +2758,7 @@ def tratamiento (request, muestra_id):
                 tamiz= formTratamiento.cleaned_data["tamiz"]
                 fechaTamizadoInicio= formTratamiento.cleaned_data["fechaTamizadoInicio"]
                 fechaTamizadoFin=formTratamiento.cleaned_data["fechaTamizadoFin"]
+
 
             tratamiento= Tratamiento.objects.create(
                 muestra=muestra,
@@ -2814,9 +2829,11 @@ def tratamiento (request, muestra_id):
 
             tamizado= ensayo_tratamiento.tamizado
             equipoTamizado= list(ensayo_tratamiento.equipoTamizado.values_list('id', flat=True))
-            tamiz= list(ensayo_tratamiento.tamiz)
+            tamiz= ensayo_tratamiento.tamiz
             fechaTamizadoInicio= str(ensayo_tratamiento.fechaTamizadoInicio)
             fechaTamizadoFin=str(ensayo_tratamiento.fechaTamizadoFin)
+
+            print(f"El tamiz es: {tamiz}")
             
             formTratamiento = TratamientoForm(prefix='tratamiento', initial={
                 "muestra": muestra,
@@ -2836,13 +2853,15 @@ def tratamiento (request, muestra_id):
                 "equipoMolido": equipoMolido,
                 "equipoTamizado": equipoTamizado,
             })
-            print (formTratamiento)
+
+            print(tamiz)
              # type: ignore
             formTratamiento.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
         
         else:
             formTratamiento= TratamientoForm(prefix='tratamiento')
             formTratamiento.fields['muestra'].queryset = muestras_queryset  
+
 
 
     return render(request, 'ensayos/nuevosEnsayos/tratamiento.html', {

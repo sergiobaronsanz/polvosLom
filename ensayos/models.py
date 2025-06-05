@@ -1,7 +1,7 @@
 from django.db import models
 from muestras.models import Muestras, ListaEnsayos
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
-from calidad.models import Equipos
+from calidad.models import Equipos, EquipoAsociado
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -894,15 +894,6 @@ class Tratamiento (models.Model):
         ("2", "SI")    
     ]
     
-    tamices= [
-        ("1", "500"),
-        ("2", "1000"),
-        ("2", "250"),
-        ("2", "800"),
-        ("2", "125"),
-        ("2", "63"),
-    ]
-    
     
     
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
@@ -922,7 +913,7 @@ class Tratamiento (models.Model):
 
     tamizado= models.CharField(verbose_name="Tamizado", choices=preseleccion, max_length=500, default=None, blank= True, null= True)
     equipoTamizado= models.ManyToManyField(Equipos,  verbose_name="Equipos de tamizado",related_name="tratamientos_equipoTamizado",default=None)
-    tamiz= models.CharField(verbose_name="Tamiz", choices=preseleccion, max_length=500, default=None, blank= True, null= True)
+    tamiz= models.ForeignKey(EquipoAsociado, verbose_name="Tamiz", max_length=500, default=None, blank= True, null= True, on_delete=models.CASCADE)
     fechaTamizadoInicio= models.DateField(verbose_name="Fecha", blank=True, null= True)
     fechaTamizadoFin= models.DateField(verbose_name="Fecha", blank=True, null= True)
 
