@@ -2141,6 +2141,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
+		# Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        self.piePagina(pdf, ensayo)
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
