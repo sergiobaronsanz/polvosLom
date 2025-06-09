@@ -681,7 +681,9 @@ class EmiForm(forms.Form):
         required=True,
     )
 
-    resultado= forms.IntegerField(
+    resultado= forms.DecimalField(
+        decimal_places=1,
+        max_digits=6,
         label="Resultado (Es)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
         required=False,
