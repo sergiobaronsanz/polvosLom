@@ -588,7 +588,7 @@ class PlantillasEnsayo():
                         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0) 
                 else:
                         self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-                        self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'Al tener un desviación superior a 0.15% el ensayo requiero de 10 resultados', 
+                        self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'Al tener un desviación superior a 0.15% el ensayo requiere de 10 resultados', 
                                 fill = 0)
                         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0) 
 
