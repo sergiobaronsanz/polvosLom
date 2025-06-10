@@ -1103,7 +1103,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', 'B', 12) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"PRESIÓN MÁXIMA DE EXPLOSIÓN: {ensayo.pmax} bar",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"VELOCIDAD DE AUMENTO DE PRESIÓN: {ensayo.dpdt} dP/dT",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"VELOCIDAD DE AUMENTO DE PRESIÓN: {ensayo.dpdt} bar/s",
                 align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"kmax: {ensayo.kmax} bar·m/s",
@@ -1872,7 +1872,7 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {oxigenoNo} %",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"CONCENTRACIÓN LÍMITE DE OXÍGENO: {oxigenoNo} %",
                 align= "J", fill = 0)
         
              
@@ -1959,7 +1959,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
