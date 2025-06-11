@@ -407,138 +407,143 @@ def crear_ensayos(sender, instance, action, **kwargs):
 #Cambio estado expediente, para pasar la muestra de estado de ensayando a revisión
 def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
     if ensayo:
+        #Sacamos muestra cuyo ensayo ha cambiado
+        muestraAfectada= ensayo.muestra
         #Sacamos expediente
         expediente= ensayo.muestra.expediente
-        #Vemos todas las muestras que tiene el expediente
-        muestras= get_list_or_404(Muestras, expediente= expediente)
     if muestra:
+        #Sacamos muestra cuyo ensayo ha cambiado
+        muestraAfectada= muestra
         expediente= muestra.expediente
-        muestras= get_list_or_404(Muestras, expediente= expediente)
+        
+
+    print(f"Ha cambiado el ensayo de la muestra {muestraAfectada}")
 
     #Comprobamos que todos los ensayos hayan terminado y marcamos la muestra para revisión
-    
-    for muestra in muestras:
-        estadoListadoEnsayos=[]
-        ensayos_asignados = muestra.listaEnsayos.all()
-        nombres = [e.ensayo.lower() for e in ensayos_asignados]
 
-        if "humedad" in nombres:
-            ensayo = Humedad.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
+    estadoListadoEnsayos=[]
+    ensayos_asignados = muestraAfectada.listaEnsayos.all()
+    nombres = [e.ensayo.lower() for e in ensayos_asignados]
 
-        if "granulometria" in nombres:
-            ensayo = Granulometria.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "tmic" in nombres:
-            ensayo = TMIc.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "tmin" in nombres:
-            ensayo = TMIn.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "lie" in nombres:
-            ensayo = LIE.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-        
-        if "emi" in nombres:
-            ensayo = EMI.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "pmax" in nombres:
-            ensayo = Pmax.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.pmax is not None and ensayo.dpdt is not None and ensayo.kmax is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "clo" in nombres:
-            ensayo = CLO.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "rec" in nombres:
-            ensayo = REC.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "n1" in nombres:
-            ensayo = N1.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "n2" in nombres:
-            ensayo = N2.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "n4" in nombres:
-            ensayo = N4.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if "o1" in nombres:
-            ensayo = O1.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-        
-        if "tratamiento" in nombres:
-            ensayo = Tratamiento.objects.filter(muestra=muestra).first()
-            if ensayo and (ensayo.molido or ensayo.tamizado or ensayo.secado):
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        
-        if "emisin" in nombres:
-            ensayo = EMI.objects.filter(muestra=muestra).first()
-            if ensayo and ensayo.resultado is not None:
-                estadoListadoEnsayos.append(True)
-            else:
-                estadoListadoEnsayos.append(False)
-
-        if all(estadoListadoEnsayos):
-            print(muestra)
-            muestra.estado = "4"
-            muestra.save()
+    if "humedad" in nombres:
+        ensayo = Humedad.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
         else:
-            print(muestra)
-        print(f"La lista de estado es: {estadoListadoEnsayos}")
+            estadoListadoEnsayos.append(False)
+
+    if "granulometria" in nombres:
+        ensayo = Granulometria.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "tmic" in nombres:
+        ensayo = TMIc.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "tmin" in nombres:
+        ensayo = TMIn.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "lie" in nombres:
+        ensayo = LIE.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+    
+    if "emi" in nombres:
+        ensayo = EMI.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "pmax" in nombres:
+        ensayo = Pmax.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.pmax is not None and ensayo.dpdt is not None and ensayo.kmax is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "clo" in nombres:
+        ensayo = CLO.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "rec" in nombres:
+        ensayo = REC.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "n1" in nombres:
+        ensayo = N1.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "n2" in nombres:
+        ensayo = N2.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "n4" in nombres:
+        ensayo = N4.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    if "o1" in nombres:
+        ensayo = O1.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+    
+    if "tratamiento" in nombres:
+        ensayo = Tratamiento.objects.filter(muestra = muestraAfectada).first()
+        if ensayo and (ensayo.molido or ensayo.tamizado or ensayo.secado):
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+    
+    if "emisin" in nombres:
+        ensayo = EMI.objects.filter(muestra=muestraAfectada).first()
+        if ensayo and ensayo.resultado is not None:
+            estadoListadoEnsayos.append(True)
+        else:
+            estadoListadoEnsayos.append(False)
+
+    print(f"El estado de la lista de ensayo es: {estadoListadoEnsayos}")
+    if all(estadoListadoEnsayos):
+        muestraAfectada.estado= "4"
+        muestraAfectada.save()
+        print(f"la muestra afectada ha cambiado a {muestraAfectada.estado}")
+    else:
+        print("Faltan ensayos por terminar")
 
     estadoListadoMuestras=[]
+    muestras= get_list_or_404(Muestras, expediente= expediente)
     for muestra in muestras:
-        if muestra.estado == "4":
+        print(f"La muestra es {muestra} y su estado es {muestra.estado}")
+        #Si la muestra esta en revisión o terminada
+        if muestra.estado == "4" or muestra.estado == "5":
             estadoListadoMuestras.append(True)
         else:
             estadoListadoMuestras.append(False)
@@ -549,9 +554,7 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
     else:
         expediente.estado= "3"
         expediente.save()
-    
-    
-    print(f"Las muestras son: {muestras}")
+        
 
 #Ver porcentaje expediente
 def porcentajeExpediente(ensayo= None, expediente= None):
@@ -561,7 +564,6 @@ def porcentajeExpediente(ensayo= None, expediente= None):
     if expediente:
         expediente= expediente
 
-    
 
     muestras= Muestras.objects.filter(expediente= expediente)
 
@@ -573,16 +575,18 @@ def porcentajeExpediente(ensayo= None, expediente= None):
     for muestra in muestras:
         #Sacamos la lista de ensayos
         listaEnsayos= muestra.listaEnsayos.all()
+        print(listaEnsayos)
         # Iterar sobre la lista de ensayos
         for ensayo in listaEnsayos:    
             # Verificar si el ensayo es "humedad"
             if "humedad" in ensayo.ensayo.lower():
+                
                 humedad = Humedad.objects.filter(muestra=muestra).first()
                 if humedad:
                     # Añadir las horas a la lista de horasTotales
                     horasTotales.append(humedad.horasEnsayo)
                     # Si el ensayo tiene resultado, añadir las horas a la lista de horasTerminadas
-                    if humedad.resultado:
+                    if humedad.resultado is not None:
                         horasTerminadas.append(humedad.horasEnsayo)
 
             # Verificar si el ensayo es "granulometria"
@@ -590,7 +594,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 granulometria = Granulometria.objects.filter(muestra=muestra).first()
                 if granulometria:
                     horasTotales.append(granulometria.horasEnsayo)
-                    if granulometria.resultado:
+                    if granulometria.resultado is not None:
                         horasTerminadas.append(granulometria.horasEnsayo)
 
             # Verificar si el ensayo es "tmic"
@@ -598,7 +602,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 tmic = TMIc.objects.filter(muestra=muestra).first()
                 if tmic:
                     horasTotales.append(tmic.horasEnsayo)
-                    if tmic.resultado:
+                    if tmic.resultado is not None:
                         horasTerminadas.append(tmic.horasEnsayo)
 
             # Verificar si el ensayo es "tmin"
@@ -606,7 +610,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 tmin = TMIn.objects.filter(muestra=muestra).first()
                 if tmin:
                     horasTotales.append(tmin.horasEnsayo)
-                    if tmin.resultado:
+                    if tmin.resultado is not None:
                         horasTerminadas.append(tmin.horasEnsayo)
 
             # Verificar si el ensayo es "lie"
@@ -614,7 +618,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 lie = LIE.objects.filter(muestra=muestra).first()
                 if lie:
                     horasTotales.append(lie.horasEnsayo)
-                    if lie.resultado:
+                    if lie.resultado is not None:
                         horasTerminadas.append(lie.horasEnsayo)
 
             # Verificar si el ensayo es "emi"
@@ -622,7 +626,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 emi = EMI.objects.filter(muestra=muestra).first()
                 if emi:
                     horasTotales.append(emi.horasEnsayo)
-                    if emi.resultado:
+                    if emi.resultado is not None:
                         horasTerminadas.append(emi.horasEnsayo)
 
             # Verificar si el ensayo es "pmax"
@@ -630,7 +634,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 pmax = Pmax.objects.filter(muestra=muestra).first()
                 if pmax:
                     horasTotales.append(pmax.horasEnsayo)
-                    if pmax.pmax and pmax.dpdt and pmax.kmax:
+                    if pmax.pmax is not None and pmax.dpdt is not None and pmax.kmax is not None:
                         horasTerminadas.append(pmax.horasEnsayo)
 
             # Verificar si el ensayo es "clo"
@@ -638,7 +642,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 clo = CLO.objects.filter(muestra=muestra).first()
                 if clo:
                     horasTotales.append(clo.horasEnsayo)
-                    if clo.resultado:
+                    if clo.resultado is not None:
                         horasTerminadas.append(clo.horasEnsayo)
 
             # Verificar si el ensayo es "rec"
@@ -646,7 +650,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 rec = REC.objects.filter(muestra=muestra).first()
                 if rec:
                     horasTotales.append(rec.horasEnsayo)
-                    if rec.resultado:
+                    if rec.resultado is not None:
                         horasTerminadas.append(rec.horasEnsayo)
 
             # Verificar si el ensayo es "n1"
@@ -654,7 +658,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 n1 = N1.objects.filter(muestra=muestra).first()
                 if n1:
                     horasTotales.append(n1.horasEnsayo)
-                    if n1.resultado:
+                    if n1.resultado is not None:
                         horasTerminadas.append(n1.horasEnsayo)
 
             # Verificar si el ensayo es "n2"
@@ -662,7 +666,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 n2 = N2.objects.filter(muestra=muestra).first()
                 if n2:
                     horasTotales.append(n2.horasEnsayo)
-                    if n2.resultado:
+                    if n2.resultado is not None:
                         horasTerminadas.append(n2.horasEnsayo)
 
             # Verificar si el ensayo es "n4"
@@ -670,7 +674,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 n4 = N4.objects.filter(muestra=muestra).first()
                 if n4:
                     horasTotales.append(n4.horasEnsayo)
-                    if n4.resultado:
+                    if n4.resultado is not None:
                         horasTerminadas.append(n4.horasEnsayo)
 
             # Verificar si el ensayo es "o1"
@@ -678,7 +682,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 o1 = O1.objects.filter(muestra=muestra).first()
                 if o1:
                     horasTotales.append(o1.horasEnsayo)
-                    if o1.resultado:
+                    if o1.resultado is not None:
                         horasTerminadas.append(o1.horasEnsayo)
 
             # Verificar si el ensayo es "tratamiento"
@@ -697,18 +701,22 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                     if emisin.resultado:
                         horasTerminadas.append(emisin.horasEnsayo)
 
+        print(f"horas totales {horasTotales}")
+        print(f"horas terminadas {horasTerminadas}")
         # Sumar todas las horas de los ensayos seleccionados
         totalHorasMuestra = sum(horasTotales)
+        print(totalHorasMuestra)
 
         # Sumar solo las horas de los ensayos terminados
         totalHorasTerminadasMuestra = sum(horasTerminadas)
+        print(totalHorasTerminadasMuestra)
 
     horasTotales.append(totalHorasMuestra)
     horasTerminadas.append(totalHorasTerminadasMuestra)
 
     resultado= (sum(horasTerminadas)/sum(horasTotales))*100
+    print(resultado)
         
-
     return resultado
 
     
@@ -864,41 +872,5 @@ def cambio_emisin(sender, instance, created, **kwargs):
     expediente.porcentaje= porcentaje
     expediente.save()
     
-
-
-"""   
-#Creamos los ensayos cuando se crean las muestras
-@receiver(m2m_changed, sender=Muestras.listaEnsayos.through)
-def crear_ensayos(sender, instance, action, **kwargs):    
-     
-    if action:
-    print(instance)
-    ensayos_elegidos = [
-        'Humedad', 'Granulometria', 'TMIc',
-        'TMIn', 'LIE', 'EMI', 'Pmax', 'CLO',
-        'N1', 'N2','N4', 'O1','REC']  # Lista con los nombres de los tipos de ensayos
-
-    lista_ensayos= instance.listaEnsayos.all()
-    print(lista_ensayos)
-    
-    
-    
-    
-    for tipo_ensayo_nombre in ensayos_elegidos:
-        print(tipo_ensayo_nombre)
-        print(instance)
-        try:
-            pass
-        except ListaEnsayos.DoesNotExist:
-            print(f"Tipo de ensayo '{tipo_ensayo_nombre}' no encontrado. No se creará.")S
-        
-        
-
-        # Crear el ensayo específico según el tipo
-        ensayo_model = globals()[tipo_ensayo_nombre]
-        ensayo_model.objects.create(muestra=instance)
-        ensayo_model.save()
-        print("Exito, ensayo guardado")"""
-
             # Puedes realizar más ajustes aquí según tus necesidades
 
