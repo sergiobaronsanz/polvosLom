@@ -13,6 +13,12 @@ class ExpedientesForm(forms.Form):
         label= "Empresa",
         widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; text-transform: uppercase;'}),
         )
+    
+    empresaContrata= forms.CharField(
+        label= "Empresa subcontrata",
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; text-transform: uppercase;'}),
+        )
+    
     abreviatura= forms.CharField(
         label= "Abreviatura",
         widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; text-transform: uppercase;'}),

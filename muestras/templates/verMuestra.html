@@ -66,7 +66,8 @@
 
                 <div id="descripcion" class= "row mt-4">
                   <p> 
-                    La muestra llegó el día <spam class= "text-dark font-weight-bold"> {{descripcion.fecha_recepcion}}</spam>,
+                    La muestra de la empresa <spam class= "text-dark font-weight-bold">{{expediente.empresa.empresa}} {%if expediente.empresaContrata%} ({{expediente.empresaContrata}}) {%endif%}</spam>
+					llegó el día <spam class= "text-dark font-weight-bold"> {{descripcion.fecha_recepcion}}</spam>,
                     tiene un peso de <spam class= "text-dark font-weight-bold"> {{descripcion.peso}} kg</spam>, 
                     el aspecto de la muestra es <spam class= "text-dark font-weight-bold"> {{descripcion.aspectoMuestra|lower}} </spam>,
                     el color es <spam class= "text-dark font-weight-bold"> {{descripcion.color|lower}} {{descripcion.brillo|lower}} </spam>,

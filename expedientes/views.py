@@ -31,6 +31,7 @@ def nuevoExpediente(request):
         if form.is_valid():
             expedienteForm= form.cleaned_data["expediente"].upper()
             empresaForm= form.cleaned_data["empresa"].upper()
+            empresaContrataForm= form.cleaned_data["empresaContrata"].upper()
             nMuestrasForm= form.cleaned_data["nMuestras"]
             abreviaturaForm= form.cleaned_data["abreviatura"].upper()
             
@@ -45,7 +46,12 @@ def nuevoExpediente(request):
                 expediente=Expedientes.objects.get(expediente=expedienteForm)
                 expediente.nMuestras += int(nMuestrasForm)
             except ObjectDoesNotExist:
-                expediente= Expedientes(expediente= expedienteForm, empresa= empresa, estado=1,nMuestras=nMuestrasForm)
+                expediente= Expedientes(
+                    expediente= expedienteForm, 
+                    empresa= empresa, 
+                    empresaContrata=empresaContrataForm,
+                    estado=1,
+                    nMuestras=nMuestrasForm)
                 expediente.save()   
             
             abreviatura= empresa.abreviatura 
