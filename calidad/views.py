@@ -8,6 +8,11 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def equipos (request):
     equipos= Equipos.objects.all().order_by()
+
+    if request.method == "POST":
+        busquedaEquipo= request.POST.get("filtro")
+        
+        equipos= equipos.filter(codigo__icontains = busquedaEquipo).order_by("codigo")
     
     return render (request, "equipos/equipos.html",{
         'equipos': equipos

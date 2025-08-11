@@ -2,6 +2,19 @@ from django.db import models
 from muestras.models import ListaEnsayos
 
 class Equipos (models.Model):
+    tipo_estado = [
+        ('0', 'Calibrado'),
+        ('1', "Necesita calibración"),
+        ('2', "Solicitado presupuesto"),
+        ('3', "Calibración en curso"),
+        ('4', "Esperando certificado"),
+        ('5', "Esperando actualización de la ficha del equipo"),
+    ]
+
+    tipo_calibracion = [
+        ('1', 'Calibración interna'),
+        ('2', 'Calibración externa'),
+    ]
     codigo= models.CharField(max_length=300, verbose_name="Codigo")
     equipo= models.CharField(max_length=300, verbose_name="Equipo")
     descripcion= models.TextField( verbose_name="Descripcion")
@@ -9,6 +22,8 @@ class Equipos (models.Model):
     ensayos= models.ManyToManyField(ListaEnsayos,verbose_name="Ensayos")
     fechaCalibracion= models.DateField(verbose_name="Fecha de Calibración")
     fechaCaducidadCalibracion= models.DateField(verbose_name="Fecha próxima calibración")
+    tipoCalibracion = models.CharField(max_length=10, verbose_name= "Tipo Calibración",choices=tipo_calibracion, default='1')
+    estadoCalibracion = models.CharField(max_length=10, verbose_name= "Estado Calibración", choices=tipo_estado, default= '0')
     
     class Meta():
         verbose_name="Equipo"
