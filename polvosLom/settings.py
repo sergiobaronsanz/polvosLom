@@ -12,10 +12,29 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import ssl
+import certifi
+import socket
 
 #Variables de entorno
 import dotenv
 dotenv.load_dotenv('credenciales.env')
+
+
+# --- Buscamos certificado SSL, solo hace falta en MAC ---
+def check_ssl_certificates():
+    """Prueba si el sistema puede validar certificados SSL."""
+    try:
+        context = ssl.create_default_context()
+        with socket.create_connection(("smtp.gmail.com", 587)) as sock:
+            context.wrap_socket(sock, server_hostname="smtp.gmail.com")
+        return True  # funciona bien
+    except ssl.SSLError:
+        return False  # no pudo validar
+
+# Si falla la validación SSL → usar certifi
+if not check_ssl_certificates():
+    ssl._create_default_https_context = ssl.create_default_context(cafile=certifi.where())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -150,6 +169,6 @@ MEDIA_ROOT= os.path.join(BASE_DIR, "media")
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

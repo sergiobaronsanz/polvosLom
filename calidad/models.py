@@ -4,17 +4,24 @@ from muestras.models import ListaEnsayos
 class Equipos (models.Model):
     tipo_estado = [
         ('0', 'Calibrado'),
-        ('1', "Necesita calibración"),
+        ('1', "Calibración caducada"),
         ('2', "Solicitado presupuesto"),
         ('3', "Calibración en curso"),
         ('4', "Esperando certificado"),
         ('5', "Esperando actualización de la ficha del equipo"),
+        ('6', 'Verificación al uso')
     ]
 
     tipo_calibracion = [
         ('1', 'Calibración interna'),
         ('2', 'Calibración externa'),
     ]
+
+    tipo_equipo = [
+        ('0', 'Controlado'),
+        ('1', 'No controlado')
+    ]
+
     codigo= models.CharField(max_length=300, verbose_name="Codigo")
     equipo= models.CharField(max_length=300, verbose_name="Equipo")
     descripcion= models.TextField( verbose_name="Descripcion")
