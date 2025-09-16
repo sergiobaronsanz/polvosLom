@@ -25,7 +25,7 @@ class Expedientes(models.Model):
     
     expediente= models.CharField(max_length=100, verbose_name="Nº Expediente")
     empresa= models.ForeignKey("Empresa", on_delete=models.CASCADE, verbose_name="Empresa")
-    empresaContrata= models.CharField(verbose_name="Empresa subcontrata", max_length=300, default="")
+    empresaContrata= models.CharField(verbose_name="Empresa subcontrata", max_length=300, default="", blank= True, null=True)
     estado=models.CharField(choices=estados, max_length=300, verbose_name="Estado")
     nMuestras=models.IntegerField(verbose_name="Numero de muestras", blank=True, null=True)
     fecha= models.DateField(auto_now_add=True)

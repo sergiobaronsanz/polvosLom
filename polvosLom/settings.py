@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import ssl
-import certifi
+try:
+	import certifi
+except ImportError:
+    certifi = None
 import socket
 
 #Variables de entorno
@@ -33,7 +36,7 @@ def check_ssl_certificates():
         return False  # no pudo validar
 
 # Si falla la validación SSL → usar certifi
-if not check_ssl_certificates():
+if not check_ssl_certificates() and certifi is not None:
     ssl._create_default_https_context = ssl.create_default_context(cafile=certifi.where())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
