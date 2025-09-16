@@ -427,6 +427,11 @@ class PlantillasEnsayo():
         #Resultados tabla (Habría que incluir esto en una clase con las variables)
 
         for fila in resultados:
+                if fila.repeticiones == None:
+                    repeticiones= "-"
+                else:
+                    repeticiones= str(fila.repeticiones)
+                    
                 self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
                 self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(int(fila.tHorno)), 
                         fill = 0)
@@ -436,7 +441,7 @@ class PlantillasEnsayo():
                         fill = 0)
                 self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= str(fila.get_resultado_display()),
                         fill = 0)
-                self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= str(fila.repeticiones),
+                self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= repeticiones,
                         fill = 0)
                 self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
