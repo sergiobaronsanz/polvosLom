@@ -443,21 +443,21 @@ class TminResultadosForm(forms.Form):
     tHorno= forms.DecimalField(
         decimal_places=2,  
         label="Temperatura Horno (ºC)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
     peso= forms.DecimalField(
         decimal_places=2,  
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
     presion= forms.DecimalField(
         decimal_places=2,  
         label= "Presion (kPa)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
