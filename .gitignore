@@ -46,3 +46,8 @@ local_settings.py
 node_modules/
 build/
 dist/
+
+#Archivos estáticos recopilados por Django
+static/
+staticfiles/
+staticfiles.json
