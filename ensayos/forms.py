@@ -334,7 +334,7 @@ class TmicResultadosForm(forms.Form):
     tPlato= forms.DecimalField(
         decimal_places=2,  
         label="Temperatura Plato (ºC)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
@@ -363,7 +363,7 @@ class TmicResultadosForm(forms.Form):
     tiempoPrueba= forms.DecimalField(
         decimal_places= 2,
         label= "Tiempo total (min)",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required':'required'}),
         required=False,
 
     )
