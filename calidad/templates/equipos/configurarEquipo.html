@@ -13,10 +13,11 @@
 				<div class="d-flex">
 					<a href="{%url 'equipoAsociado' equipo.id %}" class="mr-5 ms-auto btn btn-info">Equipo asociado</a>
 				</div>
-			  {% endif %}
+			  {% else %}
 				<div class="d-flex">
 					<a class="mr-5 ms-auto btn btn-secondary disabled">Equipo asociado</a>
 				</div>
+			  {%endif%}		
 
               <div class="card-body table-responsive" style="max-height: 80vh;">
                 <form class= "d-flex flex-column" method="post">
