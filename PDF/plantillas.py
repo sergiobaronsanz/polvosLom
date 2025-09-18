@@ -778,7 +778,7 @@ class PlantillasEnsayo():
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
             self.pdf.cell(w=50, h= 8,border= 1,align= "C",txt= str(fila.concentracion), 
                     fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
+            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(float(fila.peso)),
                     fill = 0)
             self.pdf.cell(w=25, h= 8,border= 1,align= "C",txt= str(float(fila.pex)),
                     fill = 0)
@@ -942,13 +942,13 @@ class PlantillasEnsayo():
         for resultado in resultados:
                 self.pdf.cell(w=5, h= 6,border= "L", fill = 0)
                 self.pdf.cell(w=50, h= 6,border= 1,align= "C", 
-                        txt= str(int(resultado.concentracion)), fill = 0)
+                        txt= str(resultado.concentracion), fill = 0)
                 self.pdf.cell(w=40, h= 6,border= 1,align= "C", 
-                        txt= str(resultado.peso), fill = 0)
+                        txt= str(float(resultado.peso)), fill = 0)
                 self.pdf.cell(w=30, h= 6,border= 1, align= "C",
                         txt= str(resultado.serie), fill = 0)
                 self.pdf.cell(w=30, h= 6,border= 1,align= "C", 
-                        txt= str(resultado.pm), fill = 0)
+                        txt= str(float(resultado.pm)), fill = 0)
                 self.pdf.cell(w=30, h= 6,border= 1, align= "C",
                         txt= str(resultado.dpdt), fill = 0)
 
@@ -1825,7 +1825,7 @@ class PlantillasEnsayo():
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
             self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(fila.concentracion), 
                     fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
+            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(float(fila.peso)),
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(float(fila.pex)),
                     fill = 0)
@@ -1833,7 +1833,7 @@ class PlantillasEnsayo():
                     fill = 0)
             self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(fila.dpdt),
                     fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(int(fila.oxigeno)),
+            self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(fila.oxigeno),
                     fill = 0)
             self.pdf.cell(w=25, h= 8,border= 1, align= "C",txt= fila.get_resultado_display(),
                     fill = 0)
