@@ -444,7 +444,7 @@ class TminResultadosForm(forms.Form):
     )
 
     peso= forms.DecimalField(
-        decimal_places=1,  
+        decimal_places=2,  
         label="Peso (g)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required',}),
         required=False,

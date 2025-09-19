@@ -219,7 +219,7 @@ class ResultadosTMIn (models.Model):
     
     ensayo= models.ForeignKey("TMIn", on_delete=models.CASCADE, verbose_name="Ensayo TMIn")
     tHorno= models.IntegerField(verbose_name="Temperatura horno")
-    peso= models.DecimalField(decimal_places=1, max_digits=5, verbose_name="Peso")
+    peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso")
     presion= models.IntegerField(verbose_name="Presión")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
     repeticiones= models.IntegerField(verbose_name="Repeticiones", blank= True, null=True)
