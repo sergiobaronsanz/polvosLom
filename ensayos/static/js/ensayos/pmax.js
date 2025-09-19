@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var valor = parseFloat(item.value);
                 var peso= document.getElementById(id_peso);
     
-                var valorPeso= valor/ 50;
+                var valorPeso= (valor/ 50).toFixed(1);
                 peso.value= valorPeso;
             })
         });
@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			//Sacamos los valores de los resultados
 			let concentracion= element[2];
-			let peso= (parseFloat(concentracion) / 50).toFixed(2);
+			let peso= (parseFloat(concentracion) / 50).toFixed(1);
 			let serie= element[1];
 			let pmax=  parseFloat(element[3].replace(",", "."));
 			let dpdt= element[4];

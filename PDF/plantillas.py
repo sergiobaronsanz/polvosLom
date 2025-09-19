@@ -251,9 +251,9 @@ class PlantillasEnsayo():
             print(fila)
         for fila in resultados:
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-            self.pdf.cell(w=29, h= 8,border= 1,align= "C",txt= str(int(fila.tPlato)), 
+            self.pdf.cell(w=29, h= 8,border= 1,align= "C",txt= str(fila.tPlato), 
                     fill = 0)
-            self.pdf.cell(w=29, h= 8,border= 1,align= "C",txt= str(int(fila.tMaxima)),
+            self.pdf.cell(w=29, h= 8,border= 1,align= "C",txt= str(float(fila.tMaxima)),
                     fill = 0)
             self.pdf.cell(w=24, h= 8,border= 1,align= "C",txt= fila.get_resultado_display(),
                     fill = 0)
@@ -435,7 +435,7 @@ class PlantillasEnsayo():
                 self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
                 self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(int(fila.tHorno)), 
                         fill = 0)
-                self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(fila.peso),
+                self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(float(fila.peso)),
                         fill = 0)
                 self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(int(fila.presion)),
                         fill = 0)

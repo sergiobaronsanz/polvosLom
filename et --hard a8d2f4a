@@ -1,0 +1,112 @@
+[33m2dce7f4[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Arreglado equipos asociados
+[33ma8d2f4a[m Arreglado equipos asociados
+[33md590abf[m cambiado statics
+[33m82ddcd2[m Borrarmos carperta static
+[33mb14e7a1[m Arreglado decimales LIE, PMAX Y CLO
+[33md47999f[m Eliminar media del control de veriones
+[33mffdd967[m Corregido decimales en Tamniente, humedad y presion
+[33mc5aa42f[m Archivo de js modificado
+[33ma0c17d9[m Archivo de boostrap modificado
+[33md44d2a1[m actualizado statics
+[33m606a490[m Arreglado problema de repeticiones sin valor (marcaba None)
+[33m9afa1f3[m Arreglado problema de Nube con ensayos sin rellenar
+[33m20a03de[m Eliminar archivos .pyc y __pycache__ del repositorio
+[33m6b44ab5[m Añadidos estaticos en .gitignore
+[33m0ce5a1d[m Arreglado el Required= false de empresa contrata
+[33m5f71b49[m Terminado el lazamiento de correos para el control de calibraciones
+[33m64ac240[m Primera parte de automaticacion equipos
+[33m471ba50[m Incluida empresa contrata
+[33mb853326[m cambiamos .gitignore
+[33maf76a6f[m Ignoramos carpeta media y reparamos % horas y cambio de estado expedientes
+[33m4659af9[m Terminado
+[33m665af47[m Cambiado a 20 el numero de digitos
+[33m82d71a3[m seguimos
+[33mb09ea84[m Revision plantillas
+[33maf7d63c[m Insertado tamices en tratamiento y Decimales en es emi
+[33m03c39ec[m Añadido listado de tamices en tratamiento
+[33m2a9b63c[m pie pdf n4
+[33m6d10426[m provisional equipos Asociados
+[33m1b9358c[m Arreglado, no salía Humedad en lista ensayos
+[33me103e42[m Arreglando problema con revision de muestras
+[33mfdf2647[m Arreglando bug
+[33m8898372[m Ignorar archivos .pyc y __pycache__
+[33m46c36cc[m Corregido errores hojas para calidad
+[33m5a5430a[m Corregido firma recepcion muestras
+[33mb72e972[m Arregaldo botones html revisarExpediente
+[33m3906513[m Permitimos filtrar expedientes
+[33ma3972a6[m Permitimos agregar nuevas muestras a los exp.
+[33ma269d92[m Permitimos eliminar muestras
+[33mb3d95b6[m Solucionado poder subir archivos emi-lie-pmax con tab
+[33m5c4d9c0[m Corrección peso nube y otros
+[33m0298cff[m Editar parte de recepcion
+[33mc670a5a[m Solucionado error enviar nube
+[33m13af517[m hashing activado para statics
+[33mc25a098[m Problemas con los statics
+[33mcbfbeca[m Solucionado problema Es emi y cierre de proceso lie pmax y clo
+[33mbddd977[m Solucionado problema Es emi
+[33m0d49028[m ordenando los ensayos
+[33m1e1e2de[m Arreglado
+[33mb09f8df[m corregido
+[33m396aff7[m arreglando pagina inicio
+[33m564fa49[m Corregido Nube y añadido fotos al expediente
+[33m4150fa7[m arreglado pmax
+[33m82cd0ab[m Solucionando descarga de archivos
+[33mb3a5cc9[m Reparando footer en vermuestras
+[33mb419afc[m Merge branch 'main' of https://github.com/sergiobaronsanz/polvosLom
+[33mb21de8c[m Arreglando cambio de ID
+[33m3acd23d[m Delete env directory
+[33m46ad2b3[m Reparando listaEnsayos
+[33mf0a64b0[m No se
+[33ma3f2f27[m Eliminando entorno virtual del control de versiones
+[33m9ef6ef5[m servidor funcionando
+[33m36785ee[m corregido settings database
+[33m20da0ad[m Cambio de nombre database
+[33m45ee4c3[m 1.5
+[33mf0fafab[m 1.4
+[33m98f88d8[m 1.3
+[33me2bc960[m 1.2
+[33m7fe6d39[m 1.1
+[33m246a68c[m 1.0
+[33ma11aef0[m Corrigiendo pdf
+[33m067ca1a[m Terminando
+[33mf5d357c[m seguimos
+[33m2a3ab27[m estado muestras y expedientes terminado
+[33m942b7c6[m a
+[33md0c0fe2[m Terminado cambio fechas y añadido bloque equipos
+[33md9cf08b[m terminando de añadir los equipos y las fechas inicio y fin
+[33mf9fa910[m creamos app calidad
+[33m4842ca1[m .txt pmax y lie
+[33mc467b24[m empezando Tratamiento muestras
+[33ma7a5c3a[m terminando n2
+[33mb7044cd[m Seguimos
+[33mbccb2cc[m haciendo hojas pdf
+[33m5f6d352[m Empezamos envio de mail para ensayos
+[33m56038ef[m empezamos los pdf
+[33md959230[m estamos con el n4 en frontend
+[33m7d00b7f[m falta el emi y el rec
+[33m3d34d5e[m terminamos pmax simple
+[33mc7d1d05[m Terminado TMIN seguimos con LIE
+[33m25d580f[m terminado Tmic, empezamos TMIn
+[33m2671b8a[m empezando a crear hojas de ensayo
+[33mcf23d11[m seguimos
+[33m7cb4c42[m Seguimos
+[33m9286e56[m seguimos
+[33m0842713[m seguimos
+[33mc531a2f[m empezando el pdf
+[33mf59571d[m cambiada la fuente
+[33m50f13d6[m seguimos
+[33mfc53840[m nos quedamos parados en equipos
+[33m6b69f34[m seguimos
+[33m0c11cbb[m seguimos
+[33m7067d09[m Seguimos con humedad
+[33m2a0225c[m empezamos con humedad
+[33m66f0a10[m seguimos
+[33mb078b3c[m seguimos
+[33m56d05ce[m Seguimos
+[33madcff14[m avanzamos a ver muestra
+[33m7249f46[m seguimos
+[33m9b59009[m menudo lio
+[33me9bde2b[m seguimos con los expedientes
+[33m5472439[m seguimos
+[33m127ffd2[m segundo
+[33m404617e[m primer commit

@@ -134,7 +134,7 @@ class TMIc (models.Model):
     humedad=  models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Humedad Ambiente", blank=True, null=True)
     presion=  models.DecimalField(decimal_places=0, max_digits=7, verbose_name="Presión", blank=True, null=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
-    tiempoMaxEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo máximo del ensayo", blank=True, null=True)
+    tiempoMaxEnsayo= models.IntegerField(verbose_name="Tiempo máximo del ensayo", blank=True, null=True)
     fechaInicio= models.DateField(verbose_name="FechaInicio", blank=True, null=True)
     fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True, blank=True, null=True)
@@ -169,12 +169,12 @@ class ResultadosTMIc (models.Model):
     ]
     
     ensayo= models.ForeignKey("TMIc", on_delete=models.CASCADE, verbose_name="Ensayo TMIc")
-    tPlato= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura plato",null= True, blank= True)
+    tPlato= models.IntegerField(verbose_name="Temperatura plato",null= True, blank= True)
     tMaxima= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura máxima", null= True, blank= True)
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado", null= True, blank= True)
     tipoIgnicion= models.CharField(max_length=300, choices=ignicionesPosibles, verbose_name="Tipo ignición", null= True, blank= True)
-    tiempoPrueba= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo ensayo", null= True, blank= True)
-    tiempoTmax= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo a temperatura máxima", null= True, blank= True)
+    tiempoPrueba= models.IntegerField(verbose_name="Tiempo ensayo", null= True, blank= True)
+    tiempoTmax= models.IntegerField(verbose_name="Tiempo a temperatura máxima", null= True, blank= True)
 
     
     class Meta():
@@ -218,9 +218,9 @@ class ResultadosTMIn (models.Model):
     ]
     
     ensayo= models.ForeignKey("TMIn", on_delete=models.CASCADE, verbose_name="Ensayo TMIn")
-    tHorno= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Temperatura horno")
-    peso= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Peso")
-    presion= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Presión")
+    tHorno= models.IntegerField(verbose_name="Temperatura horno")
+    peso= models.DecimalField(decimal_places=1, max_digits=5, verbose_name="Peso")
+    presion= models.IntegerField(verbose_name="Presión")
     resultado= models.CharField(max_length=300, choices=resultadosPosibles, verbose_name= "resultado")
     repeticiones= models.IntegerField(verbose_name="Repeticiones", blank= True, null=True)
     
