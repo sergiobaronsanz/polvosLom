@@ -406,8 +406,8 @@ class ResultadosEMIsin (models.Model):
 #Pmax
 class Pmax (models.Model):
     seleccionCerillas = [
-        ("1", "simex"),
-        ("2", "sobbe"),
+        ("1", "sobbe"),
+        ("2", "simex"),
     ]
 
     
@@ -472,8 +472,8 @@ class ResultadosPmax (models.Model):
 #clo
 class CLO (models.Model):
     seleccionCerillas = [
-        ("1", "simex"),
-        ("2", "sobbe"),
+        ("1", "sobbe"),
+        ("2", "simex"),
     ]
 
     

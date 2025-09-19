@@ -2242,7 +2242,7 @@ class PlantillasEnsayo():
         
 
         self.pdf.multi_cell(w=190, h= 8,border= "LR",align= "L", 
-                txt="El ensayo se realiza con un volumen de 2 ml, lanzando la muestra desde una altura de 1 m, se observa sI hay ignición en 5 min.",
+                txt="El ensayo se realiza con un volumen de 2 ml, lanzando la muestra desde una altura de 1 m, se observa si hay ignición en 5 min.",
                 fill = 0)
 
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)

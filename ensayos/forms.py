@@ -743,8 +743,8 @@ class PmaxForm(forms.Form):
     #tiempoEnsayo 
 
     seleccionCerillas = [
-        ("1", "simex"),
-        ("2", "sobbe"),
+        ("1", "sobbe"),
+        ("2", "simex"),
     ]
 
     
