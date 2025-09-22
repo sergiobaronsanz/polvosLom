@@ -44,11 +44,11 @@ class PlantillasEnsayo():
         self.pdf.cell(w=95, h= 12,border= "LRT", txt=f"Remitente: {empresa.empresa}", align= "L", fill = 0)
         self.pdf.multi_cell(w=95, h= 12,border= "LRT", txt=f"Expediente: {expediente.expediente}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Procedencia: {self.descripcion.procedencia}", align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Procedencia: {self.descripcion.procedencia.capitalize()}", align= "L", fill = 0)
         self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Recibida por: {self.descripcion.usuario.firmas.firma}", align= "L", fill = 0)
 
         self.pdf.cell(w=95, h= 12,border= "LR", txt= f"¿Se adjunta documentación? {self.descripcion.get_documentacion_display()}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Etiquetado: {self.descripcion.get_etiquetado_display()}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Etiquetado: {self.descripcion.get_etiquetado_display().capitalize()}", align= "L", fill = 0)
 
         self.pdf.cell(w=95, h= 12,border= "LRB", txt=f"Fecha recepción: {fecha}", align= "L", fill = 0)
         self.pdf.multi_cell(w=95, h= 12,border= "LRB", txt=f"Identificación LOM: {empresa.abreviatura}-{self.muestra.id_muestra}", align= "L", fill = 0)
@@ -62,11 +62,11 @@ class PlantillasEnsayo():
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Envoltura exterior: {self.descripcion.envolturaExt}")
+        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Envoltura exterior: {self.descripcion.envolturaExt.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Envoltura interior: {self.descripcion.envolturaInt}")
+        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Envoltura interior: {self.descripcion.envolturaInt.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
         
@@ -74,7 +74,7 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Peso: {self.descripcion.estadoEnvio}")
+        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Peso: {self.descripcion.estadoEnvio.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
         #CARACTERISTICAS MUESTRA
@@ -85,17 +85,17 @@ class PlantillasEnsayo():
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Aspecto general: {self.descripcion.aspectoMuestra}")
+        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Aspecto general: {self.descripcion.aspectoMuestra.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Color, brillo: {self.descripcion.color}, {self.descripcion.brillo}")
+        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Color, brillo: {self.descripcion.color.capitalize()}, {self.descripcion.brillo.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Tamaño, homogeneidad: {self.descripcion.tamano}, {self.descripcion.homogeneidad}")
+        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Tamaño, homogeneidad: {self.descripcion.tamano.capitalize()}, {self.descripcion.homogeneidad.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
 
@@ -107,11 +107,11 @@ class PlantillasEnsayo():
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.multi_cell(w=190, h= 12,border= "LR", align= "L", txt=f"Observación: {self.descripcion.observacion}")
+        self.pdf.multi_cell(w=190, h= 12,border= "LR", align= "L", txt=f"Observación: {self.descripcion.observacion.capitalize()}")
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"La muestra se ensaya: {self.descripcion.formaEnsayo}")
+        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"La muestra se ensaya: {self.descripcion.formaEnsayo.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
 
@@ -223,7 +223,7 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         #Leyenda superior
         self.pdf.cell(w=5, h= 8,border= "L", fill = 0)    
-        self.pdf.set_font('Arial', '', 12)
+        self.pdf.set_font('Arial', 'B', 12)
         self.pdf.cell(w=60, h= 8,border= "LT", txt= "Incrementos Tª 10 K", fill = 0)
         self.pdf.cell(w=45, h= 8,border= "T", txt= "Altura capa: 5 mm",fill = 0)
         self.pdf.cell(w=75, h= 8,border= "TR",txt= "Volumen (h=5, r=50)= 39,27 cm3", fill = 0)
@@ -231,37 +231,57 @@ class PlantillasEnsayo():
         
         #Parámetros tabla
         self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-        self.pdf.cell(w=29, h= 8,border= 1,align= "C", 
+        self.pdf.cell(w=22, h= 8,border= "TLR",align= "C", 
                 txt= "Tª Plato", fill = 0)
-        self.pdf.cell(w=29, h= 8,border= 1,align= "C", 
+        self.pdf.cell(w=22, h= 8,border= "TLR",align= "C", 
                 txt= "Tª Max", fill = 0)
-        self.pdf.cell(w=24, h= 8,border= 1,align= "C", 
+        self.pdf.cell(w=24, h= 16,border= 1,align= "C", 
                 txt= "¿Ignición?", fill = 0)
-        self.pdf.cell(w=40, h= 8,border= 1, align= "C",
-                txt= "Visual/termopar", fill = 0)
-        self.pdf.cell(w=29, h= 8,border= 1, align= "C",
+        self.pdf.cell(w=50, h= 16,border= 1, align= "C",
+                txt= "Visual/Termopar", fill = 0)
+        self.pdf.cell(w=31, h= 8,border= "TLR", align= "C",
                 txt= "Tiempo TªMax", fill = 0)
-        self.pdf.cell(w=29, h= 8,border= 1, align= "C",
+        self.pdf.cell(w=31, h= 8,border= "TLR", align= "C",
                 txt= "Tiempo", fill = 0)
+
+        self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
+        
+		#Parámetros tabla unidades
+        self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
+        self.pdf.cell(w=22, h= 8,border= "BLR",align= "C", 
+                txt= "(ºC)", fill = 0)
+        self.pdf.cell(w=22, h= 8,border= "BLR",align= "C", 
+                txt= "(ºC)", fill = 0)
+        self.pdf.cell(w=24, h= 0,border= "",align= "C", 
+                fill = 0)
+        self.pdf.cell(w=50, h= 0,border= "", align= "C",
+                fill = 0)
+        self.pdf.cell(w=31, h= 8,border= "BLR", align= "C",
+                txt= "(min)", fill = 0)
+        self.pdf.cell(w=31, h= 8,border= "BLR", align= "C",
+                txt= "(min)", fill = 0)
 
         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
         #Resultados tabla (Habría que incluir esto en una clase con las variables)
+        
         for fila in resultados:
             print(fila)
         for fila in resultados:
+            valorIgnicion = fila.get_tipoIgnicion_display() or "-"
+            
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-            self.pdf.cell(w=29, h= 8,border= 1,align= "C",txt= str(int(fila.tPlato)), 
+            self.pdf.cell(w=22, h= 8,border= 1,align= "C",txt= str(fila.tPlato), 
                     fill = 0)
-            self.pdf.cell(w=29, h= 8,border= 1,align= "C",txt= str(int(fila.tMaxima)),
+            self.pdf.cell(w=22, h= 8,border= 1,align= "C",txt= str(float(fila.tMaxima)),
                     fill = 0)
             self.pdf.cell(w=24, h= 8,border= 1,align= "C",txt= fila.get_resultado_display(),
                     fill = 0)
-            self.pdf.cell(w=40, h= 8,border= 1, align= "C",txt= fila.get_tipoIgnicion_display(),
+            self.pdf.cell(w=50, h= 8,border= 1, align= "C",txt= valorIgnicion,
                     fill = 0)
-            self.pdf.cell(w=29, h= 8,border= 1, align= "C",txt= str(int(fila.tiempoTmax)),
+            self.pdf.cell(w=31, h= 8,border= 1, align= "C",txt= str(int(fila.tiempoTmax)),
                     fill = 0)
-            self.pdf.cell(w=29, h= 8,border= 1, align= "C",txt= str(int(fila.tiempoPrueba)),
+            self.pdf.cell(w=31, h= 8,border= 1, align= "C",txt= str(int(fila.tiempoPrueba)),
                     fill = 0)
             self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
         
@@ -282,10 +302,10 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 12) 
         
         if ti == ">400":
-            self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor temperatura a la que se produce ignición:     {ti} ºC* ",
+            self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor temperatura a la que se produce ignición:     {ti} ºC ",
                     align= "J", fill = 0)
         else:
-            self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor temperatura a la que se produce ignición:     {str(ti)} ºC* ",
+            self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor temperatura a la que se produce ignición:     {str(ti)} ºC ",
                     align= "J", fill = 0)
 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mayor temperatura a la que no se produce ignición:     {ta} ºC ",
@@ -427,16 +447,21 @@ class PlantillasEnsayo():
         #Resultados tabla (Habría que incluir esto en una clase con las variables)
 
         for fila in resultados:
+                if fila.repeticiones == None:
+                    repeticiones= "-"
+                else:
+                    repeticiones= str(fila.repeticiones)
+                    
                 self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
                 self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(int(fila.tHorno)), 
                         fill = 0)
-                self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(fila.peso),
+                self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(float(fila.peso)),
                         fill = 0)
                 self.pdf.cell(w=36, h= 8,border= 1,align= "C",txt= str(int(fila.presion)),
                         fill = 0)
                 self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= str(fila.get_resultado_display()),
                         fill = 0)
-                self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= str(fila.repeticiones),
+                self.pdf.cell(w=36, h= 8,border= 1, align= "C",txt= repeticiones,
                         fill = 0)
                 self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
@@ -588,7 +613,7 @@ class PlantillasEnsayo():
                         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0) 
                 else:
                         self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-                        self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'Al tener un desviación superior a 0.15% el ensayo requiero de 10 resultados', 
+                        self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'Al tener un desviación superior a 0.15% el ensayo requiere de 10 resultados', 
                                 fill = 0)
                         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0) 
 
@@ -773,7 +798,7 @@ class PlantillasEnsayo():
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
             self.pdf.cell(w=50, h= 8,border= 1,align= "C",txt= str(fila.concentracion), 
                     fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
+            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(float(fila.peso)),
                     fill = 0)
             self.pdf.cell(w=25, h= 8,border= 1,align= "C",txt= str(float(fila.pex)),
                     fill = 0)
@@ -937,13 +962,13 @@ class PlantillasEnsayo():
         for resultado in resultados:
                 self.pdf.cell(w=5, h= 6,border= "L", fill = 0)
                 self.pdf.cell(w=50, h= 6,border= 1,align= "C", 
-                        txt= str(int(resultado.concentracion)), fill = 0)
+                        txt= str(resultado.concentracion), fill = 0)
                 self.pdf.cell(w=40, h= 6,border= 1,align= "C", 
-                        txt= str(resultado.peso), fill = 0)
+                        txt= str(float(resultado.peso)), fill = 0)
                 self.pdf.cell(w=30, h= 6,border= 1, align= "C",
                         txt= str(resultado.serie), fill = 0)
                 self.pdf.cell(w=30, h= 6,border= 1,align= "C", 
-                        txt= str(resultado.pm), fill = 0)
+                        txt= str(float(resultado.pm)), fill = 0)
                 self.pdf.cell(w=30, h= 6,border= 1, align= "C",
                         txt= str(resultado.dpdt), fill = 0)
 
@@ -1103,7 +1128,7 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', 'B', 12) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"PRESIÓN MÁXIMA DE EXPLOSIÓN: {ensayo.pmax} bar",
                 align= "J", fill = 0)
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"VELOCIDAD DE AUMENTO DE PRESIÓN: {ensayo.dpdt} dP/dT",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"VELOCIDAD DE AUMENTO DE PRESIÓN: {ensayo.dpdt} bar/s",
                 align= "J", fill = 0)
         
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"kmax: {ensayo.kmax} bar·m/s",
@@ -1820,7 +1845,7 @@ class PlantillasEnsayo():
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
             self.pdf.cell(w=45, h= 8,border= 1,align= "C",txt= str(fila.concentracion), 
                     fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(int(fila.peso)),
+            self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(float(fila.peso)),
                     fill = 0)
             self.pdf.cell(w=20, h= 8,border= 1,align= "C",txt= str(float(fila.pex)),
                     fill = 0)
@@ -1828,7 +1853,7 @@ class PlantillasEnsayo():
                     fill = 0)
             self.pdf.cell(w=30, h= 8,border= 1, align= "C",txt= str(fila.dpdt),
                     fill = 0)
-            self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(int(fila.oxigeno)),
+            self.pdf.cell(w=20, h= 8,border= 1, align= "C",txt= str(fila.oxigeno),
                     fill = 0)
             self.pdf.cell(w=25, h= 8,border= 1, align= "C",txt= fila.get_resultado_display(),
                     fill = 0)
@@ -1872,7 +1897,7 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {oxigenoNo} %",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"CONCENTRACIÓN LÍMITE DE OXÍGENO: {oxigenoNo} %",
                 align= "J", fill = 0)
         
              
@@ -1959,7 +1984,7 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "MUESTRA DE POLVO",
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
@@ -2237,7 +2262,7 @@ class PlantillasEnsayo():
         
 
         self.pdf.multi_cell(w=190, h= 8,border= "LR",align= "L", 
-                txt="El ensayo se realiza con un volumen de 2 ml, lanzando la muestra desde una altura de 1 m, se observa sI hay ignición en 5 min.",
+                txt="El ensayo se realiza con un volumen de 2 ml, lanzando la muestra desde una altura de 1 m, se observa si hay ignición en 5 min.",
                 fill = 0)
 
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
@@ -2687,7 +2712,7 @@ class PlantillasEnsayo():
         self.pdf.cell(w=35, h= 12,border= 0,
                 align= "C", fill = 0)
         self.pdf.set_font('Arial', '', 11)
-        self.pdf.multi_cell(w= 155, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
+        self.pdf.multi_cell(w= 155, h= 12, txt = f'{ensayo.ensayo.ensayo}', border= 1, 
                 align= "C", fill = 0)
 
 
@@ -2769,14 +2794,14 @@ class PlantillasEnsayo():
         if ensayo.tamizado == "2":
             self.pdf.set_font('Arial', '', 12) 
             self.pdf.cell(w=10, h= 8, border="L")
-            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha inicio: {ensayo.fechaMolidoInicio}",
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha inicio: {ensayo.fechaTamizadoInicio}",
                     align= "J", fill = 0)
-            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha fin: {ensayo.fechaMolidoFin}",
+            self.pdf.cell(w=85, h= 8,border= "", txt= f"Fecha fin: {ensayo.fechaTamizadoFin}",
                     align= "J", fill = 0)
             self.pdf.multi_cell(w=10, h= 8, border="R")
 
             self.pdf.cell(w=10, h= 8, border="L")
-            self.pdf.cell(w=170, h= 8,border= "", txt= f"Tamizado: {ensayo.tamiz}",
+            self.pdf.cell(w=170, h= 8,border= "", txt= f"Tamizado: {ensayo.equipoTamizado.get().codigo} - {ensayo.tamiz}",
                     align= "J", fill = 0)
             self.pdf.multi_cell(w=10, h= 8, border="R")
             self.pdf.multi_cell(w=190, h= 8, border="LR")   

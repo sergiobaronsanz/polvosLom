@@ -1,3 +1,52 @@
 # Archivos de entorno
 credenciales.env
+media/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.log
+*.pot
+*.mo
+*.pyc
+
+# Entornos virtuales
 env/
+venv/
+.venv/
+
+# Configuración de IDEs/editores
+.vscode/
+.idea/
+*.swp
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.bak
+
+# Archivos de base de datos
+*.sqlite3
+*.db
+
+# Archivos de entorno
+.env
+.env.*
+
+# Django
+media/
+staticfiles/   # si usas `collectstatic` (no confundir con tu carpeta `static/`)
+local_settings.py
+
+# Node/npm (si usas npm para assets)
+node_modules/
+build/
+dist/
+
+#Archivos estáticos recopilados por Django
+staticfiles/
+staticfiles.json
