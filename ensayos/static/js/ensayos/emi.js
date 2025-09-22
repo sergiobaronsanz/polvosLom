@@ -198,7 +198,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					valores.push(parseInt(element[1]));
 					valores.push(parseInt(element[2]));
 					valores.push(parseInt(element[3]));
-					let valorMinimo= Math.min(...valores);
+
+					filtroNan= valores.filter(n => !isNaN(n))
+					let valorMinimo= Math.min(...filtroNan);
 					resultadoEs = valorMinimo;
 
 					let inputResultadoEs= document.getElementById("id_emi-resultado");
