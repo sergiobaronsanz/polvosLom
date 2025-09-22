@@ -2,6 +2,7 @@
 credenciales.env
 media/
 
+
 # Python
 __pycache__/
 *.py[cod]
