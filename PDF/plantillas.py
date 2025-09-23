@@ -1889,11 +1889,17 @@ class PlantillasEnsayo():
               
                 
         else:
-              oxigenoNo= "N/D"
-              oxigenoSi= "N/D"
-              ultimaconcentracionOxigeno= resultados[-1].oxigeno
-              concentracionesNo=calculoConcentraciones(str(ultimaconcentracionOxigeno))
-              concentracionesSi=calculoConcentraciones(oxigenoSi)
+            oxigenoNo= "N/D"
+            oxigenoSi= "N/D"
+            
+            resultados_lista = list(resultados)
+            if resultados_lista:
+                ultimaconcentracionOxigeno = resultados_lista[-1].oxigeno
+            else:
+                ultimaconcentracionOxigeno = None
+                
+            concentracionesNo=calculoConcentraciones(str(ultimaconcentracionOxigeno))
+            concentracionesSi=calculoConcentraciones(oxigenoSi)
         
 
         
