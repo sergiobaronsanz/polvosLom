@@ -1685,6 +1685,7 @@ def clo (request, muestra_id):
             datosGuardados= True 
         else:
             print (formClo.errors)
+            print (formCloResultados.errors)
             formClo.add_error(None, 'Error en el formulario, revisa los datos')
             return render(request, 'ensayos/nuevosEnsayos/clo.html', {
                 'ensayo': ensayo,
