@@ -826,13 +826,16 @@ class PlantillasEnsayo():
                 
                 concentracionNo= int(ensayo.resultado)
                 concentracionSi = next((val for val in posiblesValores if val > concentracionNo), None)
+                resultadoCLO=concentracionNo
         else:
               listaConcentraciones= []
               for valor in resultados:
                   listaConcentraciones.append(valor.concentracion)
                   concentracionNo= max(listaConcentraciones)
+                  
               
               concentracionSi= "N/D"
+              resultadoCLO= "N/D"
               
 
         
@@ -845,7 +848,7 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {concentracionNo} g/m3",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"LIMITE INFERIOR EXPLOSION: {resultadoCLO} g/m3",
                 align= "J", fill = 0)
         
              
