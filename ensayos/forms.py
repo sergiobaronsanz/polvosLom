@@ -331,10 +331,9 @@ class TmicResultadosForm(forms.Form):
         ("3", "VISUAL/TERMOPAR")
     ]
 
-    tPlato= forms.DecimalField(
-        decimal_places=2,  
+    tPlato= forms.IntegerField(
         label="Temperatura Plato (ºC)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
@@ -360,16 +359,14 @@ class TmicResultadosForm(forms.Form):
         required=False,
     )
 
-    tiempoPrueba= forms.DecimalField(
-        decimal_places= 2,
+    tiempoPrueba= forms.IntegerField(
         label= "Tiempo total (min)",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required':'required'}),
         required=False,
 
     )
 
-    tiempoMax= forms.DecimalField(
-        decimal_places= 2,
+    tiempoMax= forms.IntegerField(
         label= "Tiempo Tmax (min)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
         required=False,
@@ -440,24 +437,22 @@ class TminResultadosForm(forms.Form):
         ("2", "NO"),
     ]
 
-    tHorno= forms.DecimalField(
-        decimal_places=2,  
+    tHorno= forms.IntegerField( 
         label="Temperatura Horno (ºC)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
     peso= forms.DecimalField(
         decimal_places=2,  
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required',}),
         required=False,
     )
 
-    presion= forms.DecimalField(
-        decimal_places=2,  
+    presion= forms.IntegerField( 
         label= "Presion (kPa)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
         required=False,
     )
 
@@ -577,28 +572,27 @@ class LieResultadosForm(forms.Form):
     )
 
     peso= forms.DecimalField(
-        decimal_places=2,  
+        decimal_places=1,  
         label="Peso (g)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
     pex= forms.DecimalField(
-        decimal_places=2,  
+        decimal_places=1,  
         label= "Pex (bar)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
     pm= forms.DecimalField(
-        decimal_places=2,  
+        decimal_places=1,  
         label= "Pm (bar)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
     )
 
-    dpdt= forms.DecimalField(
-        decimal_places=2,  
+    dpdt= forms.IntegerField( 
         label= "dP/dT (bar/s)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
         required=False,
@@ -681,7 +675,9 @@ class EmiForm(forms.Form):
         required=True,
     )
 
-    resultado= forms.IntegerField(
+    resultado= forms.DecimalField(
+        decimal_places=1,
+        max_digits=6,
         label="Resultado (Es)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
         required=False,
@@ -747,8 +743,8 @@ class PmaxForm(forms.Form):
     #tiempoEnsayo 
 
     seleccionCerillas = [
-        ("1", "simex"),
-        ("2", "sobbe"),
+        ("1", "sobbe"),
+        ("2", "simex"),
     ]
 
     
@@ -855,7 +851,8 @@ class PmaxResultadosForm(forms.Form):
         required=False,
     )
 
-    peso= forms.IntegerField(  
+    peso= forms.DecimalField(  
+        decimal_places=1,
         label="Peso (g)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center;'}),
         required=False,
@@ -870,7 +867,7 @@ class PmaxResultadosForm(forms.Form):
 
 
     pm_serie= forms.DecimalField(
-        decimal_places=2,  
+        decimal_places=1,  
         label= "Pm (bar)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
         required=False,
@@ -976,36 +973,34 @@ class CloResultadosForm(forms.Form):
         ("2", "NO"),
     ]
 
-    concentracion= forms.DecimalField(
-        decimal_places=2,  
+    concentracion= forms.IntegerField(
         label="Concentración (g/m3)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
         required=True,
     )
 
     peso= forms.DecimalField(
-        decimal_places=2,  
+        decimal_places=1,  
         label="Peso (g)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'readonly': 'readonly', 'style': 'text-align: center;'}),
         required=True,
     )
 
     pex= forms.DecimalField(
-        decimal_places=2,  
+        decimal_places=1,  
         label= "Pex (bar)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
         required=True,
     )
 
     pm= forms.DecimalField(
-        decimal_places=2,  
+        decimal_places=1,  
         label= "Pm (bar)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
         required=True,
     )
 
-    dpdt= forms.DecimalField(
-        decimal_places=2,  
+    dpdt= forms.IntegerField(
         label= "dP/dT (bar/s)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
         required=True,
