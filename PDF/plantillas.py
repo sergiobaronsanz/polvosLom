@@ -827,7 +827,11 @@ class PlantillasEnsayo():
                 concentracionNo= int(ensayo.resultado)
                 concentracionSi = next((val for val in posiblesValores if val > concentracionNo), None)
         else:
-              concentracionNo= "N/D"
+              listaConcentraciones= []
+              for valor in resultados:
+                  listaConcentraciones.append(valor.concentracion)
+                  concentracionNo= max(listaConcentraciones)
+              
               concentracionSi= "N/D"
               
 
