@@ -1889,14 +1889,16 @@ class PlantillasEnsayo():
               
                 
         else:
-            oxigenoNo= "N/D"
-            oxigenoSi= "N/D"
             
             resultados_lista = list(resultados)
             if resultados_lista:
                 ultimaconcentracionOxigeno = resultados_lista[-1].oxigeno
             else:
                 ultimaconcentracionOxigeno = None
+                
+            oxigenoNo= str(ultimaconcentracionOxigeno)
+            oxigenoSi= "N/D"
+            
                 
             concentracionesNo=calculoConcentraciones(str(ultimaconcentracionOxigeno))
             concentracionesSi=calculoConcentraciones(oxigenoSi)
@@ -1905,10 +1907,10 @@ class PlantillasEnsayo():
         
         self.pdf.set_font('Arial', '', 12) 
         
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor concentración de oxígeno a la que hay explosión: {oxigenoSi}% a las concentraciones de {','.join(map(str, concentracionesSi))}",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Menor concentración de oxígeno a la que hay explosión: {oxigenoSi} % a las concentraciones de {','.join(map(str, concentracionesSi))} g/m3",
                 align= "J", fill = 0)
         
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mayor concentración de oxígeno a la que no hay explosión: {oxigenoNo}% a las concentraciones de {','.join(map(str, concentracionesNo))}",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Mayor concentración de oxígeno a la que no hay explosión: {oxigenoNo} % a las concentraciones de {','.join(map(str, concentracionesNo))} g/m3",
                 align= "J", fill = 0)
         
         self.pdf.set_font('Arial', 'B', 12) 
