@@ -246,7 +246,7 @@ class PlantillasEnsayo():
 
         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
         
-		#Parámetros tabla unidades
+        #Parámetros tabla unidades
         self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
         self.pdf.cell(w=22, h= 8,border= "BLR",align= "C", 
                 txt= "(ºC)", fill = 0)
@@ -1864,14 +1864,21 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
         
         def calculoConcentraciones(oxigeno):
-            listaConcentraciones=[]
-            for resultado in resultados:
-                if resultado.oxigeno == int(oxigeno):
-                    listaConcentraciones.append(int(resultado.concentracion))
-                    listaConcentraciones = list(set(listaConcentraciones))
+            listaConcentraciones = []
 
-            return (listaConcentraciones)
-        
+            try:
+                oxigenoInt = int(oxigeno)  # si funciona, oxigeno es un número
+                for resultado in resultados:
+                    if resultado.oxigeno == oxigenoInt:
+                        listaConcentraciones.append(int(resultado.concentracion))
+                # Eliminar duplicados (manteniendo solo valores únicos)
+                listaConcentraciones = list(set(listaConcentraciones))
+
+            except ValueError:  # si falla la conversión a int
+                listaConcentraciones = ["N/D"]  # se guarda solo un "N/D"
+
+            return listaConcentraciones
+                
         if ensayo.resultado != "N/D":
               oxigenoNo= str(ensayo.resultado)
               oxigenoSi= str(int(ensayo.resultado) + 1)
@@ -1884,7 +1891,9 @@ class PlantillasEnsayo():
         else:
               oxigenoNo= "N/D"
               oxigenoSi= "N/D"
-        
+              ultimaconcentracionOxigeno= resultados[-1].oxigeno
+              concentracionesNo=calculoConcentraciones(str(ultimaconcentracionOxigeno))
+              concentracionesSi=calculoConcentraciones(oxigenoSi)
         
 
         
@@ -2166,7 +2175,7 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
-		# Agregar más contenido dinámico aquí...
+        # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
         self.piePagina(pdf, ensayo)
