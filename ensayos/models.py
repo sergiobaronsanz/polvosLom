@@ -849,7 +849,7 @@ class REC (models.Model):
     fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
     fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
     fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
-    resultado= models.DecimalField(verbose_name="Resultado", max_digits=20, decimal_places=2, null= True, blank= True) #9999,99
+    resultado= models.CharField(verbose_name="Resultado", null= True, blank= True, max_length=50) #>9999,99
     unidad= models.CharField(verbose_name="Unidad", max_length=50, default="ohm·m", null= True, blank= True)
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", null= True, blank= True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
@@ -876,7 +876,7 @@ class ResultadosREC (models.Model):
     nPrueba= models.CharField(verbose_name="Numero Prueba", choices= nPruebas, max_length= 50)
     tension= models.IntegerField(verbose_name= "Resultado", blank=True, null= True)
     tiempo= models.IntegerField(verbose_name="Tiempo")
-    resultado= models.DecimalField(decimal_places=2, max_digits=20, verbose_name= "Resultado", blank=True, null= True)
+    resultado= models.CharField(max_length=50, verbose_name= "Resultado", blank=True, null= True)
     
     class Meta():
         verbose_name="Resultado REC"

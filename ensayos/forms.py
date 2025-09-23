@@ -1109,11 +1109,9 @@ class RecResultadosForm(forms.Form):
 
     )
 
-    resultadoPrueba= forms.DecimalField(
-        decimal_places=2,
-        max_digits= 15,
+    resultadoPrueba= forms.CharField(
         label= "Resultado (Mohm)",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
 
     )
     

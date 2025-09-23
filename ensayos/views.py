@@ -1840,7 +1840,13 @@ def rec (request, muestra_id):
                         resultado=resultadoPrueba,
                     )
 
-                    listaResultados1.append(resultadoPrueba)
+                    try:
+                        resultadoPruebaInt= float(resultadoPrueba)
+                        listaResultados1.append(resultadoPruebaInt)
+                    except ValueError:
+                        pass
+                    
+                    
                     
             for form in formRecResultadosSerie2:
                 if form.cleaned_data:  # Para evitar formularios vacíos
@@ -1856,29 +1862,42 @@ def rec (request, muestra_id):
                         tiempo= tiempo,
                         resultado=resultadoPrueba,
                     )
-
-                    listaResultados2.append(resultadoPrueba)
+                    
+                    try:
+                        print(resultadoPrueba)
+                        resultadoPruebaInt= float(resultadoPrueba)
+                        listaResultados2.append(resultadoPruebaInt)
+                    except ValueError:
+                        pass
+                    
 
             #Guardamos en el modelo REC el resultado del ensayo
+            print(listaResultados1)
+            print(listaResultados2)
             if listaResultados1 and listaResultados2:
-                
-                
                 rs1 = min(listaResultados1)
-                rs2= min(listaResultados2)
+                rs2 = min(listaResultados2)
+                rs = (rs1 + rs2) / 2
+            elif listaResultados1:
+                rs = min(listaResultados1)
+            elif listaResultados2:
+                rs = min(listaResultados2)
+            else:
+                rs = None  # ninguna lista tiene datos
 
-                rs= (rs1+rs2)/2
-                hwl= 100
-                resultadoEnsayo= (0.001*float(rs)*hwl)*(10**6)
+            if rs is not None:
+                hwl = 100
+                resultadoEnsayo = (0.001 * float(rs) * hwl) * (10**6)
                 print(float(rs))
                 print(resultadoEnsayo)
 
-                rec.resultado= resultadoEnsayo
-                rec.save()
+                rec.resultado = resultadoEnsayo
+                
             else:
-                resultado= "N/D"
-                rec.resultado= resultado
-                rec.save()
-
+                # Caso en que no hay datos
+                rec.resultado = ">4E+10"
+                
+            rec.save()
             datosGuardados= True        
         else:
             print (formRec.errors)

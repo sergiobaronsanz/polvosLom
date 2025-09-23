@@ -1636,8 +1636,6 @@ class PlantillasEnsayo():
 
         self.pdf.multi_cell(w=5, h= 16,border= "R", fill = 0)
 
-        listaResultados1= []
-        listaResultados2= []
         #Resultados tabla (Habría que incluir esto en una clase con las variables)
         for fila in resultados:
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
@@ -1646,15 +1644,10 @@ class PlantillasEnsayo():
                     fill = 0)
             self.pdf.cell(w=60, h= 8,border= 1,align= "C",txt= str(int(fila.tiempo)),
                     fill = 0)
-            self.pdf.cell(w=60, h= 8,border= 1,align= "C",txt= str(float(fila.resultado)),
+            self.pdf.cell(w=60, h= 8,border= 1,align= "C",txt= (fila.resultado),
                     fill = 0)
 
-            self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
-
-            if fila.nPrueba == "1":
-                listaResultados1.append(fila.resultado)
-            else:
-                listaResultados2.append(fila.resultado)
+            self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)               
         
         
         
@@ -1667,18 +1660,21 @@ class PlantillasEnsayo():
         
         
         resultado= ensayo.resultado
-        menorResistencia1= min(listaResultados1)
-        menorResistencia2 = min(listaResultados2)
 
-        valorMedioMenorResistencia= ((menorResistencia1 + menorResistencia2)/2)* 1000000
+        try:
+            resultadoFloat= float(resultado)
+            valorMedioMenorResistencia= resultadoFloat * 10
+            menorResistencia= "{:.2E}".format(valorMedioMenorResistencia)
+            resultadoRec= "{:.2E}".format(resultadoFloat)
+            
+        except ValueError:
+            menorResistencia= ">4E+11"
+            resultadoRec= resultado
 
-        menorResistencia= "{:.2E}".format(valorMedioMenorResistencia)
+        
 
         print(f'el resultado es: {resultado}')
 
-        if resultado != 0:
-                resultadoRec= "{:.2E}".format(resultado)
-        
         
         self.pdf.set_font('Arial', 'B', 12) 
 
@@ -1707,10 +1703,16 @@ class PlantillasEnsayo():
         self.pdf.image(formulaImage_path, x=x_position, y=y_position, w=image_width, h=image_height, link="http://www.lom.upm.es", type='PNG')
 
         clasificacion=""
-        if resultado <= 1000:
-            clasificacion= "clasifica como polvo IIIC, clasifica como polvo conductivo"
-        else:
-            clasificacion= "clasifica como polvo IIIB, polvo no conductivo"
+        try:
+            # Intentamos convertir a número
+            resultado_num = float(resultado)
+            if resultado_num <= 1000:
+                clasificacion = "clasifica como polvo IIIC, clasifica como polvo conductivo"
+            else:
+                clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
+        except ValueError:
+            # Si no es numérico (por ejemplo ">4E10")
+            clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"RESISTIVIDAD ELECTRICA EN CAPA: {resultadoRec} ohm · m, {clasificacion}",
                 align= "J", fill = 0)
