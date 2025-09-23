@@ -131,9 +131,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/sergio/proyectos/mi_proyecto/polvosLom/static/'
+
+# Carpeta donde Django recopila los estáticos al hacer collectstatic
+STATIC_ROOT = '/home/sergio/proyectos/mi_proyecto/polvosLom/staticfiles/'
+
+# Carpeta(s) donde buscar archivos estáticos adicionales durante el desarrollo
+STATICFILES_DIRS = [
+    '/home/sergio/proyectos/mi_proyecto/polvosLom/static/',
+]
+
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 
