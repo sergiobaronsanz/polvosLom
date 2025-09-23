@@ -1882,6 +1882,7 @@ class PlantillasEnsayo():
         if ensayo.resultado != "N/D":
               oxigenoNo= str(ensayo.resultado)
               oxigenoSi= str(int(ensayo.resultado) + 1)
+              resultadoCLO = oxigenoNo
               
               concentracionesNo=calculoConcentraciones(oxigenoNo)
               concentracionesSi=calculoConcentraciones(oxigenoSi)
@@ -1898,6 +1899,7 @@ class PlantillasEnsayo():
                 
             oxigenoNo= str(ultimaconcentracionOxigeno)
             oxigenoSi= "N/D"
+            resultadoCLO = "N/D"
             
                 
             concentracionesNo=calculoConcentraciones(str(ultimaconcentracionOxigeno))
@@ -1914,7 +1916,7 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"CONCENTRACIÓN LÍMITE DE OXÍGENO: {oxigenoNo} %",
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"CONCENTRACIÓN LÍMITE DE OXÍGENO: {resultadoCLO} %",
                 align= "J", fill = 0)
         
              
