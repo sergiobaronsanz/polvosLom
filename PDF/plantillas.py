@@ -111,7 +111,7 @@ class PlantillasEnsayo():
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"La muestra se ensaya: {self.descripcion.formaEnsayo.capitalize()}")
+        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"La muestra se ensaya: {self.descripcion.formaEnsayo}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
 
