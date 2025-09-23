@@ -269,17 +269,20 @@ class PlantillasEnsayo():
             print(fila)
         for fila in resultados:
             valorIgnicion = fila.get_tipoIgnicion_display() or "-"
+            temperaturaMaxima = str(int(fila.tMaxima)) or "-"
+            tiempoTmax= str(int(fila.tiempoPrueba)) or "-"
+            
             
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
             self.pdf.cell(w=22, h= 8,border= 1,align= "C",txt= str(fila.tPlato), 
                     fill = 0)
-            self.pdf.cell(w=22, h= 8,border= 1,align= "C",txt= str(float(fila.tMaxima)),
+            self.pdf.cell(w=22, h= 8,border= 1,align= "C",txt= temperaturaMaxima,
                     fill = 0)
             self.pdf.cell(w=24, h= 8,border= 1,align= "C",txt= fila.get_resultado_display(),
                     fill = 0)
             self.pdf.cell(w=50, h= 8,border= 1, align= "C",txt= valorIgnicion,
                     fill = 0)
-            self.pdf.cell(w=31, h= 8,border= 1, align= "C",txt= str(int(fila.tiempoTmax)),
+            self.pdf.cell(w=31, h= 8,border= 1, align= "C",txt= tiempoTmax,
                     fill = 0)
             self.pdf.cell(w=31, h= 8,border= 1, align= "C",txt= str(int(fila.tiempoPrueba)),
                     fill = 0)
