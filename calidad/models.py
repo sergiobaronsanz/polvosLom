@@ -29,8 +29,8 @@ class Equipos (models.Model):
     descripcion= models.TextField( verbose_name="Descripcion")
     controlado= models.BooleanField(verbose_name="Controlado")
     ensayos= models.ManyToManyField(ListaEnsayos,verbose_name="Ensayos")
-    fechaCalibracion= models.DateField(verbose_name="Fecha de Calibración", null= True, blank=True, default ="2025-09-25")
-    fechaCaducidadCalibracion= models.DateField(verbose_name="Fecha próxima calibración", null= True, blank=True, default ="2025-09-27")
+    fechaCalibracion= models.DateField(verbose_name="Fecha de Calibración", null= True, blank=True)
+    fechaCaducidadCalibracion= models.DateField(verbose_name="Fecha próxima calibración", null= True, blank=True)
     tipoCalibracion = models.CharField(max_length=10, verbose_name= "Tipo Calibración",choices=tipo_calibracion, default='0')
     estadoCalibracion = models.CharField(max_length=10, verbose_name= "Estado Calibración", choices=tipo_estado, default= '0')
     
