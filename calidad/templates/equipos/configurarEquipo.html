@@ -22,6 +22,20 @@
               <div class="card-body table-responsive" style="max-height: 80vh;">
                 <form class= "d-flex flex-column" method="post">
                     {% csrf_token %}
+					{% if form.errors %}
+						<div class="alert alert-danger">
+							<ul>
+							{% for field in form %}
+								{% for error in field.errors %}
+									<li>{{ field.label }}: {{ error }}</li>
+								{% endfor %}
+							{% endfor %}
+							{% for error in form.non_field_errors %}
+								<li>{{ error }}</li>
+							{% endfor %}
+							</ul>
+						</div>
+					{% endif %}
 					<div class="row d-flex justify-content-between">
 						<div class= "col-4">
 							{{form.codigo.label}}
@@ -106,6 +120,8 @@
     </div>
 </div>
 
-  {%block script%} {%endblock%}
+  {%block script%}
+	<script src="{%static 'js/calidad/configurarEquipo.js'%}"></script> 	
+  {%endblock%}
 
 {%endblock%}

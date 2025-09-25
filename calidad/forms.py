@@ -15,6 +15,8 @@ class EquiposForm(forms.ModelForm):
             'ensayos': forms.SelectMultiple(attrs={'class': 'form-control'}),
             'fechaCalibracion': forms.TextInput(attrs={'class': 'form-control form-control-sm secado', 'style': 'text-align: center;', 'type': 'date'}),
             'fechaCaducidadCalibracion': forms.TextInput(attrs={'class': 'form-control form-control-sm secado', 'style': 'text-align: center;', 'type': 'date'}),
+            'tipoCalibracion': forms.Select(attrs={'class': 'form-control form-control secado', 'style': 'text-align: center;', 'type': 'date'}),
+            'estadoCalibracion': forms.Select(attrs={'class': 'form-control form-control secado', 'style': 'text-align: center;', 'type': 'date'}),
         }
         
 

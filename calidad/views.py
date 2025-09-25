@@ -24,14 +24,18 @@ def nuevoEquipo (request):
             form.save()
 
             return redirect ("equipos")
+        else:
+            # Si el formulario es inválido, simplemente lo renderizamos con los errores
+            print(form.errors)
+            return render(request, "equipos/configurarEquipo.html", {
+                'form': form,  # Aquí pasamos el form con errores
+            })
                
     else:
         form= EquiposForm()
     
     return render (request, "equipos/configurarEquipo.html",{
-        'equipos': equipos,
         'form': EquiposForm,
-        
     })
 
 #Editar equipos
