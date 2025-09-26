@@ -630,7 +630,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                 pmax = Pmax.objects.filter(muestra=muestra).first()
                 if pmax:
                     horasTotales.append(pmax.horasEnsayo)
-                    if pmax.pmax and pmax.dpdt and pmax.kmax:
+                    if pmax.pmax is not None and pmax.dpdt is not None and pmax.kmax is not None:
                         horasTerminadas.append(pmax.horasEnsayo)
 
             # Verificar si el ensayo es "clo"
