@@ -73,6 +73,8 @@ def recepcionMuestra(request, muestra="nueva"):
         if muestra != "nueva":
             muestraEnsayo = Muestras.objects.get(id=muestra)
             descripcion = DescripcionMuestra.objects.get(muestra=muestraEnsayo)
+            if descripcion.fecha_recepcion:
+                descripcion.fecha_recepcion = descripcion.fecha_recepcion.strftime('%Y-%m-%d')
             form = DescripcionMuestraForm(instance=descripcion)
             form.fields['muestra'].queryset = Muestras.objects.filter(id=muestraEnsayo.id)
         else:
