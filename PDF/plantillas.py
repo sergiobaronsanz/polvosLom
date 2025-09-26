@@ -264,10 +264,10 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
         #Resultados tabla (Habría que incluir esto en una clase con las variables)
-        
+        valoresNo=[]
         for fila in resultados:
-            print(fila)
-        for fila in resultados:
+            if fila.resultado == "2":
+                valoresNo.append(fila.tPlato)
             valorIgnicion = fila.get_tipoIgnicion_display() or "-"
             temperaturaMaxima = str(int(fila.tMaxima)) if fila.tMaxima is not None else "-"
             tiempoTmax= str(int(fila.tiempoPrueba)) if fila.tMaxima is not None else "-"
@@ -297,8 +297,9 @@ class PlantillasEnsayo():
                         ta = "No funde a " + str(int(float(ensayo.resultado)) - 10)  
         except Exception as e:
             print(f"Error: {e}")
-            ti= ensayo.resultado
-            ta= "N/D"
+            ti= ensayo.resultado    
+            ultimoResultado= max(valoresNo)
+            ta= ultimoResultado
 
         #Celda con Resultados
         self.pdf.multi_cell(w=190, h= 5,border= "LR", fill = 0)

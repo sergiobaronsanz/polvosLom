@@ -520,7 +520,7 @@ def tmic(request, muestra_id):
                 tmic.resultado= resultado
                 tmic.save()
             else:
-                resultado= ">400"
+                resultado= "N/D"
                 tmic.resultado= resultado
                 tmic.save()
 
@@ -691,7 +691,7 @@ def tmin (request, muestra_id):
                 tmin.resultado= resultado - 20
                 tmin.save()
             else:
-                resultado= ">800"
+                resultado= "N/D"
                 tmin.resultado= resultado
                 tmin.save()
 
