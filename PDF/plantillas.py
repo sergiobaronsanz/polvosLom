@@ -269,7 +269,7 @@ class PlantillasEnsayo():
             if fila.resultado == "2":
                 valoresNo.append(fila.tPlato)
             valorIgnicion = fila.get_tipoIgnicion_display() or "-"
-            temperaturaMaxima = str(int(fila.tMaxima)) if fila.tMaxima is not None else "-"
+            temperaturaMaxima = str(float(fila.tMaxima)) if fila.tMaxima is not None else "-"
             tiempoTmax= str(int(fila.tiempoTmax)) if fila.tiempoTmax is not None else "-"
             
             
