@@ -270,7 +270,7 @@ class PlantillasEnsayo():
                 valoresNo.append(fila.tPlato)
             valorIgnicion = fila.get_tipoIgnicion_display() or "-"
             temperaturaMaxima = str(int(fila.tMaxima)) if fila.tMaxima is not None else "-"
-            tiempoTmax= str(int(fila.tiempoPrueba)) if fila.tMaxima is not None else "-"
+            tiempoTmax= str(int(fila.tiempoTmax)) if fila.tiempoTmax is not None else "-"
             
             
             self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
