@@ -36,7 +36,7 @@ def nuevoExpediente(request):
             abreviaturaForm= form.cleaned_data["abreviatura"].upper()
             
             try:
-                empresa = Empresa.objects.get(empresa__icontains=empresaForm)
+                empresa = Empresa.objects.get(empresa__iexact=empresaForm)
             except ObjectDoesNotExist:
                 print("No se encontró ninguna empresa que coincida con la búsqueda.")
                 empresa= Empresa(empresa=empresaForm, abreviatura=abreviaturaForm)
@@ -63,21 +63,23 @@ def nuevoExpediente(request):
     return render(request, 'nuevoExpediente.html', {'form': form})
 @login_required
 def empresaSugerencias(request):
-    data= []
-    empresas= Empresa.objects.filter(empresa__icontains=request.POST['term'])
-    print(f"las empresas son {empresas}")
-    for empresa in empresas:
-        data.append(empresa.empresa)
+    term = request.POST.get('term', '').strip()  # <-- usa .get() y strip()
+    data = []
+
+    if term:  # solo buscar si el término no está vacío
+        empresas = Empresa.objects.filter(empresa__icontains=term).values_list('empresa', flat=True)[:10]
+        data = list(empresas)
+
     return JsonResponse(data, safe=False)
+
+
 @login_required
 def empresaExistente(request):
-    empresas= Empresa.objects.filter(empresa__iexact=request.POST['term'])
-    data=False
-    if empresas:
-        data=True
-    else:
-        data=False
-    return JsonResponse(data, safe=False)
+    term = request.POST.get('term', '').strip()  # <-- usa .get() y strip()
+    existe = Empresa.objects.filter(empresa__iexact=term).exists()
+
+    return JsonResponse(existe, safe=False)
+
 @login_required
 def abreviaturaExistente(request):
     abreviatura= Empresa.objects.filter(abreviatura__iexact=request.POST["term"])
