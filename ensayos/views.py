@@ -1841,6 +1841,7 @@ def rec (request, muestra_id):
                     )
 
                     try:
+                        resultadoPrueba= resultadoPrueba.replace(",", ".")
                         resultadoPruebaInt= float(resultadoPrueba)
                         listaResultados1.append(resultadoPruebaInt)
                     except ValueError:
@@ -1865,6 +1866,7 @@ def rec (request, muestra_id):
                     
                     try:
                         print(resultadoPrueba)
+                        resultadoPrueba= resultadoPrueba.replace(",", ".")
                         resultadoPruebaInt= float(resultadoPrueba)
                         listaResultados2.append(resultadoPruebaInt)
                     except ValueError:
