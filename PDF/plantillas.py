@@ -4,6 +4,29 @@ from muestras.models import *
 import os
 import math
 
+
+class PDFConPie(FPDF):
+    def __init__(self, ensayo=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ensayo = ensayo
+
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial', 'B', 7)
+
+        ancho_total = self.w - 2 * self.l_margin
+
+        if self.ensayo:  # solo imprime si hay ensayo
+            self.cell(w=ancho_total / 2, h=8,
+                      txt=f"RCPOENS {self.ensayo.ensayo.poens}",
+                      align="L", fill=0)
+            self.cell(w=ancho_total / 2, h=8,
+                      txt=f"Fecha: {self.ensayo.ensayo.fechaAprobacion}",
+                      align="R", fill=0)
+        else:
+            # Opcional: pie genérico si no hay ensayo
+            self.cell(w=ancho_total, h=8, txt="", align="C", fill=0)
+
 class PlantillasEnsayo():
     def __init__(self, muestra):
         self.muestra= Muestras.objects.get(id= muestra)
@@ -25,7 +48,7 @@ class PlantillasEnsayo():
         empresa= self.muestra.empresa
         expediente= self.muestra.expediente
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
 
         #IMAGEN
@@ -140,7 +163,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
 
         #TEXTO 
@@ -335,7 +358,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
         
@@ -348,7 +371,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -502,7 +525,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -515,7 +538,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -672,7 +695,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
@@ -700,7 +723,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -863,7 +886,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
@@ -877,7 +900,7 @@ class PlantillasEnsayo():
         fechaFin= ensayo.fechaFin
 
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 10)
@@ -1158,7 +1181,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -1171,7 +1194,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -1348,7 +1371,7 @@ class PlantillasEnsayo():
         
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -1361,7 +1384,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -1540,7 +1563,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -1553,7 +1576,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -1742,7 +1765,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
         
@@ -1755,7 +1778,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -1943,7 +1966,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
@@ -1974,7 +1997,7 @@ class PlantillasEnsayo():
                         resultado4 = resultado
 
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -2201,7 +2224,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
 
@@ -2215,7 +2238,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -2347,7 +2370,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -2360,7 +2383,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -2536,7 +2559,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -2549,7 +2572,7 @@ class PlantillasEnsayo():
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -2724,7 +2747,7 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
     
@@ -2733,7 +2756,7 @@ class PlantillasEnsayo():
         ensayo= Tratamiento.objects.get(muestra= self.muestra)
         ensayoForma= self.descripcion.get_formaEnsayo_display()
 
-        self.pdf = FPDF(orientation = 'P', unit= 'mm', format = 'A4')
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
         self.pdf.add_page()
         #TEXTO 
         self.pdf.set_font('Arial', '', 12)
@@ -2857,6 +2880,6 @@ class PlantillasEnsayo():
         # Agregar más contenido dinámico aquí...
         pdf=self.pdf
         
-        self.piePagina(pdf, ensayo)
+        
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
