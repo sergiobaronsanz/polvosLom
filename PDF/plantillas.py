@@ -64,85 +64,85 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 12)
 
         
-        self.pdf.cell(w=95, h= 12,border= "LRT", txt=f"Remitente: {empresa.empresa} ({expediente.empresaContrata})", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= "LRT", txt=f"Expediente: {expediente.expediente}", align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 10,border= "LRT", txt=f"Remitente: {empresa.empresa}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 10,border= "LRT", txt=f"Expediente: {expediente.expediente}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Id: {self.descripcion.id_fabricante}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Empresa de transportes: {self.descripcion.empresaTransporte}", align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 10,border= "LR", txt=f"Id: {self.descripcion.id_fabricante}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 10,border= "LR", txt=f"Empresa de transportes: {self.descripcion.empresaTransporte}", align= "L", fill = 0)
         
-        self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Id: {self.descripcion.procedencia.capitalize()}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Recibida por: {self.descripcion.usuario.firmas.firma}", align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 10,border= "LR", txt=f"Procedencia: {self.descripcion.procedencia.capitalize()}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 10,border= "LR", txt=f"Recibida por: {self.descripcion.usuario.firmas.firma}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 12,border= "LR", txt= f"¿Se adjunta documentación? {self.descripcion.get_documentacion_display()}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Etiquetado: {self.descripcion.get_etiquetado_display().capitalize()}", align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 10,border= "LR", txt= f"¿Se adjunta documentación? {self.descripcion.get_documentacion_display()}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 10,border= "LR", txt=f"Etiquetado: {self.descripcion.get_etiquetado_display().capitalize()}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 12,border= "LRB", txt=f"Fecha recepción: {fecha}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= "LRB", txt=f"Identificación LOM: {empresa.abreviatura}-{self.muestra.id_muestra}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 12,border= 0, align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 10,border= "LRB", txt=f"Fecha recepción: {fecha}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 10,border= "LRB", txt=f"Identificación LOM: {empresa.abreviatura}-{self.muestra.id_muestra}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 10,border= 0, align= "L", fill = 0)
 
 
         #ESTADO ENVÍO
         self.pdf.set_font('Arial', 'B', 12)
-        self.pdf.cell(w=190, h= 12,border= "LRT", align= "C",txt=f"ESTADO ENVÍO")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LRT", align= "C",txt=f"ESTADO ENVÍO")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Envoltura exterior: {self.descripcion.envolturaExt.capitalize()}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "L", txt=f"Envoltura exterior: {self.descripcion.envolturaExt.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Envoltura interior: {self.descripcion.envolturaInt.capitalize()}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "L", txt=f"Envoltura interior: {self.descripcion.envolturaInt.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Peso: {self.descripcion.peso} kg")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "L", txt=f"Peso: {self.descripcion.peso} kg")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Peso: {self.descripcion.estadoEnvio.capitalize()}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LRB", align= "L", txt=f"Peso: {self.descripcion.estadoEnvio.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         #CARACTERISTICAS MUESTRA
         self.pdf.set_font('Arial', 'B', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "C",txt=f"CARACTERÍSTICAS MUESTRA")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "C",txt=f"CARACTERÍSTICAS MUESTRA")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Aspecto general: {self.descripcion.aspectoMuestra.capitalize()}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "L", txt=f"Aspecto general: {self.descripcion.aspectoMuestra.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Color, brillo: {self.descripcion.color.capitalize()}, {self.descripcion.brillo.capitalize()}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "L", txt=f"Color, brillo: {self.descripcion.color.capitalize()}, {self.descripcion.brillo.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Tamaño, homogeneidad: {self.descripcion.tamano.capitalize()}, {self.descripcion.homogeneidad.capitalize()}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "L", txt=f"Tamaño, homogeneidad: {self.descripcion.tamano.capitalize()}, {self.descripcion.homogeneidad.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Humedad aparente: {self.descripcion.humedadAparente.capitalize()}, {self.descripcion.homogeneidad.capitalize()}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LRB", align= "L", txt=f"Humedad aparente: {self.descripcion.humedadAparente.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
 
         #OBSERVACIONES
         self.pdf.set_font('Arial', 'B', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LR", align= "C",txt=f"OBSERVACIONES")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LR", align= "C",txt=f"OBSERVACIONES")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.multi_cell(w=190, h= 12,border= "LR", align= "L", txt=f"Observación: {self.descripcion.observacion.capitalize()}")
+        self.pdf.multi_cell(w=190, h= 10,border= "LR", align= "L", txt=f"Observación: {self.descripcion.observacion.capitalize()}")
 
         self.pdf.set_font('Arial', '', 12)
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"La muestra se ensaya: {self.descripcion.formaEnsayo}")
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.cell(w=190, h= 10,border= "LRB", align= "L", txt=f"La muestra se ensaya: {self.descripcion.formaEnsayo}")
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
 
-        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
+        self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         #Firma
         self.pdf.set_font('Arial', '', 14) 
