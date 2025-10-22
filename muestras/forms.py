@@ -10,13 +10,18 @@ class DescripcionMuestraForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
-        # Establecer el widget para 'muestra' y darle la clase 'form-control'
-        self.fields['muestra'].widget.attrs.update({'class': 'form-control'})
-
-		 # Puedes añadir un widget para personalizar la apariencia de los campos
         
+        # Hacer todos los campos obligatorios
+        for field_name, field in self.fields.items():
+            if field_name != 'imagenEnvoltorio':  # esta será opcional
+                field.required = True
+            else:
+                field.required = False
+        
+        self.fields['muestra'].widget.attrs.update({'class': 'form-control'})        
         self.fields['id_fabricante'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['fecha_recepcion'].widget = forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
+        self.fields['empresaTransporte'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['documentacion'].widget.attrs.update({'class': 'form-control'})
         self.fields['etiquetado'].widget.attrs.update({'class': 'form-control'})
         self.fields['envolturaExt'].widget = forms.TextInput(attrs={'class': 'form-control'})
@@ -29,6 +34,7 @@ class DescripcionMuestraForm(forms.ModelForm):
         self.fields['brillo'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['tamano'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['homogeneidad'].widget = forms.TextInput(attrs={'class': 'form-control'})
+        self.fields['humedadAparente'].widget = forms.TextInput(attrs={'class': 'form-control'})
         self.fields['formaEnsayo'].widget.attrs.update({'class': 'form-control'})
         self.fields['observacion'].widget = forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         self.fields['imagenMuestra'].widget = forms.ClearableFileInput(attrs={'class': 'form-control'})

@@ -64,10 +64,13 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 12)
 
         
-        self.pdf.cell(w=95, h= 12,border= "LRT", txt=f"Remitente: {empresa.empresa}", align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 12,border= "LRT", txt=f"Remitente: {empresa.empresa} ({expediente.empresaContrata})", align= "L", fill = 0)
         self.pdf.multi_cell(w=95, h= 12,border= "LRT", txt=f"Expediente: {expediente.expediente}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Procedencia: {self.descripcion.procedencia.capitalize()}", align= "L", fill = 0)
+        self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Id: {self.descripcion.id_fabricante}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Empresa de transportes: {self.descripcion.empresaTransporte}", align= "L", fill = 0)
+        
+        self.pdf.cell(w=95, h= 12,border= "LR", txt=f"Id: {self.descripcion.procedencia.capitalize()}", align= "L", fill = 0)
         self.pdf.multi_cell(w=95, h= 12,border= "LR", txt=f"Recibida por: {self.descripcion.usuario.firmas.firma}", align= "L", fill = 0)
 
         self.pdf.cell(w=95, h= 12,border= "LR", txt= f"¿Se adjunta documentación? {self.descripcion.get_documentacion_display()}", align= "L", fill = 0)
@@ -116,9 +119,10 @@ class PlantillasEnsayo():
         self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Color, brillo: {self.descripcion.color.capitalize()}, {self.descripcion.brillo.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
-        self.pdf.set_font('Arial', '', 12)
+        self.pdf.cell(w=190, h= 12,border= "LR", align= "L", txt=f"Tamaño, homogeneidad: {self.descripcion.tamano.capitalize()}, {self.descripcion.homogeneidad.capitalize()}")
+        self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
         
-        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Tamaño, homogeneidad: {self.descripcion.tamano.capitalize()}, {self.descripcion.homogeneidad.capitalize()}")
+        self.pdf.cell(w=190, h= 12,border= "LRB", align= "L", txt=f"Humedad aparente: {self.descripcion.humedadAparente.capitalize()}, {self.descripcion.homogeneidad.capitalize()}")
         self.pdf.multi_cell(w=5, h= 12,border= "", fill = 0)
 
 
