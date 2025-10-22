@@ -1155,9 +1155,11 @@ class PlantillasEnsayo():
 
         self.pdf.multi_cell(w=190, h= 6,border= "LR", fill = 0)
 
+        concentraciones_unicasPmax = sorted(set(concentracionesPmax))
+        concentraciones_unicasDpdt = sorted(set(concentracionesDpdt))
                       
         self.pdf.set_font('Arial', '', 12) 
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"""La mayor Pmax registrada es de {pmMaxima} bar a una concentración de {', '.join(str(c) for c in concentracionesPmax)} g/m3; la mayor dPdT registrada es de {dPdTMaxima} bar/s a una concentración de {', '.join(str(c) for c in concentracionesDpdt)} g/m3""",   
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"""La mayor Pmax registrada es de {pmMaxima} bar a una concentración de {', '.join(str(c) for c in concentraciones_unicasPmax)} g/m3; la mayor dPdT registrada es de {dPdTMaxima} bar/s a una concentración de {', '.join(str(c) for c in concentraciones_unicasDpdt)} g/m3""",   
                 align= "J", fill = 0)
         self.pdf.set_font('Arial', 'B', 12) 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"PRESIÓN MÁXIMA DE EXPLOSIÓN: {ensayo.pmax} bar",
