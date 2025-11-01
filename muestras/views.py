@@ -27,7 +27,9 @@ def muestras(request):
     
     if request.POST:
         filtro= request.POST["filtro"]
-        muestras= Muestras.objects.filter(empresa__abreviatura__icontains=filtro).order_by('-fecha')
+        muestras= Muestras.objects.filter(empresa__abreviatura__icontains=filtro).order_by('-fecha').annotate(
+            tiene_descripcion= Exists(DescripcionMuestra.objects.filter(muestra= OuterRef('pk')))
+        )
     
     return render(request, 'muestras.html', {
         'muestras': muestras
