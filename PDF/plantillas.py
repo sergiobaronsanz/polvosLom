@@ -100,7 +100,7 @@ class PlantillasEnsayo():
         self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         
-        self.pdf.cell(w=190, h= 10,border= "LRB", align= "L", txt=f"Peso: {self.descripcion.estadoEnvio.capitalize()}")
+        self.pdf.cell(w=190, h= 10,border= "LRB", align= "L", txt=f"Estado del envío: {self.descripcion.estadoEnvio.capitalize()}")
         self.pdf.multi_cell(w=5, h= 10,border= "", fill = 0)
 
         #CARACTERISTICAS MUESTRA
