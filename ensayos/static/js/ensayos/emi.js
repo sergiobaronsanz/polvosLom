@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		var numeroResultado = 0;
 		resultados.forEach(element=>{
 			var concentracion, energia, retardo, nEnsayo, resultado, resultadoEs
-
 			if (element.length >= 6){
 				//Sacamos los valores de los resultados
 				concentracion= element[1];
@@ -195,9 +194,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			else{
 				if (element[0] === 'Es (mJ):' && element.length > 1 ){
 					let valores= [];
-					valores.push(parseInt(element[1]));
-					valores.push(parseInt(element[2]));
-					valores.push(parseInt(element[3]));
+					valores.push(parseFloat(element[1].replace(',', '.')));
+					valores.push(parseFloat(element[2].replace(',', '.')));
+					valores.push(parseFloat(element[3].replace(',', '.')));
 
 					filtroNan= valores.filter(n => !isNaN(n))
 					let valorMinimo= Math.min(...filtroNan);
