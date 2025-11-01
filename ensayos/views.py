@@ -85,8 +85,24 @@ def ensayosRealizados(request, ensayo):
         resultados= LIE.objects.all()
     elif ensayo_id.ensayo== "EMI":
         resultados= EMI.objects.all()
+    elif ensayo_id.ensayo== "EMIsin":
+        resultados= EMIsin.objects.all()
     elif ensayo_id.ensayo== "Pmax":
         resultados= Pmax.objects.all()
+    elif ensayo_id.ensayo== "REC":
+        resultados= REC.objects.all()
+    elif ensayo_id.ensayo== "CLO":
+        resultados= CLO.objects.all()
+    elif ensayo_id.ensayo== "N1":
+        resultados= N1.objects.all()
+    elif ensayo_id.ensayo== "N2":
+        resultados= N2.objects.all()
+    elif ensayo_id.ensayo== "N4":
+        resultados= N4.objects.all()
+    elif ensayo_id.ensayo== "O1":
+        resultados= O1.objects.all()
+    elif ensayo_id.ensayo== "Tratamiento":
+        resultados= Tratamiento.objects.all()
     else:
         resultados= None
     
