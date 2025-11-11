@@ -73,17 +73,14 @@ function calcularResultados(){
             tiempo.addEventListener("change", event=>{
                 let sumaTotal= 0;
                 let numTotal=0;
-                tiempos.forEach(tiempoc => {
-				if (tiempoc.value && !isNaN(tiempoc.value)) {
-					// Convertir a número, redondear al entero más cercano y asegurar entero
-					const valorRedondeado = Math.round(parseFloat(tiempoc.value));
-					
-					sumaTotal += valorRedondeado;
-					numTotal += 1;
-				}
-});
+                tiempos.forEach(tiempoc=>{
+                    if (tiempoc.value && !isNaN(tiempoc.value)) {
+                        sumaTotal= sumaTotal + parseInt(tiempoc.value);
+                        numTotal= numTotal+1;
+                    }               
+                });
                 nuevoResultado= sumaTotal/numTotal;
-                resultado.value= parseFloat(nuevoResultado).toFixed(1);
+                resultado.value = Math.round(parseFloat(nuevoResultado));
             })
         })
 
