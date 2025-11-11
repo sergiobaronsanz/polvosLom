@@ -2653,9 +2653,9 @@ def o1 (request, muestra_id):
 
             if valorReferencia <= tiempo37[0]:
                 resultadoEnsayo= "2"
-            if valorReferencia <= tiempo64[0]:
+            elif valorReferencia <= tiempo64[0]:
                 resultadoEnsayo= "3"
-            if valorReferencia <= tiempo46[0]:
+            elif valorReferencia <= tiempo46[0]:
                 resultadoEnsayo= "4"
 
             #Guardamos en el modelo O1 el resultado del ensayo
