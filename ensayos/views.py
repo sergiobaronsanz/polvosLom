@@ -74,35 +74,35 @@ def ensayosRealizados(request, ensayo):
     #filtramos por tipo de ensayo
 
     if ensayo_id.ensayo == "Humedad":
-        resultados= Humedad.objects.all()
+        resultados = Humedad.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Granulometria":
-        resultados= Granulometria.objects.all()
+        resultados= Granulometria.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "TMIc":
-        resultados= TMIc.objects.all()
+        resultados= TMIc.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "TMIn":
-        resultados= TMIn.objects.all()
+        resultados= TMIn.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "LIE":
-        resultados= LIE.objects.all()
+        resultados= LIE.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "EMI":
-        resultados= EMI.objects.all()
+        resultados= EMI.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "EMIsin":
-        resultados= EMIsin.objects.all()
+        resultados= EMIsin.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Pmax":
-        resultados= Pmax.objects.all()
+        resultados= Pmax.objects.all().filter(pmax__isnull=False, dpdt__isnull=False, kmax__isnull=False).order_by('-fechaFin')
     elif ensayo_id.ensayo== "REC":
-        resultados= REC.objects.all()
+        resultados= REC.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "CLO":
-        resultados= CLO.objects.all()
+        resultados= CLO.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "N1":
-        resultados= N1.objects.all()
+        resultados= N1.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "N2":
-        resultados= N2.objects.all()
+        resultados= N2.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "N4":
-        resultados= N4.objects.all()
+        resultados= N4.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "O1":
-        resultados= O1.objects.all()
+        resultados= O1.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Tratamiento":
-        resultados= Tratamiento.objects.all()
+        resultados= Tratamiento.objects.all().order_by('-fechaFin')
     else:
         resultados= None
     

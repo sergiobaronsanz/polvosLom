@@ -43,8 +43,7 @@ function calculoDesviacion(){
             if (!isNaN(valorCampo)){
                 valores.push(valorCampo);
                 suma+= valorCampo;
-                console.log(valores);
-                
+                console.log(valores);    
             }
         }
 
@@ -56,6 +55,8 @@ function calculoDesviacion(){
         //Ponemos el valor en el campo desviacion
         const desviacion= document.getElementById("id_desviacion");
         desviacion.value= desviacionEstandar.toFixed(2);
+
+		console.log('hola como estas')
 
         //Mostramos o ocultamos los campos dependiendo de la desviación
         if (desviacionEstandar>= 0.15){
@@ -81,6 +82,8 @@ function calculoDesviacion(){
         // Agregar un evento de escucha para el evento de cambio (change)
         campo.addEventListener('change', calculo);
     }
+
+	calculo();
 }
 
 function resultadoNoDeterminado(){

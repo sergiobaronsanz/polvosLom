@@ -186,7 +186,7 @@ def ensayosMuestrasSimple(request, muestra):
 def verExpedientes(request):
 
     #Sacamos los expedientes
-    expedientes= Expedientes.objects.all().order_by( 'estado', 'fecha')
+    expedientes= Expedientes.objects.all().order_by( 'estado', '-fecha')
         
     query_year= Expedientes.objects.values("fecha__year").distinct().order_by("-fecha__year")
     listaYears = [año['fecha__year'] for año in query_year]
