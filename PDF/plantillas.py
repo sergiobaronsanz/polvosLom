@@ -1708,8 +1708,12 @@ class PlantillasEnsayo():
             resultadoRec= "{:.2E}".format(resultadoFloat)
             
         except ValueError:
-            menorResistencia= ">4E+11"
-            resultadoRec= resultado
+            if resultado == "<1E+03":
+                menorResistencia= "<10E+03"
+                resultadoRec= resultado
+            else:
+                menorResistencia= ">4E+11"
+                resultadoRec= resultado
 
         
 
@@ -1747,12 +1751,15 @@ class PlantillasEnsayo():
             # Intentamos convertir a número
             resultado_num = float(resultado)
             if resultado_num <= 1000:
-                clasificacion = "clasifica como polvo IIIC, clasifica como polvo conductivo"
+                clasificacion = "clasifica como polvo IIIC, polvo conductivo"
             else:
                 clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
         except ValueError:
             # Si no es numérico (por ejemplo ">4E10")
-            clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
+            if resultado == "<1E+03":
+                clasificacion = "clasifica como polvo IIIC, polvo conductivo"
+            else:
+                clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
 
         self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"RESISTIVIDAD ELECTRICA EN CAPA: {resultadoRec} ohm · m, {clasificacion}",
                 align= "J", fill = 0)

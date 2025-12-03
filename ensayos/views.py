@@ -1912,8 +1912,16 @@ def rec (request, muestra_id):
                 rec.resultado = resultadoEnsayo
                 
             else:
-                # Caso en que no hay datos
-                rec.resultado = ">4E+10"
+                resultadoREC = ResultadosREC.objects.filter(ensayo=rec)
+                if resultadoREC.filter(resultado="<0,01").exists():
+                    rec.resultado = "<1E+03"
+                else:
+                    # Caso en que no hay datos
+                    rec.resultado = ">4E+10"
+
+                    
+                    
+                
                 
             rec.save()
             datosGuardados= True        
