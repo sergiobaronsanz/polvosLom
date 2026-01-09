@@ -2657,20 +2657,20 @@ def o1 (request, muestra_id):
             tiempo46= [d["resultado"] for d in listaResultadosReferencia if d["proporcion"] == "3"]
 
             print(tiempo37)
-            resultadoEnsayo= "1"
-
-            if valorReferencia <= tiempo37[0]:
-                resultadoEnsayo= "2"
-            elif valorReferencia <= tiempo64[0]:
-                resultadoEnsayo= "3"
+            resultadoEnsayo = "1"
+            
+            if valorReferencia < tiempo64[0]:
+                resultadoEnsayo = "2"
             elif valorReferencia <= tiempo46[0]:
-                resultadoEnsayo= "4"
-
-            #Guardamos en el modelo O1 el resultado del ensayo
-            o1.resultado= resultadoEnsayo
+                resultadoEnsayo = "3"
+            elif valorReferencia <= tiempo37[0]:
+                resultadoEnsayo = "4"
+            
+            # Guardamos en el modelo O1 el resultado del ensayo
+            o1.resultado = resultadoEnsayo
             o1.save()
-
-            datosGuardados= True
+            
+            datosGuardados = True
 
         else:
             print (formO1Resultados.errors)
