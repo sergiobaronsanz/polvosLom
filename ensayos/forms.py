@@ -1463,6 +1463,13 @@ class O1Form(forms.Form):
         label="Humedad Ambiente",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
     )  
+
+    humedadCelulosa = forms.DecimalField(
+        decimal_places=2,
+        max_digits=3,
+        label="Humedad celulosa",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
     
 
     observacion=forms.CharField(
