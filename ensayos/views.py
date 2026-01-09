@@ -2694,6 +2694,7 @@ def o1 (request, muestra_id):
             fechaFin= str(ensayo_O1.fechaFin)
             temperaturaAmbiente= ensayo_O1.temperaturaAmbiente
             humedad=ensayo_O1.humedad
+            humedadCelulosa= ensayo_O1.humedadCelulosa
             observacion= ensayo_O1.observacion
             
             
@@ -2703,6 +2704,7 @@ def o1 (request, muestra_id):
                 'fechaFin': fechaFin,
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
+                'humedadCelulosa': humedadCelulosa,
                 'observacion': observacion,
                 })
             
