@@ -2585,6 +2585,7 @@ def o1 (request, muestra_id):
             fechaFin= formO1.cleaned_data['fechaFin']
             temperaturaAmbiente= formO1.cleaned_data['temperaturaAmbiente']
             humedad= formO1.cleaned_data['humedad']
+            humedadCelulosa= formO1.cleaned_data['humedadCelulosa']
             observacion=formO1.cleaned_data['observacion']
 
             o1= O1.objects.create(
@@ -2592,6 +2593,7 @@ def o1 (request, muestra_id):
                 ensayo=ensayo,
                 temperaturaAmbiente= temperaturaAmbiente,
                 humedad= humedad,
+                humedadCelulosa=humedadCelulosa,
                 fechaInicio= fechaInicio,
                 fechaFin= fechaFin,
                 observacion= observacion,
