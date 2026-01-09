@@ -821,6 +821,7 @@ class ResultadosO1 (models.Model):
     ensayo= models.ForeignKey("O1", on_delete=models.CASCADE, verbose_name="Ensayo O1")
     ensayoReferencia= models.BooleanField(verbose_name="¿Ensayo Referencia?")
     proporcion= models.CharField(max_length=300,choices= porcentajes, verbose_name="Proporción")
+    humedadCelulosa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name="Humedad Celulosa")
     tiempo1= models.IntegerField(verbose_name="Tiempo1")
     tiempo2= models.IntegerField(verbose_name="Tiempo2")
     tiempo3= models.IntegerField(verbose_name="Tiempo3")
