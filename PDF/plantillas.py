@@ -2631,7 +2631,7 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
-        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}",
+        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}, humedad celulosa: {ensayo.humedadCelulosa} %",
                 align= "J", fill = 0)
 
 
