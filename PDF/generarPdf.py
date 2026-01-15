@@ -131,17 +131,18 @@ class PDFGenerator:
                 pdf_bytes = self.generate_tratamiento_pdf()
             if request['ensayo'] == 'EMIsin':
                 pdf_bytes = self.generate_EmiSin_pdf()
-        
-            nombre_archivo= (request['muestra_nombre']) + "-" + (request['ensayo'] + ".pdf")
-            # Agregar más tipos de PDF aquí...
-            pdf_files.append((nombre_archivo, pdf_bytes))
-            #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
-            formateo_pdf_files.append(io.BytesIO(pdf_bytes))
+
+            if request['ensayo'] != 'Parte': #Incluye el parte en ensayos ZIP con un solo archivo (ejemplo se pide O1 solo)
+                nombre_archivo= (request['muestra_nombre']) + "-" + (request['ensayo'] + ".pdf")
+                # Agregar más tipos de PDF aquí...
+                pdf_files.append((nombre_archivo, pdf_bytes))
+                #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
+                formateo_pdf_files.append(io.BytesIO(pdf_bytes))
         
         return pdf_files, formateo_pdf_files
 
 
-    # Método principal para gestionar múltiples PDFs
+    # Método principal para gestionar PDFs
     def generateMuestra(self):
         
         #Sacamos los archivos pdf y el formateo de los mismos para que puedan ser unidos con el merge

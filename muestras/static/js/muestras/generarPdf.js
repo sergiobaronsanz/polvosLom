@@ -90,7 +90,8 @@ botonZIP.addEventListener("click", function() {
   ensayos.forEach(element => {
     datos.push(element)
   });
-
+  //Añadimos el parte par los zip enviados que solo tienen una muestra
+  datos.push({ensayo:"Parte"});
   console.log(datos)
 
   solicitudPOST(datos);  // Llamamos a la función de solicitud POST
