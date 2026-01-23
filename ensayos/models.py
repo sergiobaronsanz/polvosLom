@@ -785,7 +785,7 @@ class O1 (models.Model):
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Temperatura Ambiente", blank=True, null= True)
     humedad=  models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Humedad Ambiente", blank=True, null= True)
-    humedadCelulosa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name="Humedad Celulosa")
+    humedadCelulosa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name="Humedad Celulosa", blank=True, null= True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     ensayoHumedad= models.FileField(upload_to='ensayos/o1/humedad_celulosa/', verbose_name="Humedad Celulosa", blank=True, null= True)
     fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
