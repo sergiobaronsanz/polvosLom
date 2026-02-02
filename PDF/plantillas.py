@@ -64,20 +64,20 @@ class PlantillasEnsayo():
         self.pdf.set_font('Arial', '', 12)
 
         
-        self.pdf.cell(w=95, h= 10,border= "LRT", txt=f"Remitente: {empresa.empresa}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 10,border= "LRT", txt=f"Expediente: {expediente.expediente}", align= "L", fill = 0)
+        self.pdf.cell(w=115, h= 10,border= "LRT", txt=f"Remitente: {empresa.empresa}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=75, h= 10,border= "LRT", txt=f"Expediente: {expediente.expediente}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 10,border= "LR", txt=f"Id: {self.descripcion.id_fabricante}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 10,border= "LR", txt=f"Empresa de transportes: {self.descripcion.empresaTransporte}", align= "L", fill = 0)
+        self.pdf.cell(w=115, h= 10,border= "LR", txt=f"Id: {self.descripcion.id_fabricante}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=75, h= 10,border= "LR", txt=f"Empresa de transportes: {self.descripcion.empresaTransporte}", align= "L", fill = 0)
         
-        self.pdf.cell(w=95, h= 10,border= "LR", txt=f"Procedencia: {self.descripcion.procedencia.capitalize()}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 10,border= "LR", txt=f"Recibida por: {self.descripcion.usuario.firmas.firma}", align= "L", fill = 0)
+        self.pdf.cell(w=115, h= 10,border= "LR", txt=f"Procedencia: {self.descripcion.procedencia.capitalize()}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=75, h= 10,border= "LR", txt=f"Recibida por: {self.descripcion.usuario.firmas.firma}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 10,border= "LR", txt= f"¿Se adjunta documentación? {self.descripcion.get_documentacion_display()}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 10,border= "LR", txt=f"Etiquetado: {self.descripcion.get_etiquetado_display().capitalize()}", align= "L", fill = 0)
+        self.pdf.cell(w=115, h= 10,border= "LR", txt= f"¿Se adjunta documentación? {self.descripcion.get_documentacion_display()}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=75, h= 10,border= "LR", txt=f"Etiquetado: {self.descripcion.get_etiquetado_display().capitalize()}", align= "L", fill = 0)
 
-        self.pdf.cell(w=95, h= 10,border= "LRB", txt=f"Fecha recepción: {fecha}", align= "L", fill = 0)
-        self.pdf.multi_cell(w=95, h= 10,border= "LRB", txt=f"Identificación LOM: {empresa.abreviatura}-{self.muestra.id_muestra}", align= "L", fill = 0)
+        self.pdf.cell(w=115, h= 10,border= "LRB", txt=f"Fecha recepción: {fecha}", align= "L", fill = 0)
+        self.pdf.multi_cell(w=75, h= 10,border= "LRB", txt=f"Identificación LOM: {empresa.abreviatura}-{self.muestra.id_muestra}", align= "L", fill = 0)
         self.pdf.multi_cell(w=95, h= 10,border= 0, align= "L", fill = 0)
 
 
