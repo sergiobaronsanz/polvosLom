@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 #Equipos
 @login_required
 def equipos (request):
-    equipos= Equipos.objects.all().order_by()
+    equipos= Equipos.objects.all().order_by('codigo')
     
     return render (request, "equipos/equipos.html",{
         'equipos': equipos
