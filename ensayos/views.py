@@ -76,7 +76,7 @@ def ensayosRealizados(request, ensayo):
     if ensayo_id.ensayo == "Humedad":
         resultados = Humedad.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Granulometria":
-        resultados= Granulometria.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
+        resultados = Granulometria.objects.filter(resultado__isnull=False).exclude(resultado=0).order_by('-fechaFin')
     elif ensayo_id.ensayo== "TMIc":
         resultados= TMIc.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "TMIn":
@@ -102,7 +102,7 @@ def ensayosRealizados(request, ensayo):
     elif ensayo_id.ensayo== "O1":
         resultados= O1.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Tratamiento":
-        resultados= Tratamiento.objects.all().order_by('-fechaFin')
+        resultados= Tratamiento.objects.all().order_by('-id')
     else:
         resultados= None
     
@@ -2558,6 +2558,7 @@ def o1 (request, muestra_id):
     equipos= get_list_or_404(Equipos, ensayos=ensayo)
     datosGuardados= False
     usuario= request.user
+    nombreArchivo= None
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
@@ -2566,39 +2567,44 @@ def o1 (request, muestra_id):
 
     if request.method == 'POST':
         #O1ibimos los formularios diferenciándolos con el prefijo
-        formO1= O1Form(request.POST, prefix='o1')
+        #formO1= O1Form(request.POST, request.POST, prefix='o1')
+        formO1= O1Form(request.POST, request.FILES, prefix='o1')
         formO1Resultados= o1ResultadosFormSet(request.POST, prefix='o1Resultados') 
 
         equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo') 
         
         if formO1.is_valid() and formO1Resultados.is_valid() and equiposEnsayo.is_valid():
 
-            muestra= get_object_or_404(Muestras, id= request.POST.get('o1-muestra')) 
-            
-            #Comprobamos que no exista un ensayo  previo
-            o1_instancia= O1.objects.filter(muestra= muestra)
-            o1_instancia.delete()
+            muestra = get_object_or_404(Muestras, id=request.POST.get('o1-muestra'))
 
-            
-            #Guardamos el formulario  a falta del resultado final
-            fechaInicio= formO1.cleaned_data['fechaInicio']
-            fechaFin= formO1.cleaned_data['fechaFin']
-            temperaturaAmbiente= formO1.cleaned_data['temperaturaAmbiente']
-            humedad= formO1.cleaned_data['humedad']
-            humedadCelulosa= formO1.cleaned_data['humedadCelulosa']
-            observacion=formO1.cleaned_data['observacion']
-
-            o1= O1.objects.create(
+            # Obtener o crear el registro sin borrarlo
+            o1, created = O1.objects.get_or_create(
                 muestra=muestra,
-                ensayo=ensayo,
-                temperaturaAmbiente= temperaturaAmbiente,
-                humedad= humedad,
-                humedadCelulosa=humedadCelulosa,
-                fechaInicio= fechaInicio,
-                fechaFin= fechaFin,
-                observacion= observacion,
-                usuario= usuario,
+                defaults={
+                    "ensayo": ensayo,
+                    "usuario": usuario,
+                }
             )
+
+            # Actualizar campos normales
+            o1.ensayo = ensayo
+            o1.fechaInicio = formO1.cleaned_data['fechaInicio']
+            o1.fechaFin = formO1.cleaned_data['fechaFin']
+            o1.temperaturaAmbiente = formO1.cleaned_data['temperaturaAmbiente']
+            o1.humedad = formO1.cleaned_data['humedad']
+            o1.humedadCelulosa = formO1.cleaned_data['humedadCelulosa']
+            o1.friable = formO1.cleaned_data['friable']
+            o1.tamanoMuestra = formO1.cleaned_data['tamanoMuestra']
+            o1.observacion = formO1.cleaned_data['observacion']
+            o1.usuario = usuario
+
+            # Solo actualizar archivo si se sube uno nuevo
+            archivo = formO1.cleaned_data.get('archivo')
+            if archivo:
+                o1.archivo = archivo
+
+            o1.save()
+            
             equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
             o1.equipos.set (equipos)
 
@@ -2673,9 +2679,12 @@ def o1 (request, muestra_id):
             o1.save()
             
             datosGuardados = True
+            
+            nombreArchivo= archivo
 
         else:
             print (formO1Resultados.errors)
+            print (formO1.errors)
             formO1.add_error(None, 'Error en el formulario, revisa los datos')
             return render(request, 'ensayos/nuevosEnsayos/o1.html', {
                 'ensayo': ensayo,
@@ -2695,7 +2704,10 @@ def o1 (request, muestra_id):
             temperaturaAmbiente= ensayo_O1.temperaturaAmbiente
             humedad=ensayo_O1.humedad
             humedadCelulosa= ensayo_O1.humedadCelulosa
+            friable= ensayo_O1.friable
+            tamanoMuestra= ensayo_O1.tamanoMuestra
             observacion= ensayo_O1.observacion
+            archivo= ensayo_O1.archivo
             
             
             formO1 = O1Form(prefix='o1', initial={
@@ -2705,7 +2717,10 @@ def o1 (request, muestra_id):
                 'temperaturaAmbiente': temperaturaAmbiente,
                 'humedad': humedad,
                 'humedadCelulosa': humedadCelulosa,
+                'friable': friable,
+                'tamanoMuestra' : tamanoMuestra,
                 'observacion': observacion,
+                'archivo' : archivo,
                 })
             
             formO1.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
@@ -2750,6 +2765,7 @@ def o1 (request, muestra_id):
         'formO1Resultados': formO1Resultados,
         'equiposEnsayo': equiposEnsayo,
         'datosGuardados': datosGuardados,
+        'nombreArchivo' : nombreArchivo,
     })
 
 @login_required

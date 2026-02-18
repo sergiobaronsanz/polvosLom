@@ -40,13 +40,42 @@
         {{formO1.humedadCelulosa.label}}
         {{formO1.humedadCelulosa}}
       </div>
+
+	  <div class= "col text-nowrap">
+        {{formO1.friable.label}}
+        {{formO1.friable}}
+      </div>
+
   </div>
+   <div class= "row mt-3 mb-3">
+		<div class= "col text-nowrap">
+        <p> Tras comprobación mediante pesaje ¿Qué porcentaje de la muestra es < 500 um? </p>
+		<div class= "col-3 m-auto">
+        	{{formO1.tamanoMuestra}}
+		</div>
+		<p id="prepararSi" class= "mt-3 p-2  bg-info rounded text-white" hidden> La muestra requiere preparación </p>
+		<p id="prepararNo" class= "mt-3 p-2  bg-success rounded text-white" hidden> La muestra se puede ensayar S/V </p>
+      </div>
+   </div>
 
   <div class= "row mt-4 d-flex justify-content-center">
     <div class= "col-8 text-nowrap">
       {{equiposEnsayo}}
     </div>
   </div>
+
+  <div class= "row mt-4 mb-4">
+		<div class= "m-auto">
+			<p> Sube si es necesaria la hoja de verificiación la fuente de alimentación </p>
+			{%if nombreArchivo%}
+				<div>
+					<h5> Archivo guardado </h5>
+					<p> {{nombreArchivo}} </p>
+				</div>
+			{%endif%}
+			{{formO1.archivo}}
+		</div>
+   </div>
 
 
 {%endblock%}

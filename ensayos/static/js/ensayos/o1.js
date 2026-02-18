@@ -1,3 +1,40 @@
+//Función para ver si requiere molienda
+
+function requierePreparacion(){
+	inputPorcentaje = document.getElementById("id_o1-tamanoMuestra");
+	pPreparacionSi= document.getElementById("prepararSi");
+	pPreparacionNo= document.getElementById("prepararNo");
+	friable= document.getElementById("id_o1-friable");
+
+	function cambioPreparacion(){
+		console.log(inputPorcentaje.value);
+		valorPorcentaje= inputPorcentaje.value
+		valorFriable= friable.value
+		console.log(valorFriable);
+		console.log(valorPorcentaje);
+		if (valorPorcentaje > 10 || valorFriable == "2"){
+			pPreparacionSi.hidden= false;
+			pPreparacionNo.hidden= true;
+		}
+		else{
+			pPreparacionSi.hidden= true;
+			pPreparacionNo.hidden= false;
+		}
+	}
+	
+
+	inputPorcentaje.addEventListener("change", event=>{
+		cambioPreparacion();
+
+	});
+
+	friable.addEventListener("change", event =>{
+		cambioPreparacion();
+	})
+
+}
+
+
 //Fijar proporciones
 
 function fijarProporcion(){
@@ -96,8 +133,8 @@ function calcularResultados(){
 }
 
     
-    
 
 //Funciones
 fijarProporcion();
 calcularResultados();
+requierePreparacion();

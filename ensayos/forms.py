@@ -1428,6 +1428,12 @@ class O1Form(forms.Form):
         ("1", "SI"),
         ("2", "NO")
     ]
+    
+    muestraFriable=[
+		("1", "NO"),
+		("2", "SI")
+	]
+    
 
     muestras= Muestras.objects.all()
 
@@ -1466,16 +1472,35 @@ class O1Form(forms.Form):
 
     humedadCelulosa = forms.DecimalField(
         decimal_places=2,
-        max_digits=3,
+        max_digits=4,
         label="Humedad celulosa",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
     )  
     
+    friable= forms.ChoiceField(
+		choices= muestraFriable,
+        label="Friable", 
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+	)
+    
+    
+    tamanoMuestra = forms.DecimalField(
+        decimal_places=1,
+        max_digits=3,
+        label="% de muestra < 500 um",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
 
     observacion=forms.CharField(
         label= "Observación",
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
+    
+    archivo= forms.FileField(
+        label= "Archivo Evalución Fuente de alimentación",
+        required= False,
     )
 
 class O1ResultadosForm(forms.Form):

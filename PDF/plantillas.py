@@ -666,27 +666,27 @@ class PlantillasEnsayo():
         
         #Si el ensayo no se ha podido hacer        
         else:
-                for i,fila in enumerate(resultados[:3]):
-                        self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-                        self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'Humedad {i+1}: {fila.resultado}', 
-                                fill = 0)
-                        self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
+            for i,fila in enumerate(resultados[:3]):
+                    self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
+                    self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'Humedad {i+1}: {fila.resultado}', 
+                            fill = 0)
+                    self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
-                self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
+            self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
 
-                self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-                self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'El ensayo no se puede hacer', 
-                        fill = 0)
-                self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
+            self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
+            self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'El ensayo no se puede hacer', 
+                    fill = 0)
+            self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
 
-                self.pdf.set_font('Arial', 'B', 12) 
-                
-                self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
-                self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
-                self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'HUMEDAD MEDIA: {ensayo.resultado} %', 
-                        fill = 0)
-                self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
-                self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
+            self.pdf.set_font('Arial', 'B', 12) 
+            
+            self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
+            self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
+            self.pdf.cell(w=180, h= 8,border= 0,align= "L",txt= f'HUMEDAD MEDIA: {ensayo.resultado} %', 
+                    fill = 0)
+            self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
+            self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
 
              
         #Firma
@@ -2627,12 +2627,19 @@ class PlantillasEnsayo():
 
         #Celda Tratamiento de muestras  
         self.pdf.set_font('Arial', 'B', 12) 
-        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
+        self.pdf.multi_cell(w=190, h= 8,border= "LTR", txt= "CONDICIONES MUESTRA",
                 align= "J", fill = 0)
 
-        self.pdf.set_font('Arial', '', 12)    
-        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}, humedad celulosa: {ensayo.humedadCelulosa} %",
+        self.pdf.set_font('Arial', '', 12)  
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt = f"Muestra friable: {ensayo.get_friable_display()}",
                 align= "J", fill = 0)
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt = f"Porcentaje de muestra inferior a 500 um: {ensayo.tamanoMuestra} %",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt= f"La muestra se ensaya {ensayoForma}",
+                align= "J", fill = 0)            
+        
 
 
         #Celda Condiciones ambientales  
@@ -2646,6 +2653,15 @@ class PlantillasEnsayo():
 
         self.pdf.multi_cell(w=95, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
                 align= "C", fill = 0)
+        
+        
+        #Celda Condiciones celulosa
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "HUMEDAD CELULOSA",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = f"Humedad: {ensayo.humedadCelulosa} % ",
+                align= "J", fill = 0)
 
 
         #Celda Equipos
@@ -2763,6 +2779,21 @@ class PlantillasEnsayo():
         
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+    
+    
+    def VerificacionFuente(self):
+        try:
+                ensayo = O1.objects.get(muestra=self.muestra)
+                
+                if ensayo.archivo:  # Verifica si el archivo está presente
+                        with ensayo.archivo.open('rb') as file:  # Abre el archivo como binario
+                                contenido = file.read()
+                                return contenido  # Retorna el contenido binario del archivo
+                else:
+                        return None  # Si no hay archivo, retorna None
+
+        except Granulometria.DoesNotExist:
+                return print("Granulometría no existe")  # Si no encuentra el objeto, retorna None
     
 
     def tratamiento(self):

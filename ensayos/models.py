@@ -780,12 +780,18 @@ class O1 (models.Model):
         ("4", "Grupo de embalaje/envasado III/Categoría 3")
     ]
     
+    muestraFriable=[
+		("1", "NO"),
+		("2", "SI")
+	]
     
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     temperaturaAmbiente= models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Temperatura Ambiente", blank=True, null= True)
     humedad=  models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Humedad Ambiente", blank=True, null= True)
-    humedadCelulosa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name="Humedad Celulosa", blank=True, null= True)
+    humedadCelulosa = models.DecimalField(max_digits=4, decimal_places=2, verbose_name="Humedad Celulosa", blank=True, null= True)
+    tamanoMuestra= models.DecimalField(max_digits=3, decimal_places=1, verbose_name="% de muestra < 500 um", blank= True, null=True)
+    friable= models.CharField(max_length=50, choices= muestraFriable, verbose_name="Friable", blank=True, null=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
     ensayoHumedad= models.FileField(upload_to='ensayos/o1/humedad_celulosa/', verbose_name="Humedad Celulosa", blank=True, null= True)
     fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
@@ -795,10 +801,11 @@ class O1 (models.Model):
     resultado= models.CharField(max_length=50, choices= resultadosPosibles, verbose_name="Resultado", blank=True, null=True) #9999,99
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank=True, null= True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
+    archivo= models.FileField(upload_to="archivosEvaluacionesFuente", blank= True, null=True)
 
     horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
     
-    #unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""
+    #unidad= models.CharField(verbose_name="Unidad", max_length=50, default="mJ")"""q
     
     
     class Meta():

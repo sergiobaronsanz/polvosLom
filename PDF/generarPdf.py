@@ -15,6 +15,8 @@ from muestras.models import DescripcionMuestra
 import os
 import os
 from django.conf import settings
+from pypdf import PdfReader, PdfWriter
+from io import BytesIO
 
 
 class PDFGenerator:
@@ -65,6 +67,9 @@ class PDFGenerator:
     
     def generate_o1_pdf(self):
         return self.plantilla.O1()
+    
+    def generate_o1_Verificacion_pdf(self):
+        return self.plantilla.VerificacionFuente()
     
     def generate_tratamiento_pdf(self):
         return self.plantilla.tratamiento()
@@ -125,8 +130,29 @@ class PDFGenerator:
                 pdf_bytes = self.generate_n2_pdf()
             if request['ensayo'] == 'N1':
                 pdf_bytes = self.generate_n1_pdf()
-            if request['ensayo'] == 'O1':
-                pdf_bytes = self.generate_o1_pdf()
+            if request['ensayo'] == 'O1': ##O1 Lleva 2 documentos anexados, el ensayo y la hoja de verificación.
+                pdf1 = self.generate_o1_pdf()
+                pdf2 = self.generate_o1_Verificacion_pdf()
+                
+                if pdf2:
+                    writer = PdfWriter()
+
+                    with BytesIO(pdf1) as pdf1_buffer, BytesIO(pdf2) as pdf2_buffer:
+                        reader1 = PdfReader(pdf1_buffer)
+                        reader2 = PdfReader(pdf2_buffer)
+
+                        for page in reader1.pages:
+                            writer.add_page(page)
+
+                        for page in reader2.pages:
+                            writer.add_page(page)
+
+                        with BytesIO() as output:
+                            writer.write(output)
+                            pdf_bytes = output.getvalue()
+                else:
+                    pdf_bytes = pdf1
+                        
             if request['ensayo'] == 'Tratamiento':
                 pdf_bytes = self.generate_tratamiento_pdf()
             if request['ensayo'] == 'EMIsin':
@@ -139,7 +165,7 @@ class PDFGenerator:
                 #Creamos la lista con todos los pdfs pasándolos de binarios a un archivo para poder unirlos (merge)
                 formateo_pdf_files.append(io.BytesIO(pdf_bytes))
         
-        return pdf_files, formateo_pdf_files
+            return pdf_files, formateo_pdf_files
 
 
     # Método principal para gestionar PDFs
