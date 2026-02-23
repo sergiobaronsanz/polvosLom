@@ -79,7 +79,7 @@ class HumedadForm(forms.Form):
     )
 
     tDesecacion= forms.IntegerField(
-        initial=105, 
+        initial=100, 
         label="Temperatura de Desecación",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
