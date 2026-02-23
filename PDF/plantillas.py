@@ -1912,7 +1912,7 @@ class PlantillasEnsayo():
 
         self.pdf.multi_cell(w=190, h= 8,border= "RL", fill = 0)
         
-        def calculoConcentraciones(oxigeno):
+        def calculoConcentracionesSi(oxigeno):
             listaConcentraciones = []
 
             try:
@@ -1927,14 +1927,30 @@ class PlantillasEnsayo():
                 listaConcentraciones = ["N/D"]  # se guarda solo un "N/D"
 
             return listaConcentraciones
+        
+        def calculoConcentracionesNo(oxigeno):
+            listaConcentraciones = []
+
+            try:
+                oxigenoInt = int(oxigeno)  # si funciona, oxigeno es un número
+                for resultado in resultados:
+                    if (resultado.oxigeno == oxigenoInt):
+                        listaConcentraciones.append(int(resultado.concentracion))
+                # Eliminar duplicados (manteniendo solo valores únicos)
+                listaConcentraciones = list(set(listaConcentraciones))
+
+            except ValueError:  # si falla la conversión a int
+                listaConcentraciones = ["N/D"]  # se guarda solo un "N/D"
+
+            return listaConcentraciones
                 
         if ensayo.resultado != "N/D":
               oxigenoNo= str(ensayo.resultado)
               oxigenoSi= str(int(ensayo.resultado) + 1)
               resultadoCLO = oxigenoNo
               
-              concentracionesNo=calculoConcentraciones(oxigenoNo)
-              concentracionesSi=calculoConcentraciones(oxigenoSi)
+              concentracionesNo=calculoConcentracionesNo(oxigenoNo)
+              concentracionesSi=calculoConcentracionesSi(oxigenoSi)
               
               
                 
