@@ -518,8 +518,8 @@ class ResultadosCLO (models.Model):
     ensayo= models.ForeignKey("CLO", on_delete=models.CASCADE, verbose_name="Ensayo LIE")
     concentracion= models.IntegerField(verbose_name="Concentración")
     peso= models.DecimalField(decimal_places=1, max_digits=5, verbose_name="Peso equivalente")
-    pex= models.DecimalField(decimal_places=1, max_digits=5, verbose_name="PEX")
-    pm= models.DecimalField(decimal_places=1, max_digits=5, verbose_name="PM")
+    pex= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PEX")
+    pm= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="PM")
     dpdt=  models.IntegerField(verbose_name="dPdT")
 
     oxigeno= models.IntegerField(verbose_name= "Oxígeno")
