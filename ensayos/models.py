@@ -929,3 +929,62 @@ class Tratamiento (models.Model):
         
     def __str__(self):
         return f"{self.muestra} tratada" 
+
+
+
+#EXPLO/NOEXPLO
+class exploNoExplo(models.Model):
+    seleccionCerillas = [
+        ("1", "sobbe"),
+        ("2", "simex"),
+    ]
+
+    
+    seleccionBoquillas = [
+        ("1", "rebote"),
+        ("2", "tubular"),
+    ]
+    
+    muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
+    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
+    temperaturaAmbiente= models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Temperatura Ambiente", blank= True, null= True)
+    temperaturaEsfera= models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Temperatura Esfera", null=True, blank=True)
+    humedad=  models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
+    equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
+    cerillas= models.CharField(max_length=300, choices=seleccionCerillas, verbose_name="Cerillas", blank= True, null= True)
+    boquilla= models.CharField(max_length=300, choices=seleccionBoquillas, verbose_name="Boquilla", blank= True, null= True)
+    fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
+    fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
+    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
+    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    pmax= models.DecimalField(verbose_name="Pmax", max_digits=4, decimal_places=1, blank= True, null= True) #99,99
+    dpdt= models.IntegerField(verbose_name="dPdT", blank= True, null= True) #999
+    kmax= models.IntegerField(verbose_name="kmax", blank= True, null= True)
+    unidadPmax= models.CharField(verbose_name="Unidad", max_length=50, default="bar", blank= True, null= True)
+    unidadDpdt= models.CharField(verbose_name="Unidad", max_length=50, default="bar/s", blank= True, null= True)
+    observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
+
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
+
+    class Meta():
+        verbose_name="Pmax"
+        verbose_name_plural="Pmaxs"
+        
+    def __str__(self):
+        return f"{self.muestra} | Pmax: {self.pmax}, dP/dT: {self.dpdt}, kmax: {self.kmax}" 
+    
+class ResultadosexploNoExplo (models.Model):
+    
+    ensayo= models.ForeignKey("exploNoExplo", on_delete=models.CASCADE, verbose_name="Ensayo Explo/No explo")
+    concentracion= models.IntegerField(verbose_name="Concentración")
+    peso=models.DecimalField(decimal_places=1, max_digits=7, verbose_name="Peso equivalente")
+    pm= models.DecimalField(decimal_places=1, max_digits=7, verbose_name="PM")
+    dpdt= models.IntegerField(verbose_name="dP/dT")
+    
+    class Meta():
+        verbose_name="Resultado Pmax"
+        verbose_name_plural="Resultados Pmaxs"
+        
+    def __str__(self):
+        return f"{self.ensayo} | Pmax: {self.pm}, dP/dT: {self.dpdt} "

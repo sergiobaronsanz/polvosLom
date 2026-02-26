@@ -29,9 +29,16 @@ botonEnvioMail.addEventListener("click", function(){
     })
     .then(data => {
       console.log('Respuesta del servidor:', data);
+      console.log(data);
+      if (data.mensaje === "Email enviado") {
+        $('#modalMail').modal('hide');   // 👈 Cierra el modal
+        $('#emailEnviado').modal('show');
+      }
     })
     .catch(error => {
       console.error('Error en la solicitud:', error);
+      $('#modalMail').modal('hide');
+      $('#emailFallido').modal('show');
     });
 
     // Función para obtener el CSRF token de las cookies (necesaria en Django)
@@ -50,3 +57,4 @@ botonEnvioMail.addEventListener("click", function(){
     return cookieValue;
     }
   })
+
