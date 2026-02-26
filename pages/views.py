@@ -32,7 +32,7 @@ def inicio(request):
     nMuestrasTotales= Muestras.objects.filter(expediente__fecha__year= año_actual).count()
     
     #Evolución ensayos
-    evolucionExpedientes= Expedientes.objects.filter(estado__in=["3", "4"])
+    evolucionExpedientes= Expedientes.objects.filter(estado__in=["3", "4"]).order_by("-porcentaje")
     
     #Número de muestras realizadas por mes
     # Agrupar por mes y contar

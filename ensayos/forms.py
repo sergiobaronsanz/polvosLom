@@ -79,7 +79,7 @@ class HumedadForm(forms.Form):
     )
 
     tDesecacion= forms.IntegerField(
-        initial=105, 
+        initial=100, 
         label="Temperatura de Desecación",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
@@ -987,14 +987,14 @@ class CloResultadosForm(forms.Form):
     )
 
     pex= forms.DecimalField(
-        decimal_places=1,  
+        decimal_places=2,  
         label= "Pex (bar)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
         required=True,
     )
 
     pm= forms.DecimalField(
-        decimal_places=1,  
+        decimal_places=2,  
         label= "Pm (bar)", 
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
         required=True,
