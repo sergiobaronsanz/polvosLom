@@ -7,7 +7,10 @@ botonEnvioMail.addEventListener("click", function(){
         console.log(element.textContent);
     });
 
-    datos=[{"expediente": expediente}];
+    datos=[
+      {"expediente": expediente},
+      {"listaEmails" : listaEmails},
+    ];
     console.log("Enviamos el correo");
 
     fetch('/expedientes/envioMail', {

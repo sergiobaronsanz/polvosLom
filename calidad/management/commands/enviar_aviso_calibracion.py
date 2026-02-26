@@ -49,21 +49,23 @@ class Command(BaseCommand):
         destinatarios = [tecnico.email, "s.baronsanz@gmail.com"]
 
         # 6️⃣ Enviar email HTML
-        self.enviar_mail(mensaje, equipos_a_avisar, destinatarios)
+        if equipos_a_avisar.exists():
+            self.enviar_mail(mensaje, equipos_a_avisar, destinatarios)
 
         self.stdout.write(self.style.SUCCESS("Correo enviado con equipos a calibrar"))
 
     # ---------------------------------------------------------------------
 
     def actualizacion_equipos(self, hoy):
-        equipos = Equipos.objects.filter(controlado=True)
+        equipos = Equipos.objects.filter(
+            controlado=True,
+            fechaCalibracion__isnull=False,
+            fechaCaducidadCalibracion__isnull=False
+        )
 
         for equipo in equipos:
-            if (
-                equipo.fechaCaducidadCalibracion <= hoy
-                and equipo.estadoCalibracion == "0"
-            ):
-                equipo.estadoCalibracion = "1"
+            if (equipo.fechaCaducidadCalibracion <= hoy and equipo.estadoCalibracion == "1"):
+                equipo.estadoCalibracion = "2"
                 equipo.save()
 
     # ---------------------------------------------------------------------

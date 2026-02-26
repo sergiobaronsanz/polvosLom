@@ -49,8 +49,19 @@
 								{%else%}
 									<td class="align-middle">No</td>
 								{%endif%}
-								<td class="align-middle">{{equipo.fechaCalibracion}}</td>
-								<td class="align-middle">{{equipo.fechaCaducidadCalibracion}}</td>
+								
+								{%if equipo.fechaCalibracion%}
+									<td class="align-middle">{{equipo.fechaCalibracion}}</td>
+								{%else%}
+									<td class="align-middle">-</td>
+								{%endif%}
+
+								{%if equipo.fechaCalibracion%}
+									<td class="align-middle">{{equipo.fechaCaducidadCalibracion}}</td>
+								{%else%}
+									<td class="align-middle">-</td>
+								{%endif%}
+								
 								<td>
 									<form method="POST" action="{% url 'eliminarEquipo' equipo.id %}" onsubmit="return confirm('¿Seguro que deseas eliminar este equipo?');">
 										{% csrf_token %}

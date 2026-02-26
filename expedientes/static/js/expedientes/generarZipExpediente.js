@@ -1,3 +1,4 @@
+/*
 function solicitudPOSTzip(datos) {  
   fetch('/expedientes/ver-expedientes/generarZip', {
     method: 'POST',
@@ -88,7 +89,7 @@ function solicitudPOSTzip(datos) {
 	console.log(datos)
   
 	solicitudPOSTzip(datos);  // Llamamos a la función de solicitud POST
-  });
+  }); */
   
   
   

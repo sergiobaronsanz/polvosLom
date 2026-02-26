@@ -16,10 +16,12 @@ import shutil
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Exists, OuterRef
+from django.db.models import Q
 
 import traceback
 from django.http import HttpResponse, JsonResponse
 from io import BytesIO
+
 
 
 
@@ -307,8 +309,10 @@ def expediente (request, expediente):
         tiene_descripcion=Exists(DescripcionMuestra.objects.filter(muestra=OuterRef('pk')))
     )
     
-    usuarios= get_list_or_404(User)
-
+    usuarios = get_list_or_404(User.objects.filter(Q(is_staff=True) | Q(id=request.user.id)))
+    listaEmails= []
+    for usuario in usuarios:
+        listaEmails.append(usuario.email)
 
     ensayosMuestras=[]
     for muestra in muestras:
@@ -324,6 +328,8 @@ def expediente (request, expediente):
     #pasamos la variable a json para que se pueda leer en js
     ensayosMuestras_json= json.dumps(ensayosMuestras)
     expediente_json= json.dumps(expediente.id)
+    listaEmails= json.dumps(listaEmails)
+    
         
     return render (request, "revisarExpediente.html", {
         'expediente': expediente,
@@ -331,6 +337,7 @@ def expediente (request, expediente):
         'ensayosMuestras_json': ensayosMuestras_json, 
         'expediente_json': expediente_json,
         "usuarios": usuarios,
+        "listaEmails": listaEmails,
 
     })
 
@@ -344,7 +351,15 @@ def envioMail(request):
             id_expediente= datosList[0]['expediente']
             expediente= Expedientes.objects.get(id= id_expediente)
             muestras= get_list_or_404(Muestras, expediente= expediente)
-            print(expediente)
+            print(datosList)
+
+            listaEmails= datosList[1]['listaEmails']
+
+            print(listaEmails)
+            print(listaEmails[0])
+            print(type(listaEmails))
+            print(type(listaEmails[0]))
+
             asuntosMuestras= []
             for muestra in muestras:
                 abreviatura= muestra.empresa.abreviatura
@@ -352,11 +367,11 @@ def envioMail(request):
                 asuntosMuestras.append(f"{abreviatura}-{numeroMuestra}")
             nExpediente=expediente.expediente
             empresa=expediente.empresa
-            listaDestinatarios = [user.email for user in User.objects.all()]
+            listaDestinatarios = listaEmails
 
 
-            asunto= f"Resultados de {' , '.join(asuntosMuestras)} de la empresa {empresa} para el expediente {nExpediente}" 
-            mensaje= f"Hola,\n\nYa tienes los resultados de {' , '.join(asuntosMuestras)}.\n\nUn saludo."
+            asunto= f"Resultados de {' , '.join(asuntosMuestras)} para el expediente {nExpediente}" 
+            mensaje= f"Hola,\n\nYa están terminados los ensayos de {' , '.join(asuntosMuestras)}.\n\nUn saludo."
             remitente = settings.EMAIL_HOST_USER
             destinatarios = listaDestinatarios
             print(mensaje)
