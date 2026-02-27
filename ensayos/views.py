@@ -2919,3 +2919,183 @@ def tratamiento (request, muestra_id):
         'formTratamiento': formTratamiento,
         'datosGuardados': datosGuardados,
     })
+
+
+@login_required
+def exploNoExplo (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "exploNoExplo")
+    equipos=get_list_or_404(Equipos, ensayos= ensayo) 
+    datosGuardados=False  
+    usuario= request.user
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(explonoexplo__pmax__isnull=True) & Q(explonoexplo__dpdt__isnull=True) & Q(explonoexplo__kmax__isnull=True) & Q(listaEnsayos__ensayo__icontains="exploNoExplo") & ~Q(estado=1)
+    )
+
+    if request.method == 'POST':
+        
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formExploNoExplo= ExploNoExploForm(request.POST, prefix='exploNoExplo')
+        exploNoExploResultadosFormSet= formset_factory(ExploNoExploResultadosForm, extra=0)
+        formExploNoExploResultados= exploNoExploResultadosFormSet(request.POST, prefix='exploNoExploResultados')
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix='equiposEnsayo')
+          
+        if formExploNoExplo.is_valid() and formExploNoExploResultados.is_valid() and equiposEnsayo.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('exploNoExplo-muestra'))
+            
+            #Comprobamos que no exista un ensayo  previo
+            exploNoExplo_instancia= ExploNoExplo.objects.filter(muestra= muestra)
+            exploNoExplo_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fechaInicio= formExploNoExplo.cleaned_data['fechaInicio']
+            fechaFin= formExploNoExplo.cleaned_data['fechaFin']
+            temperaturaAmbiente= formExploNoExplo.cleaned_data['temperaturaAmbiente']
+            temperaturaEsfera= formExploNoExplo.cleaned_data['temperaturaEsfera']
+            humedad= formExploNoExplo.cleaned_data['humedad']
+            cerillas= formExploNoExplo.cleaned_data['cerillas']
+            boquilla= formExploNoExplo.cleaned_data['boquilla']
+            pmax= formExploNoExplo.cleaned_data['pm_media']
+            dpdt= formExploNoExplo.cleaned_data['dpdt_media']
+            kmax= formExploNoExplo.cleaned_data['kmax']
+            observacion=formExploNoExplo.cleaned_data['observacion']
+
+            exploNoExplo= ExploNoExplo.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                temperaturaEsfera= temperaturaEsfera,
+                humedad= humedad,
+                cerillas= cerillas,
+                boquilla= boquilla,
+                pmax= pmax,
+                dpdt= dpdt,
+                kmax= kmax,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
+                observacion= observacion,
+                usuario= usuario,
+            )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
+            exploNoExplo.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosexploNoExplo.objects.filter(ensayo= exploNoExplo)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+            
+            #Guadramos la lista de resultados
+
+            for form in formExploNoExploResultados:
+                
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    concentracion = form.cleaned_data['concentracion']
+                    peso = form.cleaned_data['peso']
+                    pm= form.cleaned_data['pm_serie']
+                    dpdt= form.cleaned_data['dpdt_serie']
+                    
+
+                    resultadosExploNoExplo=ResultadosexploNoExplo.objects.create(
+                        ensayo= exploNoExplo,
+                        concentracion= concentracion,
+                        peso=peso,
+                        pm= pm,
+                        dpdt=dpdt,
+                    )
+                    
+                else:
+                    formExploNoExplo.add_error(None, 'No hay resultados positivos en el ensayo, revisa la tabla.')
+                    print(formExploNoExploResultados.errors)
+                    return render(request, 'ensayos/nuevosEnsayos/exploNoExplo.html', {
+                        'ensayo': ensayo,
+                        'formExploNoExplo': formExploNoExplo,
+                        'formExploNoExploResultados': formExploNoExploResultados,
+                        'equiposEnsayo': equiposEnsayo,
+                        'datosGuardados': datosGuardados,
+                    })
+            datosGuardados= True            
+        else:
+            print (formExploNoExplo.errors)
+            formExploNoExplo.add_error(None, f'Error en el formulario, revisa los datos {formExploNoExplo.errors}')
+            return render(request, 'ensayos/nuevosEnsayos/exploNoExplo.html', {
+                'ensayo': ensayo,
+                'formExploNoExplo': formExploNoExplo,
+                'formExploNoExploResultados': formExploNoExploResultados,
+                'equiposEnsayo': equiposEnsayo,
+        'datosGuardados': datosGuardados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_exploNoExplo= ExploNoExplo.objects.get(muestra__id= muestra_id)   
+            equipos= ensayo_exploNoExplo.equipos.all()         
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fechaInicio= str(ensayo_exploNoExplo.fechaInicio)
+            fechaFin= str(ensayo_exploNoExplo.fechaFin)
+            temperaturaAmbiente= ensayo_exploNoExplo.temperaturaAmbiente
+            temperaturaEsfera= ensayo_exploNoExplo.temperaturaEsfera
+            humedad=ensayo_exploNoExplo.humedad
+            cerillas=ensayo_exploNoExplo.cerillas
+            boquilla=ensayo_exploNoExplo.boquilla
+            pmax= ensayo_exploNoExplo.pmax
+            dpdt= ensayo_exploNoExplo.dpdt
+            kmax= ensayo_exploNoExplo.kmax
+            observacion= ensayo_exploNoExplo.observacion
+            
+            
+            formExploNoExplo = ExploNoExploForm(prefix='exploNoExplo', initial={
+                'muestra': muestra,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'temperaturaEsfera': temperaturaEsfera,
+                'humedad': humedad,
+                'cerillas': cerillas,
+                'boquilla': boquilla,
+                'pm_media': pmax,
+                'dpdt_media': dpdt,
+                'kmax': kmax,
+                'observacion': observacion,
+                })
+            
+            formExploNoExplo.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosexploNoExplo.objects.filter(ensayo=ensayo_exploNoExplo).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'concentracion': resultado.concentracion,
+                    'peso': resultado.peso,
+                    'pm_serie': resultado.pm,
+                    'dpdt_serie': resultado.dpdt,
+                })
+            
+            # Crear el formset con los datos iniciales
+            exploNoExploResultadosFormSet = formset_factory(ExploNoExploResultadosForm, extra=0)
+            formExploNoExploResultados = exploNoExploResultadosFormSet(prefix='exploNoExploResultados',initial=initial_data)
+            equiposEnsayo= EquiposEnsayoForm(prefix="equiposEnsayo", initial= {'equiposEnsayo':equipos})
+
+        
+        else:
+            formExploNoExplo= ExploNoExploForm(prefix='exploNoExplo')
+            formExploNoExplo.fields['muestra'].queryset = muestras_queryset
+
+            exploNoExploResultadosFormSet = formset_factory(ExploNoExploResultadosForm, extra=7)
+            formExploNoExploResultados=exploNoExploResultadosFormSet(prefix='exploNoExploResultados')     
+            equiposEnsayo = EquiposEnsayoForm(prefix='equiposEnsayo',initial={'equiposEnsayo': equipos}) 
+                
+
+
+    return render(request, 'ensayos/nuevosEnsayos/exploNoExplo.html', {
+        'ensayo': ensayo,
+        'formExploNoExplo': formExploNoExplo,
+        'formExploNoExploResultados': formExploNoExploResultados,
+        'equiposEnsayo': equiposEnsayo,
+        'datosGuardados': datosGuardados,
+    })

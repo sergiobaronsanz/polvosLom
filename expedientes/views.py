@@ -130,6 +130,8 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         if request.POST:
             listaEnsayos = request.POST.getlist('listaEnsayos')
             observaciones= request.POST.get('observaciones')
+
+            print(listaEnsayos)
             
             nuevaMuestra= Muestras(
                 id_muestra= id_muestra, 

@@ -312,6 +312,26 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         instance.save()
                         expediente.estado= "1"
                         expediente.save()
+            
+            if ensayo.ensayo == "exploNoExplo":
+                if not ExploNoExplo.objects.filter(muestra= instance).exists():
+                    resultados= ExploNoExplo.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                        unidadPmax= "g/m3",
+                        unidadDpdt= "bar/s",
+                    )
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
                 
         porcentaje= porcentajeExpediente(expediente=expediente)
         expediente.porcentaje= porcentaje
@@ -396,6 +416,11 @@ def crear_ensayos(sender, instance, action, **kwargs):
 
         if not "tratamiento" in listaEnsayosnueva:
             ensayoObjeto= Tratamiento.objects.filter(muestra= instance)
+            if ensayoObjeto.exists():
+                ensayoObjeto.delete()
+
+        if not "explonoexplo" in listaEnsayosnueva:
+            ensayoObjeto= ExploNoExplo.objects.filter(muestra= instance)
             if ensayoObjeto.exists():
                 ensayoObjeto.delete()
         
@@ -528,6 +553,14 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
             else:
                 estadoListadoEnsayos.append(False)
 
+
+        if "explonoexplo" in nombres:
+            ensayo = ExploNoExplo.objects.filter(muestra=muestra).first()
+            if ensayo and ensayo.pmax is not None and ensayo.dpdt is not None and ensayo.kmax is not None:
+                estadoListadoEnsayos.append(True)
+            else:
+                estadoListadoEnsayos.append(False)
+
         if all(estadoListadoEnsayos):
             print(muestra)
             muestra.estado = "4"
@@ -560,8 +593,6 @@ def porcentajeExpediente(ensayo= None, expediente= None):
         expediente= ensayo.muestra.expediente
     if expediente:
         expediente= expediente
-
-    
 
     muestras= Muestras.objects.filter(expediente= expediente)
 
@@ -696,7 +727,20 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                     horasTotales.append(emisin.horasEnsayo)
                     if emisin.resultado:
                         horasTerminadas.append(emisin.horasEnsayo)
+            
+            print("ensayo")
+            print(ensayo.ensayo.lower())
 
+            # Verificar si el ensayo es "Explo/ No Explo"
+            if "explonoexplo" in ensayo.ensayo.lower():
+                print("Aqui estamos sumando")
+                exploNoExplo = ExploNoExplo.objects.filter(muestra=muestra).first()
+                if exploNoExplo:
+                    horasTotales.append(exploNoExplo.horasEnsayo)
+                    if exploNoExplo.pmax is not None and exploNoExplo.dpdt is not None and exploNoExplo.kmax is not None:
+                        horasTerminadas.append(exploNoExplo.horasEnsayo)
+                        
+        
         # Sumar todas las horas de los ensayos seleccionados
         totalHorasMuestra = sum(horasTotales)
 
@@ -856,6 +900,17 @@ def cambio_tratamiento(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender= EMIsin)
 def cambio_emisin(sender, instance, created, **kwargs):
+    chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
+
+
+@receiver(post_save, sender= ExploNoExplo)
+def cambio_exploNoExplo(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
     porcentaje= porcentajeExpediente(ensayo=instance)
     

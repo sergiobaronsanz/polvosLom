@@ -933,7 +933,7 @@ class Tratamiento (models.Model):
 
 
 #EXPLO/NOEXPLO
-class exploNoExplo(models.Model):
+class ExploNoExplo(models.Model):
     seleccionCerillas = [
         ("1", "sobbe"),
         ("2", "simex"),

@@ -1,166 +1,59 @@
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("Hola Paquito");
     /////Automatización columna Concentración-Peso/////
     var botonEliminar= document.getElementById("borrar-fila")
     var botonAñadir= document.getElementById("añadir-fila")
         
         /////Cálculo de Presión media, dp/dt media y kmax/////
-    var pm_media= document.getElementById("id_pmax-pm_media");
-    var dpdt_media= document.getElementById("id_pmax-dpdt_media");
-    var kmax_media= document.getElementById("id_pmax-kmax");
+    var pm_media= document.getElementById("id_exploNoExplo-pm_media");
+    var dpdt_media= document.getElementById("id_exploNoExplo-dpdt_media");
+    var kmax_media= document.getElementById("id_exploNoExplo-kmax");
 
     //Automatizamos las presiones
     function presionMedia(){
         var pms= document.querySelectorAll(".pm input")
 
-
         //Sacamos las variables necesarias
-        var sumaPresiones= 0;
-        var numPresiones= 0;
-        var listaValoresMaximos= [0,0,0];
-        var listaValores1= [];
-        var listaValores2= [];
-        var listaValores3= [];
+        var listaValores = [];
         var valor_maximo= 0.0;
 
-        //Sacamos los valores máximos de cada serie
+        //Sacamos los valores máximos
         pms.forEach(item =>{
-            var id_item= item.id;
-            var id_serie= id_item.replace("pm_serie", "serie");
-			var serie= document.getElementById(id_serie);
-            var valor_serie= serie.value;
-            
+            valor = item.value;
+            listaValores.push(valor);
 
-            if(valor_serie=== "1"){
-                
-                if(item.value){
-                    listaValores1.push(item.value);
-                }
-                
-            }
-
-            if(valor_serie=== "2"){
-                
-                if(item.value){
-                    listaValores2.push(item.value);
-                }
-                
-            }
-
-            if(valor_serie=== "3"){
-                
-                if(item.value){
-                    listaValores3.push(item.value);
-                }
-                
-            }          
         })
 
-        if (listaValores1.length > 0){
-            listaValoresMaximos[0]= Math.max(...listaValores1);
-        }
+        console.log(listaValores);
 
-        if (listaValores2.length > 0){
-            listaValoresMaximos[1]= Math.max(...listaValores2);
-        }
+        valor_maximo= Math.max(...listaValores);
 
-        if (listaValores3.length > 0){
-            listaValoresMaximos[2]= Math.max(...listaValores3);
-        }
-
-
-        valor_maximo= listaValoresMaximos[0] + listaValoresMaximos[1] + listaValoresMaximos[2];
-
-        //Hacemos la media con el numero de valores que haya
-        var numValores= 3;
-        listaValoresMaximos.forEach(item =>{    
-            if (item === 0){
-                numValores= numValores -1;
-            }
-			let resultado=0;
-			
-			if (valor_maximo){
-				resultado= (Math.round(valor_maximo / numValores * 10) / 10).toFixed(1);
-			}
-			
-			pm_media.value = resultado;
-			
-        });
+        pm_media.value = valor_maximo;
         
     };
 
     //Automatizamos las dPdT
     function dpdtMedia(){
+        
         var dpdt= document.querySelectorAll(".dpdt input")
 
         //Sacamos las variables necesarias
-        var sumaPresiones= 0;
-        var numPresiones= 0;
-        var listaValoresMaximos= [0,0,0];
-        var listaValores1= [];
-        var listaValores2= [];
-        var listaValores3= [];
+        var listaValores = [];
         var valor_maximo= 0.0;
 
-        //Sacamos los valores máximos de cada serie
+        //Sacamos los valores máximos
         dpdt.forEach(item =>{
-            var id_item= item.id;
-            var id_serie= id_item.replace("dpdt_serie", "serie");
-            var serie= document.getElementById(id_serie);
-            var valor_serie= serie.value;
+            valor = item.value;
+            listaValores.push(valor);
 
-            if(valor_serie=== "1"){
-                
-                if(item.value){
-                    listaValores1.push(item.value);
-                }
-                
-            }
-
-            if(valor_serie=== "2"){
-                
-                if(item.value){
-                    listaValores2.push(item.value);
-                }
-                
-            }
-
-            if(valor_serie=== "3"){
-                
-                if(item.value){
-                    listaValores3.push(item.value);
-                }
-                
-            }          
         })
 
-        if (listaValores1.length > 0){
-            listaValoresMaximos[0]= Math.max(...listaValores1);
-        }
+        console.log(listaValores);
 
-        if (listaValores2.length > 0){
-            listaValoresMaximos[1]= Math.max(...listaValores2);
-        }
+        valor_maximo= Math.max(...listaValores);
 
-        if (listaValores3.length > 0){
-            listaValoresMaximos[2]= Math.max(...listaValores3);
-        }
-
-        valor_maximo= listaValoresMaximos[0] + listaValoresMaximos[1] + listaValoresMaximos[2];
-		console.log("el valor dpdt max es:" + valor_maximo/3)
-
-        //Hacemos la media con el numero de valores que haya
-        var numValores= 3;
-        listaValoresMaximos.forEach(item =>{    
-            if (item === 0){
-                numValores= numValores -1;
-            }
-			let resultado= 0
-			if (valor_maximo){
-				resultado= (Math.round(valor_maximo / numValores).toFixed(0));
-			}
-            dpdt_media.value= resultado;
-        });
+        dpdt_media.value = valor_maximo;
         
     };
 
@@ -332,11 +225,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		//2. Copiamos la fila y agregamos los datos
 		var numeroResultado = 0;
 		resultados.forEach(element=>{
-
+            console.log(element);
 			//Sacamos los valores de los resultados
 			let concentracion= element[2];
 			let peso= (parseFloat(concentracion) / 50).toFixed(1);
-			let serie= element[1];
 			let pmax=  parseFloat(element[3].replace(",", "."));
 			let dpdt= element[4];
 
@@ -387,15 +279,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				let nuevoName= nameDato.replace(/-\d+-/, `-${numeroResultado}-`);
 				select.name= nuevoName;
 
-				console.log("la serie es" + serie)
-				select.value = serie;
-				console.log("El valor es" + select.value)
-				console.log(select.id)
-				console.log("Nuevo valor del select:", select.value); // Muestra el nuevo valor
 			}); 
 			
 			numeroResultado ++;
-			var numeroEnsayos= document.getElementById("id_pmaxResultados-TOTAL_FORMS");
+			var numeroEnsayos= document.getElementById("id_exploNoExploResultados-TOTAL_FORMS");
 			numeroEnsayos.value= numeroResultado;
 		})
 

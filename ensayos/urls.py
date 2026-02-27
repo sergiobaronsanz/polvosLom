@@ -27,6 +27,8 @@ urlpatterns = [
     path('ensayos/n4/<str:muestra_id>/', views.n4, name="n4"),
     path('ensayos/o1/<str:muestra_id>/', views.o1, name="o1"),
     path('ensayos/tratamiento/<str:muestra_id>/', views.tratamiento, name="tratamiento"),
+    path('ensayos/exploNoExplo/<str:muestra_id>/', views.exploNoExplo, name="explonoexplo"),
+
 
 	#Gestor de archivos para valores de ensayos
 	path('ensayos/gestorArchivos/pmax/', views.gestorArchivoPmax, name="gestorArchivosPmax"),

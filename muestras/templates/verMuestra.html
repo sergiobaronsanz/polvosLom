@@ -108,7 +108,7 @@
                   {% for resultado in resultados%}
                     <p class= "flex-fill text-center"> 
 						{%if resultado.ensayo|lower != 'tratamiento' %}
-							{%if resultado.ensayo|lower != 'pmax'%}
+							{%if resultado.ensayo|lower != 'pmax' and resultado.ensayo|lower != 'explonoexplo' %}
 								{%if resultado.resultado|lower != "none" %}
 									<a href= {% url resultado.ensayo|lower muestra.id %}>{{resultado.ensayo}}  </a>
 									{% if resultado.ensayo|lower == "n1" or resultado.ensayo|lower == "n2" or resultado.ensayo|lower == "n4" or resultado.ensayo|lower == "o1" %}
@@ -120,26 +120,34 @@
 								<a class="text-danger">{{resultado.ensayo}} = Sin ensayar </a> 
 								{%endif%}
 							{%else%} 
-								 
-								{%if resultado.pmax|lower != "none" %}
-									<a href= {% url resultado.ensayo|lower muestra.id %}>Pmax = {{resultado.pmax}} {{resultado.unidadPmax}} | </a> 
+								{%if resultado.ensayo|lower == 'explonoexplo'%}
+									{%if resultado.pmax|lower != "none" %}
+										<a href= {% url resultado.ensayo|lower muestra.id %}>Explo/ No explo = {{resultado.pmax}} {{resultado.unidadPmax}}</a> 
+									{%else%}
+										<a class="text-danger"> Pmax = Sin ensayar  </a> 
+									{%endif%}
 								{%else%}
-									<a class="text-danger"> Pmax = Sin ensayar | </a> 
-								{%endif%}
+									{%if resultado.pmax|lower != "none" %}
+										<a href= {% url resultado.ensayo|lower muestra.id %}>Pmax = {{resultado.pmax}} {{resultado.unidadPmax}} | </a> 
+									{%else%}
+										<a class="text-danger"> Pmax = Sin ensayar | </a> 
+									{%endif%}
 
-								
-								{%if resultado.dpdt|lower != "none" %}
-									<a href= {% url resultado.ensayo|lower muestra.id %}>dPdT ={{resultado.dpdt}} {{resultado.unidadDpdt}} | </a> 
 									
-								{%else%}
-									<a class="text-danger">dPDt = Sin ensayar | </a> 
+									{%if resultado.dpdt|lower != "none" %}
+										<a href= {% url resultado.ensayo|lower muestra.id %}>dPdT ={{resultado.dpdt}} {{resultado.unidadDpdt}} | </a> 
+										
+									{%else%}
+										<a class="text-danger">dPDt = Sin ensayar | </a> 
+									{%endif%}
+
+									{%if resultado.kmax|lower != "none" %}
+										<a href= {% url resultado.ensayo|lower muestra.id %}>kmax ={{resultado.kmax}} </a> 
+									{%else%}
+										<a class="text-danger">kmax= Sin ensayar | </a> 
+									{%endif%}
 								{%endif%}
 
-								{%if resultado.kmax|lower != "none" %}
-									<a href= {% url resultado.ensayo|lower muestra.id %}>kmax ={{resultado.kmax}} </a> 
-								{%else%}
-									<a class="text-danger">kmax= Sin ensayar | </a> 
-								{%endif%}
 							{%endif%}
 						{%else%}
 							{%if resultado.secado or resultado.molido or resultado.tamizado %}

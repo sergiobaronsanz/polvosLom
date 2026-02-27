@@ -147,6 +147,10 @@ def listaEnsayosMuestra(muestra):
         resultado= Tratamiento.objects.filter(muestra= muestra)
         print("tratamiento")
         resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo__iexact= "exploNoExplo").exists():
+        resultado= ExploNoExplo.objects.filter(muestra= muestra)
+        print("exploNoExplo")
+        resultados.extend(resultado)
 
     return resultados
 
@@ -154,7 +158,7 @@ def listaEnsayosTerminados(resultados, muestra):
     #pasamos los datos a json para poder mandarlos al script de js
     ensayos=[]
     for resultado in resultados:
-        if resultado.ensayo.ensayo != "Pmax":
+        if resultado.ensayo.ensayo != "Pmax" and resultado.ensayo.ensayo != "exploNoExplo":
             ensayo= resultado.ensayo
             muestra_id= muestra.id
             muestra_nombre= muestra.empresa.abreviatura + "-" + str(muestra.id_muestra)

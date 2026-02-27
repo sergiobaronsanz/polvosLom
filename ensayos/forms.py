@@ -1678,3 +1678,139 @@ class TratamientoForm(forms.Form):
         """tamiz_tratamiento = Equipos.objects.filter(descripcion="tamices tratamiento").first()
         if tamiz_tratamiento:
             self.fields['equipoTamizado'].queryset = Equipos.objects.filter(equipo_padre=tamiz_tratamiento)"""
+
+
+
+#PMAX
+class ExploNoExploForm(forms.Form):
+    #Todos los campos # se deben establecer en la view
+    #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
+    #resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
+    #equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
+    #tiempoEnsayo 
+
+    seleccionCerillas = [
+        ("1", "sobbe"),
+        ("2", "simex"),
+    ]
+
+    
+    seleccionBoquillas = [
+        ("1", "rebote"),
+        ("2", "tubular"),
+    ]
+
+
+    muestras= Muestras.objects.all()
+
+    
+    muestra = forms.ModelChoiceField(
+        queryset=muestras,
+        label="Muestra",
+        empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    
+    fechaInicio= forms.DateField(
+        label="Fecha Inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaFin= forms.DateField(
+        label="Fecha Fin",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+
+    temperaturaAmbiente = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    temperaturaEsfera = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Esfera",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    humedad= forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Humedad Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
+
+    cerillas= forms.ChoiceField(
+            choices= seleccionCerillas,
+            label= "Cerillas",
+            widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+            required=False,
+
+    )
+
+    boquilla= forms.ChoiceField(
+            choices= seleccionBoquillas,
+            label= "Boquilla",
+            widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+            required=False,
+
+    )
+
+    pm_media= forms.DecimalField(
+        decimal_places=1,
+        max_digits=5,
+        label="Presión media",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly','style': 'text-align: center;'})
+    )
+
+    dpdt_media= forms.IntegerField(
+        label="dP/dT media",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly','style': 'text-align: center;'})
+    )
+
+    kmax= forms.IntegerField(
+        label="kmax",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly','style': 'text-align: center;'})
+    )
+
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
+
+class ExploNoExploResultadosForm(forms.Form):
+
+    concentracion= forms.IntegerField(
+        label="Concentración (g/m3)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    peso= forms.DecimalField(  
+        decimal_places=1,
+        label="Peso (g)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+
+    pm_serie= forms.DecimalField(
+        decimal_places=1,  
+        label= "Pm (bar)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+    dpdt_serie= forms.IntegerField(  
+        label= "dP/dT (bar/s)", 
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        required=False,
+    )
+
+
+exploNoExploResultadosFormSet= formset_factory(ExploNoExploResultadosForm, extra=7)

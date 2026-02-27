@@ -2912,3 +2912,150 @@ class PlantillasEnsayo():
         
         # Agregar más contenido dinámico aquí...
         return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+
+
+
+
+
+    def exploNoExplo(self):
+        ensayo= ExploNoExplo.objects.get(muestra= self.muestra)
+        equipos=ensayo.equipos.all()
+        resultados= ResultadosexploNoExplo.objects.filter(ensayo= ensayo).order_by("id")
+        ensayoForma= self.descripcion.get_formaEnsayo_display()
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
+
+
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
+        self.pdf.add_page()
+        #TEXTO 
+        self.pdf.set_font('Arial', '', 10)
+        #IMAGEN
+        image_path = os.path.join(self.rutaAbsoluta, 'Imagenes', 'LOGO.png')
+        self.pdf.image(image_path, x=8, y=8, w=30, h=30, link="http://www.lom.upm.es", type='PNG')
+        #Celdas Cabecera
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
+        self.pdf.cell(w= 100, h= 12, txt = f'Explo/ No explo ({ensayo.ensayo.normativa})', border= 1, 
+                align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+                align= "L", fill = 0)
+
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=100, h= 12, txt = f'Nº Expediente: {ensayo.muestra.expediente.expediente}',border= "LRB", 
+                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
+
+        #Celda I/D muestra
+        self.pdf.multi_cell(w=0, h= 5,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=130, h= 8,border= 0, txt= f"Material: {self.descripcion.id_fabricante}",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=60, h= 8,border= 0, txt= f"Identificación: {self.identificacion}",
+                align= "J", fill = 0)
+
+        #Celda Tratamiento de muestras  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}",
+                align= "J", fill = 0)
+
+
+        #Celda Condiciones ambientales  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "CONDICIONES AMBIENTALES",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"Temperatura en esfera: {ensayo.temperaturaEsfera} ºC",
+                align= "C", fill = 0)
+
+
+        #Celda Equipos
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = f"Cerillas: {ensayo.get_cerillas_display()} (10kJ)",
+                align= "J", fill = 0)
+
+
+        #Celda Resultados
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= "RESULTADOS",
+                align= "J", fill = 0)
+                
+        #Parámetros tabla
+        self.pdf.cell(w=5, h= 8,border= "L", fill = 0)
+        self.pdf.cell(w=60, h= 8,border= 1,align= "C", 
+                txt= "Concentración (g/m3)", fill = 0)
+        self.pdf.cell(w=50, h= 8,border= 1,align= "C", 
+                txt= "Peso (g)", fill = 0)
+        self.pdf.cell(w=35, h= 8,border= 1, align= "C",
+                txt= "Pm (bar)", fill = 0)
+        self.pdf.cell(w=35, h= 8,border= 1, align= "C",
+                txt= "dP/dT(bar/s)", fill = 0)
+
+        self.pdf.multi_cell(w=5, h= 8,border= "R", fill = 0)
+        
+
+        for resultado in resultados:
+                self.pdf.cell(w=5, h= 6,border= "L", fill = 0)
+                self.pdf.cell(w=60, h= 6,border= 1,align= "C", 
+                        txt= str(resultado.concentracion), fill = 0)
+                self.pdf.cell(w=50, h= 6,border= 1,align= "C", 
+                        txt= str(float(resultado.peso)), fill = 0)
+                self.pdf.cell(w=35, h= 6,border= 1,align= "C", 
+                        txt= str(float(resultado.pm)), fill = 0)
+                self.pdf.cell(w=35, h= 6,border= 1, align= "C",
+                        txt= str(resultado.dpdt), fill = 0)
+
+                self.pdf.multi_cell(w=5, h= 6,border= "R", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 6,border= "LR", fill = 0)
+
+
+                      
+        self.pdf.set_font('Arial', '', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"PRESIÓN MÁXIMA DE EXPLOSIÓN: {ensayo.pmax} bar",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"VELOCIDAD DE AUMENTO DE PRESIÓN: {ensayo.dpdt} bar/s",
+                align= "J", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"kmax: {ensayo.kmax} bar·m/s",
+                align= "J", fill = 0)
+        
+        
+        
+             
+        #Firma
+        self.pdf.set_font('Arial', '', 14) 
+        self.pdf.cell(w=95, h= 6,border= 1, txt= f"Conforme:",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=95, h= 6,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
+                align= "J", fill = 0)
+        
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        
+        # Agregar más contenido dinámico aquí...
+        return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
