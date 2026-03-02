@@ -9,8 +9,9 @@
 		<!-- Page Heading -->
 		<div class="d-sm-flex align-items-center justify-content-between mb-4">
 			<h1 class="h3 mb-0 text-gray-800">Resultados Sustancias Inflamables {{año}}</h1>
-			<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-					class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+			<button type="button" class="bd-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" id="generarPdf" data-toggle="modal" data-target="#seleccionReporte">
+						<i class="fas fa-download fa-sm text-white-50"></i> Generar reporte
+			</button>
 		</div>
 
 		<!-- Content Row -->
@@ -204,6 +205,42 @@
 
 		
 		</div>
+
+
+		<!--Modal para generar reporte-->
+				<div class="modal fade" id="seleccionReporte" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content ">
+							<div class="modal-header">
+							<h5 class="modal-title" id="envioModalLabel">Selecciona el periodo del reporte</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							</div>
+
+							<form method= "POST" id="formReporte">
+								{%csrf_token%}
+							
+								<div class="modal-body">
+									
+									<div class= "row">
+										<h4> Desde </h4>
+										{{formularioReporte.fechaInicio}}
+									</div>
+									<div class= "row">
+										<h4> Hasta </h4>
+										{{formularioReporte.fechaFin}}
+									</div>								
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" id= "generarReporte"class="btn btn-info">Generar</button>
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
 
 		
 

@@ -11,13 +11,14 @@ from django.db.models import Count, Q, F, ExpressionWrapper, FloatField
 from django.db.models.functions import ExtractMonth
 from django.http import JsonResponse
 import json
+from pages.forms import *
 
 
 
 # Create your views here.
 @login_required
 def inicio(request):
-    
+
     user= request.user
 
     #Fecha actual
@@ -49,7 +50,7 @@ def inicio(request):
 
     for item in muestras_por_mes_qs:
         muestras_por_mes_dict[item['mes']]= item['total']
-   
+
     muestrasPorMes = [muestras_por_mes_dict[mes] for mes in range(1, 13)]
 
     # Convertimos a json
@@ -75,14 +76,17 @@ def inicio(request):
 
     #Expedientes por mes 
     expedientes_por_año = (Expedientes.objects
-                       .filter(fecha__year__gte=año_actual - 5, fecha__year__lte=año_actual)  # Filtrar los últimos 5 años
-                       .values('fecha__year')  # Agrupar por año
-                       .annotate(nExpedientes=Count('id'))  # Contar los expedientes
-                       .order_by('fecha__year')) 
+                    .filter(fecha__year__gte=año_actual - 5, fecha__year__lte=año_actual)  # Filtrar los últimos 5 años
+                    .values('fecha__year')  # Agrupar por año
+                    .annotate(nExpedientes=Count('id'))  # Contar los expedientes
+                    .order_by('fecha__year')) 
     # Convertimos a json
     expedientes_por_año = [{'año': item['fecha__year'], 'nExpedientes': item['nExpedientes']} for item in expedientes_por_año]    
     print(f"el expediente es {expedientes_por_año}")
     expediente_por_año_json= json.dumps(expedientes_por_año)
+
+    #Formulario del reporte
+    formularioReporte= ReporteForm()
 
     
     return render(request,'pages/inicio.html', { 
@@ -96,11 +100,14 @@ def inicio(request):
         "muestrasPorMes": muestrasPorMes_json,
         "top_empresas": empresasTop,
         "top_empresas_json": top_empresas_json,
-        "expediente_por_año_json": expediente_por_año_json
+        "expediente_por_año_json": expediente_por_año_json,
+        "formularioReporte": formularioReporte
         
     })
 
-
+@login_required
+def generarReporte(request):
+    pass
 
 def login_view(request):
 
