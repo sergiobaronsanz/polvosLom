@@ -45,8 +45,10 @@ class Command(BaseCommand):
             )
 
         # 5️⃣ Destinatarios
-        tecnico = User.objects.get(username="sergio")
-        destinatarios = [tecnico.email, "s.baronsanz@gmail.com"]
+        emails_staff = User.objects.filter(groups__name="calidad").exclude(email="").values_list('email', flat=True)
+
+
+        destinatarios = list(emails_staff) 
 
         # 6️⃣ Enviar email HTML
         if equipos_a_avisar.exists():
