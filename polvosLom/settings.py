@@ -133,12 +133,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = '/static/'
 
-if DEBUG:  # 👉 DESARROLLO (local)
-    STATICFILES_DIRS = [
-        BASE_DIR / "static",
-    ]
 
-else:  # 👉 SERVIDOR / PRODUCCIÓN
+if not DEBUG:  # 👉 SERVIDOR / PRODUCCIÓN
     STATIC_ROOT = BASE_DIR / "staticfiles"
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
