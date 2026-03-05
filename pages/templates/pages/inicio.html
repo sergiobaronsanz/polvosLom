@@ -222,21 +222,39 @@
 								{%csrf_token%}
 							
 								<div class="modal-body">
-									
-									<div class= "row">
-										<h4> Desde </h4>
-										{{formularioReporte.fechaInicio}}
-									</div>
-									<div class= "row">
-										<h4> Hasta </h4>
-										{{formularioReporte.fechaFin}}
-									</div>								
+									<p> 
+										Selecciona el año para el que quieres que salga el reporte, o un periodo de tiempo concreto
+									</p>
+
+
+									<div>
+										<div class = 'row m-auto col-3'>
+											<select id="tipoPeriodo" class= 'form-control form-control-sm text-center'>
+												<option value="1">Año</option>
+												<option value="2">Periodo</option>
+											</select>
+										</div>
+										
+										<div class= "mb-3 mt-3">
+											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
+												<p class= 'col m-0'> Desde </p>
+												{{formularioReporte.fechaInicio}}
+											</div>
+										</div>
+
+										<div class= "mb-3">
+											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
+												<p class= 'col m-0'> Hasta </p>
+											{{formularioReporte.fechaFin}}
+											</div>
+										</div>							
 								</div>
 
 								<div class="modal-footer">
 									<button type="button" id= "generarReporte"class="btn btn-info">Generar</button>
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
 								</div>
+
 							</form>
 						</div>
 					</div>
@@ -247,6 +265,12 @@
 		
 
 	</div>
-	<!-- /.container-fluid -->        
+	<!-- /.container-fluid -->    
+	 
+	<scripts>
 
+{%endblock%}
+
+{%block script%}  
+    <script src="{%static 'js/pages/inicio.js'%}"></script> 
 {%endblock%}
