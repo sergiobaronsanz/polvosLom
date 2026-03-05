@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*d_on*-1ng#(czewvxu0wn5o6)9hae946sm1af(8+i)5grqzn1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ['*']
 
@@ -133,15 +133,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = '/static/'
 
-# Carpeta donde Django recopila los estáticos al hacer collectstatic
-STATIC_ROOT = '/home/sergio/proyectos/mi_proyecto/polvosLom/staticfiles/'
+if DEBUG:  # 👉 DESARROLLO (local)
+    STATICFILES_DIRS = [
+        BASE_DIR / "static",
+    ]
 
-# Carpeta(s) donde buscar archivos estáticos adicionales durante el desarrollo
-STATICFILES_DIRS = [
-    '/home/sergio/proyectos/mi_proyecto/polvosLom/static/',
-]
-
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+else:  # 👉 SERVIDOR / PRODUCCIÓN
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 
 # Default primary key field type
