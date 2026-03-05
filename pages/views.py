@@ -134,3 +134,29 @@ def logout_view(request):
     
     # Redirigir al usuario a la página de login o la página principal
     return redirect('login')  # O a la URL de tu preferencia
+
+
+@login_required
+def reporte(request):
+    
+    if request.method == "POST":
+        data = json.loads(request.body)
+        fechaInicio= data.get('fechaInicio')
+        fechaFin= data.get('fechaFin')
+        fechaYear= data.get('fechaYear')
+
+        print(data)
+
+        if fechaInicio and fechaFin:
+            print("hay fechas")
+        
+        elif fechaYear:
+            print("hay año")
+        
+        else:
+            print("error")
+
+
+
+
+    return JsonResponse({'mensaje': 'Email enviado'})

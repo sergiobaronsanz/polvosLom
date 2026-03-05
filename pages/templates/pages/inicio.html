@@ -223,31 +223,38 @@
 							
 								<div class="modal-body">
 									<p> 
-										Selecciona el año para el que quieres que salga el reporte, o un periodo de tiempo concreto
+										Selecciona el año para el que quieres que salga el reporte, o un periodo de tiempo concreto.
 									</p>
 
 
 									<div>
 										<div class = 'row m-auto col-3'>
 											<select id="tipoPeriodo" class= 'form-control form-control-sm text-center'>
-												<option value="1">Año</option>
-												<option value="2">Periodo</option>
+												<option value="1">Periodo</option>
+												<option value="2">Año</option>
 											</select>
 										</div>
 										
-										<div class= "mb-3 mt-3">
+										<div class= "mb-3 mt-3" id= "fechaInicio">
 											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
 												<p class= 'col m-0'> Desde </p>
 												{{formularioReporte.fechaInicio}}
 											</div>
 										</div>
 
-										<div class= "mb-3">
+										<div class= "mb-3" id= "fechaFin">
 											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
 												<p class= 'col m-0'> Hasta </p>
 											{{formularioReporte.fechaFin}}
 											</div>
-										</div>							
+										</div>	
+										
+										<div class= "mb-3 mt-3" id= "fechaYear">
+											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
+												<p class= 'col m-0'> Año </p>
+												{{formularioReporte.fechaYear}}
+											</div>
+										</div>	
 								</div>
 
 								<div class="modal-footer">
