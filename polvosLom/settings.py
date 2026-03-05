@@ -133,15 +133,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = '/static/'
 
-# Carpeta donde Django recopila los estáticos al hacer collectstatic
-STATIC_ROOT = '/home/sergio/proyectos/mi_proyecto/polvosLom/staticfiles/'
+if DEBUG:  # 👉 DESARROLLO (local)
+    STATICFILES_DIRS = [
+        BASE_DIR / "static",
+    ]
 
-# Carpeta(s) donde buscar archivos estáticos adicionales durante el desarrollo
-STATICFILES_DIRS = [
-    '/home/sergio/proyectos/mi_proyecto/polvosLom/static/',
-]
-
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+else:  # 👉 SERVIDOR / PRODUCCIÓN
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 
 # Default primary key field type
