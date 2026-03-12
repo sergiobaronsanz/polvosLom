@@ -67,7 +67,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);  // Captura errores HTTP
                 }
-                return response.json();  // Convierte solo si la respuesta es JSON
+                const contentType = response.headers.get('Content-Type');
+                if (contentType === 'application/pdf') {
+                    return response.blob().then(blob => {
+                        // 🔹 Crear una URL temporal para descargar
+                        const url = window.URL.createObjectURL(blob);
+
+                        // 🔹 Extraer el nombre del archivo del header
+                        const contentDisposition = response.headers.get('Content-Disposition');
+                        const filename = contentDisposition
+                        ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+                        : 'archivo.pdf';
+
+                        // 🔹 Crear un enlace para descargar el archivo
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+
+                        // 🔹 Liberar memoria
+                        window.URL.revokeObjectURL(url);
+
+                        console.log('Archivo descargado correctamente');
+                        var myModal = new bootstrap.Modal(document.getElementById('archivoGuardado'));
+                        myModal.show();  
+                    });
+                    } else {
+                    return response.json(); // ← Si es un error del servidor, lo manejamos como JSON
+                    }
             })
             .then(data => {
                 console.log('Respuesta del servidor:', data);

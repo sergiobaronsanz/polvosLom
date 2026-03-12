@@ -12,6 +12,11 @@ from django.db.models.functions import ExtractMonth
 from django.http import JsonResponse
 import json
 from pages.forms import *
+from PDF.generarReporte import ReportGenerator
+from django.http import HttpResponse, JsonResponse
+from django.utils.encoding import smart_str
+
+
 
 
 
@@ -145,16 +150,36 @@ def reporte(request):
         fechaFin= data.get('fechaFin')
         fechaYear= data.get('fechaYear')
 
-        print(data)
-
+        # Definimos el periodo y le asignamos un nombre para el archivo #
+        periodo = []
         if fechaInicio and fechaFin:
-            print("hay fechas")
+            periodo.append(fechaInicio)
+            periodo.append(fechaFin)
         
         elif fechaYear:
-            print("hay año")
+            periodo.append(fechaYear)
         
         else:
-            print("error")
+            return HttpResponse("Periodo no válido", status=400)
+
+
+        nombreReporte= ""
+        if len(periodo) == 2:
+            nombreReporte = f"Reporte {periodo[0]} a {periodo[1]}"
+        else:
+            nombreReporte= f"Reporte {periodo[0]}"
+
+
+        #Pedimos el Reporte
+        pdf_gen = ReportGenerator(periodo)
+        output = pdf_gen.reporte()
+
+        # Preparar la respuesta para enviar el archivo al cliente
+        response = HttpResponse(output, content_type="application/pdf")
+        response['Content-Disposition'] = f'attachment; filename="{nombreReporte}"'
+        
+
+        return response
 
 
 
