@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+
+<style>
+@media screen {
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5000px; /* suficiente alto */
+        pointer-events: none;
+        z-index: 9999;
+
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 1120px,
+            red 1120px,
+            red 1123px
+        );
+    }
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+.a4{
+  width: 210mm;
+  height: 297mm;
+  display: flex;
+  align-items: center;   /* centra verticalmente */
+  justify-content: center; /* opcional */
+}
+
+p{
+    color: #192B5C;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.titulo-seccion{
+    color:#192B5C;
+}
+
+.letra-muy-pequena{
+    font-size: 10px;
+}
+
+.letra-pequena{
+    font-size: 16px;
+}
+
+.letra-media{
+    font-size: 20px;
+}
+
+.letra-grande{
+    font-size: 30px;
+}
+
+.azul-fuerte{
+    color:#192B5C;
+}
+
+.azul-medio{
+    color:#5F6B8B;
+}
+
+.azul-turquesa{
+    color:#2E95AA;
+}
+
+.gris{
+    color:#A8B4C5;
+}
+
+.blanco{
+    color:#EEF2F4;
+}
+
+
+body {
+    font-family: Arial;
+}
+
+.titulo-actividad{
+    width: 100%;
+}
+
+.titulo-codigo{
+    width: 100%;
+    left: 0px;
+    color: #5F6B8B;
+    font-size: 60px;
+    margin-bottom: 0px;
+}
+
+.titulo-nombre{
+    width: 100%;
+    left: 0px;
+    color:#5F6B8B;
+    font-size: 45px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.linea-horizontal-turquesa {
+    width: 100%;
+    height: 2px;
+    background-color: #2E95AA;
+}
+
+.linea-horizontal-medio {
+    width: 100%;
+    height: 2px;
+    background-color: #5F6B8B;
+}
+
+.linea-horizontal-fuerte {
+    width: 100%;
+    height: 2px;
+    background-color: #192B5C;
+}
+
+.linea-vertical {
+    width: 2px;
+    height: 100px;
+    background-color: #192B5C;
+}
+
+/******************* PORTADA ***********************/
+.portada {
+    width: 80%;
+    height: 90%;
+    position: relative;
+}
+
+.titulo {
+    color: #192B5C;
+    font-size: 28px;
+    font-weight: bold;
+    width: 320px;
+    text-align: justify;
+}
+
+.periodo {
+    color: #2E95AA;
+    font-size: 24px;
+}
+
+.periodo p {
+    margin-top: 5px;
+}
+
+/* LOGO */
+#logoPortada{
+    margin: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+    position: absolute;
+    height: 50%;
+}
+.logo-central {
+    margin: auto;
+    width: 600px;
+}
+
+.pie-portada {
+    width: 100%;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 10px;
+}
+
+.footer-left {
+    float: left;
+}
+
+#branding{
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+#branding p{
+    margin: 0px;
+    margin-left: 10px;
+    
+}
+
+.footer-right {
+    float: right;
+}
+
+.logo-footer {
+    left: 5px;
+    width: 80px;
+}
+
+/******************* RESUMEN ***********************/
+#texto-resumen{
+    width: 80%;
+    margin: auto;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#texto-resumen p{
+  text-align: justify;
+}
+
+/******************* ACTIVIDAD ***********************/
+#actividad{
+    height: 90%;
+    width: 80%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= PORTADA ================= -->
+<div class="a4">
+    <div class="portada">
+
+        <div class="titulo">
+            Informe de resultados obtenidos en el área de Sustancias Inflamables
+        </div>
+
+        <div class="periodo">
+            {% if periodo|length == 2 %}
+                <p>Entre el {{ periodo[0] }} y el {{ periodo[1] }}</p>
+            {% else %}
+                <p>Año {{ periodo[0] }}</p>
+            {% endif %}
+        </div>
+        <div id="logoPortada">
+            <div>
+                <img src="{{ logo_path }}" class="logo-central">
+            </div>
+            
+        </div>
+
+        <!-- footer -->
+        <div class="pie-portada">
+            <div class="footer-left">
+                <div id="branding">
+                    <img src="{{ logo_path }}" class="logo-footer">
+                    <div>
+                        <p class="letra-pequena azul-fuerte">Laboratorio Oficial</p>
+                        <p class="letra-pequena azul-fuerte">J.M. Madariaga</p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="footer-right">
+                <p class="letra-pequena azul-fuerte">Generado por {{ usuario_nombre }} {{ usuario_apellido }}</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- ================= RESUMEN ================= -->
+ 
+<div style="page-break-before: always;" class="a4">
+    <div id="texto-resumen">
+        <p class= "letra-media azul-fuerte">
+            El presente informe recoge la actividad desarrollada en el área de Sustancias Inflamables del Laboratorio J.M. Madariaga, 
+            centrada en la caracterización de muestras pulverulentas mediante ensayos destinados a determinar su comportamiento explosivo.<br>
+            El documento ofrece una visión global de la actividad anual del laboratorio, incluyendo el volumen de muestras analizadas y 
+            su evolución a lo largo del ano. Se detalla la actividad técnica llevada a cabo, describiendo los principales ensayos realizados 
+            para la evaluación del riesgo de explosividad de los polvos.<br><br>
+            Asimismo, se presentan los recursos disponibles y la operativa del laboratorio, abarcando tanto los medios técnicos como la 
+            organización del trabajo que permiten garantizar la calidad y fiabilidad de los resultados.<br><br>
+            El informe incorpora una comparativa anual que permite analizar tendencias y variaciones en la actividad, así como un mapa de 
+            procedencia de las muestras recibidas, proporcionando una perspectiva geográfica del origen de los ensayos realizados.
+            Este conjunto de información permite evaluar de manera integral la actividad del laboratorio en el ámbito de la seguridad 
+            frente a riesgos asociados a sustancias pulverulentas inflamables.
+        </p>
+    </div>
+</div>
+
+
+<!-- ================= ACTIVIDAD ================= -->
+<div style="page-break-before: always;" class="a4">
+    <div id="actividad">
+        <div class="titulo-actividad mb-5">
+            <h1 class="titulo-codigo">01</h1>
+            <h2 class="titulo-nombre">Actividad</h2>
+            <div class="linea-horizontal-medio"></div>
+        </div>
+    <h4 class="azul-fuerte text-justify">Evolución del desarrollo de la actividad del laboratorio de sustancias inflamables, durante el {{periodo[0]}}.</h4>
+    <div class="col-12 d-flex align-items-center justify-content-between mt-5 p-4 bg-light" style="min-height: 100px; border-radius: 1rem;">
+        <div class="d-flex align-items-center">
+                <p class="mb-0 font-weight-bold letra-media azul-fuerte text-center">EVOLUCIÓN GENERAL</p>
+        </div>
+
+        <div class="linea-vertical mx-3"></div>
+
+        <div class=" d-flex align-items-stretch">
+            <div class="col d-flex flex-column">
+                <p class="text-center mb-0 letra-grande font-weight-bold azul-turquesa fw-bold">26</p>
+                <p class="text-center mb-0 azul-turquesa fw-bold">Muestras</p>
+                <div class="linea-horizontal-turquesa"></div>
+
+                <p class="letra-muy-pequena text-justify mt-2">Número de muestras totales ensayadas.</p>
+            </div>
+            <div class="col d-flex flex-column">
+                <p class="text-center mb-0 letra-grande font-weight-bold azul-turquesa fw-bold">26</p>
+                <p class="text-center mb-0 azul-turquesa fw-bold">Expedientes</p>
+                <div class="linea-horizontal-turquesa"></div>
+
+                <p class="letra-muy-pequena text-justify mt-2">Número de expedientes totales cerrados.</p>
+            </div>
+            <div class="col d-flex flex-column">
+                <p class="text-center mb-0 letra-grande font-weight-bold azul-turquesa fw-bold">26</p>
+                <p class="text-center mb-0 azul-turquesa fw-bold">Empresas</p>
+                <div class="linea-horizontal-turquesa"></div>
+
+                <p class="letra-muy-pequena text-justify mt-2">Número de clientes con los que se ha trabajado.</p>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<!--BOOSTRAP-->
+<script src="{{ bootstrap_js }}"></script>
+</html>

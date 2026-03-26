@@ -1,142 +1,97 @@
-from fpdf import FPDF
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
 import unicodedata
+from playwright.sync_api import sync_playwright
+from jinja2 import Environment, FileSystemLoader
+import os
+import tempfile
+from polvosLom import settings
+import webbrowser
 
 
-class InformePDF(FPDF):
+class InformePDF:
 
-    def __init__(self, periodo):
-        super().__init__()
+    def __init__(self, periodo, usuario):
         self.periodo = periodo
-        self.azulFuerte = (25, 43, 92)     # #192B5C
-        self.azulMedio  = (95, 107, 139)   # #5F6B8B
-        self.turquesa   = (46, 149, 170)   # #2E95AA
-        self.gris       = (168, 180, 197)  # #A8B4C5
-        self.blanco     = (238, 242, 244)  # #EEF2F4
-        self.rutaAbsoluta = os.path.dirname(__file__)
+        self.usuario = usuario
+        self.ruta = os.path.dirname(__file__)
 
-
-    # -------------------------
-    # MÉTODO PRINCIPAL
-    # -------------------------
     def build(self):
-        # Portada
-        self.add_page()
-        self._portada()
 
-        return self.output(dest="S").encode("latin1")
-
-
-    # -------------------------
-    # HEADER / FOOTER
-    # -------------------------
-
-    def footer(self):
-        self.set_y(-15)
-        self.set_font("Helvetica", "", 8)
-        self.cell(0, 10, f"Página {self.page_no()}", 0, 0, "C")
-
-    # -------------------------
-    # SECCIONES
-    # -------------------------
-    def _portada(self):
-
-        # ===== TITULO =====
-        self.set_font("Helvetica", "B", 24)
-        self.set_text_color(*self.azulFuerte)
-
-        texto = "Informe de resultados obtenidos en el área de Sustancias Inflamables"
-
-        bloque_ancho = 120
-        x = (self.w - bloque_ancho) / 4
-
-        self.set_xy(x, 15)
-        self.multi_cell(
-            w=bloque_ancho,
-            h=12,
-            txt=texto,
-            align="L"
+        env = Environment(
+            loader=FileSystemLoader(self.ruta)
         )
 
-        # ===== PERIODO =====
-        if len(self.periodo) == 2:
-            nombrePeriodo = f"Entre el {self.periodo[0]} y el {self.periodo[1]}"
-        else:
-            nombrePeriodo = f"En el año {self.periodo[0]}"
+        template = env.get_template("plantillaReporte.html")
+        bootstrap_css = "file:///" + os.path.join(self.ruta, "static", "css", "bootstrap.min.css").replace("\\", "/")
+        bootstrap_js = "file:///" + os.path.join(self.ruta, "static", "js", "bootstrap.bundle.min.js").replace("\\", "/")
 
-        self.set_font("Helvetica", "B", 20)
-        self.set_text_color(*self.turquesa)
-
-        self.set_x(x)  # mantiene centrado respecto al bloque
-        self.multi_cell(
-            w=bloque_ancho,
-            h=10,
-            txt=nombrePeriodo,
-            align="L"
+        html = template.render(
+            periodo=self.periodo,
+            usuario_nombre=self.usuario.first_name,
+            usuario_apellido=self.usuario.last_name,
+            # 👇 usa esto en debug (mejor con Django static si puedes)
+            logo_path="file:///" + os.path.join(self.ruta, "Imagenes", "LOGO.png").replace("\\", "/"),
+            bootstrap_css=bootstrap_css,
+            bootstrap_js=bootstrap_js,
         )
 
-        # ===== LOGO =====
-        image_path = os.path.join(self.rutaAbsoluta, "Imagenes", "LOGO.png")
+        # =========================
+        # 🧪 MODO DEBUG
+        # =========================
+        prueba= False
+        if prueba:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
+                f.write(html.encode("utf-8"))
+                temp_path = f.name
 
-        ancho_imagen = 140
-        alto_imagen = 140
+            print("🧪 Debug HTML:", temp_path)
 
-        x_img = (self.w - ancho_imagen) / 2
-        y_img = (self.h - alto_imagen) / 2   # centrado vertical visual
+            # 👇 abre automáticamente en navegador
+            webbrowser.open(f"file://{temp_path}")
 
-        self.image(
-            image_path,
-            x=x_img,
-            y=y_img,
-            w=ancho_imagen,
-            h=alto_imagen,
-            link="http://www.lom.upm.es"
-        )
+            return None  # no genera PDF
 
-    def _indice(self):
-        self._titulo("Índice")
+        # =========================
+        # 📄 MODO PRODUCCIÓN
+        # =========================
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-dev-shm-usage"]
+            )
 
-        secciones = [
-            "Resumen ejecutivo",
-            "Ventas",
-            "Finanzas"
-        ]
+            page = browser.new_page()
 
-        self.set_font("Helvetica", "", 12)
-        for s in secciones:
-            self.cell(0, 8, s, 0, 1)
+            # usar archivo temporal (clave para imágenes)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
+                f.write(html.encode("utf-8"))
+                temp_path = f.name
 
-    def _prologo(self):
-        self._titulo("Resumen ejecutivo")
+            page.goto(f"file://{temp_path}")
+            page.wait_for_load_state("networkidle")
+            page.wait_for_timeout(1000)
 
-        self.set_font("Helvetica", "", 12)
-        self.multi_cell(0, 8, "Aquí va el resumen generado dinámicamente.")
+            # Forzar viewport exacto A4 en píxeles (96dpi)
+            page.set_viewport_size({"width": 794, "height": 1123})
 
-    def _resumenEjecutivo(self): #Se compara año anterior vs año nuevo (si es año completo genial, si no, se compara periodo del año anterior conn periodo de este)
-        pass
-    
-    def _resumen(self):
-        self._titulo("Ventas")
-        self.multi_cell(0, 8, "Datos de ventas...")
+            pdf = page.pdf(
+                format="A4",
+                print_background=True,
+                margin={
+                    "top": "0mm",
+                    "bottom": "0mm",
+                    "left": "0mm",
+                    "right": "0mm"
+                }
+            )
 
-    def _mapa(self):
-        self._titulo("Finanzas")
-        self.multi_cell(0, 8, "Datos financieros...")
-    
-    def _ensayos(self):
-        self._titulo("Finanzas")
-        self.multi_cell(0, 8, "Datos financieros...")
+            browser.close()
 
-    # -------------------------
-    # HELPERS
-    # -------------------------
-    def _titulo(self, texto):
-        self.set_font("Helvetica", "B", 16)
-        self.cell(0, 10, texto, 0, 1)
-        self.ln(4)
+        return pdf
 
 
 

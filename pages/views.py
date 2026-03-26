@@ -169,9 +169,9 @@ def reporte(request):
         else:
             nombreReporte= f"Reporte {periodo[0]}"
 
-
+        usuario = request.user
         #Pedimos el Reporte
-        pdf_gen = ReportGenerator(periodo)
+        pdf_gen = ReportGenerator(periodo, usuario)
         output = pdf_gen.reporte()
 
         # Preparar la respuesta para enviar el archivo al cliente
@@ -185,3 +185,5 @@ def reporte(request):
 
 
     return JsonResponse({'mensaje': 'Email enviado'})
+
+
