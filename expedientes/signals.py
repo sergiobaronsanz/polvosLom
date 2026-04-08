@@ -722,7 +722,7 @@ def porcentajeExpediente(ensayo= None, expediente= None):
 
             # Verificar si el ensayo es "emisin"
             if "emisin" in ensayo.ensayo.lower():
-                emisin = EMI.objects.filter(muestra=muestra).first()
+                emisin = EMIsin.objects.filter(muestra=muestra).first()
                 if emisin:
                     horasTotales.append(emisin.horasEnsayo)
                     if emisin.resultado:
