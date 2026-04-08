@@ -38,8 +38,8 @@ def inicio(request):
     # Agrupar por mes y contar
     muestras_por_mes_qs = (
         Muestras.objects
-        .filter(expediente__fecha__year=año_actual)
-        .annotate(mes=ExtractMonth('expediente__fecha'))
+        .filter(fecha__year=año_actual)
+        .annotate(mes=ExtractMonth('fecha'))
         .values('mes')
         .annotate(total=Count('id'))
         .order_by('mes')
