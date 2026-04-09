@@ -10,6 +10,12 @@ import os
 import tempfile
 from polvosLom import settings
 import webbrowser
+from expedientes.models import Empresa
+from django.utils import timezone
+from django.db.models import Count, Q, F, ExpressionWrapper, FloatField
+import json
+
+
 
 
 class InformePDF:
@@ -28,6 +34,30 @@ class InformePDF:
         template = env.get_template("plantillaReporte.html")
         bootstrap_css = "file:///" + os.path.join(self.ruta, "static", "css", "bootstrap.min.css").replace("\\", "/")
         bootstrap_js = "file:///" + os.path.join(self.ruta, "static", "js", "bootstrap.bundle.min.js").replace("\\", "/")
+        chart_pie_js= "file:///" + os.path.join(self.ruta, "static", "js", "chart-pie-demo.js").replace("\\", "/")
+        bar_chart_js= "file:///" + os.path.join(self.ruta, "static", "js", "barChart.js").replace("\\", "/")
+        line_chart_js= "file:///" + os.path.join(self.ruta, "static", "js", "lineChart.js").replace("\\", "/")
+
+        Chart= "file:///" + os.path.join(self.ruta, "static", "js", "Chart.js").replace("\\", "/")
+
+
+        #Variables
+            #Fecha actual
+        año_actual = timezone.now().year
+        top_empresas = Empresa.objects.filter(
+                muestras__fecha__year=año_actual
+            ).annotate(
+                total_muestras=Count('muestras')
+            ).order_by('-total_muestras')[:5]
+        
+        empresasTop= []
+        colores= ["primary", "success", "info", "secondary", "warning"]
+        bucle= 0
+        for empresa in top_empresas:
+            empresasTop.append({'empresa': empresa.empresa, 'nMuestras': empresa.total_muestras, 'color': colores[bucle]})
+            bucle = bucle + 1
+        
+        top_empresas_json= json.dumps(empresasTop)
 
         html = template.render(
             periodo=self.periodo,
@@ -37,12 +67,19 @@ class InformePDF:
             logo_path="file:///" + os.path.join(self.ruta, "Imagenes", "LOGO.png").replace("\\", "/"),
             bootstrap_css=bootstrap_css,
             bootstrap_js=bootstrap_js,
+            chart_pie_js= chart_pie_js,
+            Chart=Chart,
+            bar_chart_js=bar_chart_js,
+            line_chart_js=line_chart_js,
+            top_empresas= top_empresas,
+            top_empresas_json= top_empresas_json,
+
         )
 
         # =========================
         # 🧪 MODO DEBUG
         # =========================
-        prueba= False
+        prueba= True
         if prueba:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
                 f.write(html.encode("utf-8"))
@@ -73,7 +110,7 @@ class InformePDF:
 
             page.goto(f"file://{temp_path}")
             page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(1000)
+            page.wait_for_function("window.chartRendered === true")
 
             # Forzar viewport exacto A4 en píxeles (96dpi)
             page.set_viewport_size({"width": 794, "height": 1123})
