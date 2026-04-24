@@ -35,8 +35,13 @@ class InformePDF:
         bootstrap_css = "file:///" + os.path.join(self.ruta, "static", "css", "bootstrap.min.css").replace("\\", "/")
         bootstrap_js = "file:///" + os.path.join(self.ruta, "static", "js", "bootstrap.bundle.min.js").replace("\\", "/")
         chart_pie_js= "file:///" + os.path.join(self.ruta, "static", "js", "chart-pie-demo.js").replace("\\", "/")
+
         bar_chart_js= "file:///" + os.path.join(self.ruta, "static", "js", "barChart.js").replace("\\", "/")
+
         line_chart_js= "file:///" + os.path.join(self.ruta, "static", "js", "lineChart.js").replace("\\", "/")
+
+        icons= "file:///" + os.path.join(self.ruta, "static", "icons", "bootstrap-icons.css").replace("\\", "/")
+
 
         Chart= "file:///" + os.path.join(self.ruta, "static", "js", "Chart.js").replace("\\", "/")
 
@@ -68,6 +73,7 @@ class InformePDF:
             bootstrap_css=bootstrap_css,
             bootstrap_js=bootstrap_js,
             chart_pie_js= chart_pie_js,
+            icons=icons,
             Chart=Chart,
             bar_chart_js=bar_chart_js,
             line_chart_js=line_chart_js,
@@ -129,8 +135,6 @@ class InformePDF:
             browser.close()
 
         return pdf
-
-
 
 class mapaGenerator (): 
     def crearMapa():

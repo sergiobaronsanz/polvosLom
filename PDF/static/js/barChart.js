@@ -11,12 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
             {
                 label: 'Expedientes',
                 data: [7, 8],
-                backgroundColor: '#5F6B8B'
+                backgroundColor: '#2E95AA'
             },
             {
                 label: 'Empresas',
                 data: [3, 7],
-                backgroundColor: '#2E95AA'
+                backgroundColor: '#5F6B8B'
             }
         ]
     };
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
             devicePixelRatio: 3,
             layout: {
                 padding: {
-                    top: 5
+                    top: 20
                 }
             },
 
@@ -46,10 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     position: 'bottom'
                 },
                 datalabels: {
-                    anchor: 'end',
-                    align: 'end',
-                    offset: 4,
-                    color: '#000',
+                    anchor: 'center',   // 👈 centrado vertical
+                    align: 'center',    // 👈 centrado horizontal
+                    color: '#fff',      // 👈 mejor contraste dentro de la barra
                     font: {
                         weight: 'bold'
                     },
