@@ -31,6 +31,7 @@ class InformePDF:
             loader=FileSystemLoader(self.ruta)
         )
 
+        ########### Rutas ###########
         template = env.get_template("plantillaReporte.html")
         bootstrap_css = "file:///" + os.path.join(self.ruta, "static", "css", "bootstrap.min.css").replace("\\", "/")
         bootstrap_js = "file:///" + os.path.join(self.ruta, "static", "js", "bootstrap.bundle.min.js").replace("\\", "/")
@@ -45,9 +46,14 @@ class InformePDF:
 
         Chart= "file:///" + os.path.join(self.ruta, "static", "js", "Chart.js").replace("\\", "/")
 
+        mapa= os.path.join(self.ruta, "static", "js", "spain-provinces.geojson")
 
-        #Variables
-            #Fecha actual
+        donut="file:///" + os.path.join(self.ruta, "static", "js", "donutChart.js").replace("\\", "/")
+        empresasChar= "file:///" + os.path.join(self.ruta, "static", "js", "empresasChar.js").replace("\\", "/")
+
+
+        ########### Variables ###########
+        #Fecha actual
         año_actual = timezone.now().year
         top_empresas = Empresa.objects.filter(
                 muestras__fecha__year=año_actual
@@ -55,6 +61,7 @@ class InformePDF:
                 total_muestras=Count('muestras')
             ).order_by('-total_muestras')[:5]
         
+        #Empresas
         empresasTop= []
         colores= ["primary", "success", "info", "secondary", "warning"]
         bucle= 0
@@ -64,6 +71,12 @@ class InformePDF:
         
         top_empresas_json= json.dumps(empresasTop)
 
+        #Mapa
+        with open(mapa, encoding="utf-8") as f:
+            mapa = json.load(f)
+        mapa = json.dumps(mapa)
+
+        ########### Render template ###########
         html = template.render(
             periodo=self.periodo,
             usuario_nombre=self.usuario.first_name,
@@ -79,7 +92,9 @@ class InformePDF:
             line_chart_js=line_chart_js,
             top_empresas= top_empresas,
             top_empresas_json= top_empresas_json,
-
+            mapa=mapa,
+            donut=donut,
+            empresasChar=empresasChar
         )
 
         # =========================

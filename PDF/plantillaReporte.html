@@ -64,6 +64,10 @@ p{
     font-size: 20px;
 }
 
+.letra-media-grande{
+    font-size: 24px;
+}
+
 .letra-grande{
     font-size: 30px;
 }
@@ -157,6 +161,8 @@ body {
 .justify-content-center { justify-content: center; }
 .justify-content-start { justify-content: flex-start; }
 .justify-content-end { justify-content: flex-end; }
+.justify-content-around { justify-content: space-around; }
+.justify-content-evenly { justify-content: space-evenly; }
 
 /* ===== TEXT ===== */
 .text-center { text-align: center; }
@@ -276,6 +282,45 @@ body {
 .col-10 { width: 83.3333%; }
 .col-11 { width: 91.6666%; }
 .col-12 { width: 100%; }
+
+/* ===== SMALL ===== */
+.small{
+  font-size: 80%;
+}
+
+/* ===== FLOAT ===== */
+.float-right{
+  float: right;
+}
+
+/* ===== CARD ===== */
+.card-body{
+  padding: 1.25rem;
+}
+
+/* ===== PROGRESS ===== */
+.progress{
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  background-color: #e9ecef;
+  border-radius: .25rem;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  white-space: nowrap;
+  transition: width .6s ease;
+  border-radius: .25rem;
+}
+
+/* ===== COLORS ===== */
+.bg-danger{
+  background-color: #e74a3b;
+}
 
 /* ================= EXTRAS ÚTILES ================= */
 
@@ -404,7 +449,7 @@ body {
 }
 
 .numero-mediano{
-    font-size: 36px;
+    font-size: 28px;
     font-weight: bold;
     line-height: 1;
 }
@@ -432,6 +477,43 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.circulo-laboratorio{
+    width: 80px;
+    height: 80px;
+    border: 3px solid #2E95AA;
+    color: white;
+    border-radius: 50%;
+
+    background-color: #2E95AA;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
+
+/******************* CLIENTES ***********************/
+
+.circulo-cliente{
+    padding: 2px;
+    border: 3px solid #93C5FD;
+    color: white;
+    border-radius: 50%;
+
+    background-color: #93C5FD;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
 
 </style>
 
@@ -502,7 +584,7 @@ body {
 
 
 <!-- ================= ACTIVIDAD ================= -->
- <div>
+<div>
     <!--Página 1-->
     <div style="page-break-before: always;" class="a4">
         <div class="actividad">
@@ -578,34 +660,61 @@ body {
     <!--Página 2-->
       <div style="page-break-before: always;" class="a4">
         <div class="actividad">
-            <div class="mb-5">             
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <div class="esfera">
-                            <div class="numero-grande"><i class="bi bi-virus" style="color: #2E95AA;"></i></div>
-                            <div><p class="mb-0 mt-2 letra-media"style="color:#EEF2F4;font-weight: bold;">17</p></div>
+            <div class="mb-5">
+                <div class="row d-flex align-items-center mt-5">
+                    <div class="col-4">
+                        <h3 class="azul-fuerte m-0"> Comparativa anual</h3>
+                    </div>
+                    
+                    <div class="col-8">
+                        <div class="linea-horizontal-fuerte"></div>
+                    </div>
+                    
+                </div>             
+
+                <div class="d-flex align-items-center justify-content-between mt-5 mb-3">
+                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 150px; border-radius: 1rem; border-left: 6px solid #1E3A8A;">
+                        
+                        <div class="numero-grande col-4 d-flex align-items-center">
+                            <i class="bi bi-virus azul-fuerte m-auto"></i>
                         </div>
-                        <h4 class="mb-0 azul-fuerte"> MUESTRAS</h4>
-                        <p class="letra-muy-pequena mt-1 azul-fuerte">Media mensual de las muestras recibidas</p>
+
+                        <div class="col-8 d-flex flex-column align-items-center">
+                            <p class="m-0 azul-fuerte numero-mediano ">17</p>
+                            <h4 class="mb-0 azul-fuerte m-0"> MUESTRAS</h4>
+                            <p class="letra-muy-pequena mt-1 azul-fuerte text-center">Media mensual de las muestras recibidas</p>
+                        </div>
+
                     </div>
 
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <div class="esfera">
-                            <div class="numero-grande"><i class="bi bi-folder" style="color: #2E95AA;"></i></div>
-                            <div><p class="mb-0 mt-2 letra-media"style="color:#EEF2F4;font-weight: bold;">8</p></div>
+                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 150px; border-radius: 1rem; border-left: 6px solid #2E95AA;">
+                        
+                        <div class="numero-grande col-4 d-flex align-items-center">
+                            <i class="bi bi-folder azul-turquesa m-auto"></i>
                         </div>
-                        <h4 class="mb-0 azul-fuerte"> EXPEDIENTES</h4>
-                        <p class="letra-muy-pequena mt-1 azul-fuerte">Media mensual de los expedientes realizados</p>
+
+                        <div class="col-8 d-flex flex-column align-items-center">
+                            <p class="m-0 azul-fuerte numero-mediano">8</p>
+                            <h4 class="mb-0 azul-fuerte m-0"> EXPEDIENTES</h4>
+                            <p class="letra-muy-pequena mt-1 azul-fuerte text-center">Media mensual de los expedientes realizados</p>
+                        </div>
+
                     </div>
 
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <div class="esfera">
-                            <div class="numero-grande"><i class="bi bi-building-fill" style="color: #2E95AA;"></i></div>
-                            <div><p class="mb-0 mt-2 letra-media"style="color:#EEF2F4;font-weight: bold;">+33</p></div>
+                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 150px; border-radius: 1rem; border-left: 6px solid #5F6B8B;">
+                        
+                        <div class="numero-grande col-4 d-flex align-items-center">
+                            <i class="bi bi-building-fill azul-medio m-auto numero-mediano"></i>
                         </div>
-                        <h4 class="mb-0 azul-fuerte"> EMPRESAS</h4>
-                        <p class="letra-muy-pequena mt-1 azul-fuerte">Nuevas empresas añadidas</p>
+
+                        <div class="col-8 d-flex flex-column align-items-center">
+                            <p class="m-0 azul-fuerte letra-media">+33</p>
+                            <h4 class="mb-0 azul-fuerte letra-pequena mt-0"> EMPRESAS</h4>
+                            <p class="letra-muy-pequena mt-1 azul-fuerte text-center">Nuevas empresas añadidas</p>
+                        </div>
+
                     </div>
+
                 </div>
                 <div>
                     <p class="azul-medio letra-pequena mt-1 text-justify"> 
@@ -673,7 +782,6 @@ body {
         </div>
     </div>
 </div>
-
 
 <!-- ================= LABORATORIO ================= -->
 <div>
@@ -794,13 +902,13 @@ body {
                 <div class="d-flex justify-content-between align-items-center mt-5">
 
                     <!-- IZQUIERDA -->
-                    <div style="width: 300px;" class="d-flex flex-column align-items-center justify-content-center">
+                    <div style="width: 250px;" class="d-flex flex-column align-items-center justify-content-center">
                         <p>Ensayos realizados</p>
                         <canvas id="myPieChart"></canvas>
                     </div>
 
                     <!-- DERECHA -->
-                    <div style="width: 300px;" class="d-flex flex-column align-items-center justify-content-center">
+                    <div style="width: 250px;" class="d-flex flex-column align-items-center justify-content-center">
                         <p>Horas dedicadas</p>
                         <canvas id="myPieChart_2"></canvas>
                     </div>
@@ -811,12 +919,12 @@ body {
 
             <div style="width: 100%; display:flex; justify-content:center;" class="mt-5">
 
-                <table style="border-collapse: collapse; width: 100%; text-align: center; font-family: Arial, sans-serif;">
-
+            <table style="width: 100%; text-align: center; font-family: Arial, sans-serif;border-collapse:separate; border-spacing: 0 10px;
+            ">
                     <!-- TÍTULO -->
                     <thead>
-                        <tr style="background-color: #192B5C; color: white;">
-                            <th style="padding: 8px;">Ensayo</th>
+                        <tr class="azul-fuerte">
+                            <th style="padding: 8px; text-align: start;">Ensayo</th>
                             <th style="padding: 8px;">% Ensayos</th>
                             <th style="padding: 8px;">Nº Ensayos</th>
                             <th style="padding: 8px;">Horas Totales</th>
@@ -825,9 +933,9 @@ body {
 
                     <tbody>
 
-                        <tr>
+                        <tr class="mb-3">
                             <td>
-                                <div style="display:flex; justify-content:center; align-items:center; gap:6px;">
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
                                     <span style="width:10px; height:10px; background:#1E3A8A; display:inline-block;"></span>
                                     TMIc
                                 </div>
@@ -837,75 +945,128 @@ body {
                             <td>120</td>
                         </tr>
 
-                        <tr style="background:#f9f9f9;">
-                            <td><span style="width:10px; height:10px; background:#2563EB; display:inline-block;"></span> TMIn</td>
+                        <tr>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#2563EB; display:inline-block;"></span>
+                                    TMIn
+                                </div>
+                            </td>
                             <td>15.9%</td>
                             <td>18</td>
                             <td>95</td>
                         </tr>
 
                         <tr>
-                            <td><span style="width:10px; height:10px; background:#3B82F6; display:inline-block;"></span> EMI</td>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#3B82F6; display:inline-block;"></span>
+                                    EMI
+                                </div>
+                            </td>
                             <td>10.6%</td>
                             <td>12</td>
                             <td>60</td>
                         </tr>
 
-                        <tr style="background:#f9f9f9;">
-                            <td><span style="width:10px; height:10px; background:#60A5FA; display:inline-block;"></span> LIE</td>
+                        <tr>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#60A5FA; display:inline-block;"></span>
+                                    LIE
+                                </div>
+                            </td>
                             <td>8.0%</td>
                             <td>9</td>
                             <td>40</td>
                         </tr>
 
                         <tr>
-                            <td><span style="width:10px; height:10px; background:#93C5FD; display:inline-block;"></span> PMAX</td>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#93C5FD; display:inline-block;"></span>
+                                    PMAX
+                                </div>
+                            </td>
                             <td>5.3%</td>
                             <td>6</td>
                             <td>30</td>
                         </tr>
 
-                        <tr style="background:#f9f9f9;">
-                            <td><span style="width:10px; height:10px; background:#2E95AA; display:inline-block;"></span> REC</td>
+                        <tr>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#2E95AA; display:inline-block;"></span>
+                                    REC
+                                </div>
+                            </td>
                             <td>5.3%</td>
                             <td>6</td>
                             <td>28</td>
                         </tr>
 
                         <tr>
-                            <td><span style="width:10px; height:10px; background:#14B8A6; display:inline-block;"></span> CLO</td>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#14B8A6; display:inline-block;"></span>
+                                    CLO
+                                </div>
+                            </td>
                             <td>5.3%</td>
                             <td>6</td>
                             <td>25</td>
                         </tr>
 
-                        <tr style="background:#f9f9f9;">
-                            <td><span style="width:10px; height:10px; background:#22C55E; display:inline-block;"></span> N1</td>
+                        <tr>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#22C55E; display:inline-block;"></span>
+                                    N1
+                                </div>
+                            </td>
                             <td>5.3%</td>
                             <td>6</td>
                             <td>22</td>
                         </tr>
 
                         <tr>
-                            <td><span style="width:10px; height:10px; background:#84CC16; display:inline-block;"></span> N2</td>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#84CC16; display:inline-block;"></span>
+                                    N2
+                                </div>
+                            </td>
                             <td>5.3%</td>
                             <td>6</td>
                             <td>20</td>
                         </tr>
 
-                        <tr style="background:#f9f9f9;">
-                            <td><span style="width:10px; height:10px; background:#F59E0B; display:inline-block;"></span> N4</td>
+                        <tr>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#F59E0B; display:inline-block;"></span>
+                                    N4
+                                </div>
+                            </td>
                             <td>5.3%</td>
                             <td>6</td>
                             <td>18</td>
                         </tr>
 
                         <tr>
-                            <td><span style="width:10px; height:10px; background:#EF4444; display:inline-block;"></span> O1</td>
+                            <td>
+                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                    <span style="width:10px; height:10px; background:#EF4444; display:inline-block;"></span>
+                                    O1
+                                </div>
+                            </td>
                             <td>5.3%</td>
                             <td>6</td>
                             <td>15</td>
                         </tr>
+
+
+                        
 
                     </tbody>
 
@@ -915,37 +1076,1174 @@ body {
         </div>
     </div>
 
-    <!--Página 5-->
+    <!--Página 5 TMIC-->
     <div style="page-break-before: always;" class="a4">
         <div class="laboratorio">
-            holaaaaaa
+            <p>
+                Dentro de los ensayos realizados en el laboratorio, destacan <spam class="azul-turquesa">TMIc</spam>, 
+                <spam class="azul-turquesa">TMIn</spam>, <spam class="azul-turquesa" >EMI</spam>,  y <spam class="azul-turquesa">Pmax</spam>. 
+                Estos ensayos son de especial relevancia, por lo que requieren un análisis individualizado.
+            </p>
+            <div class="row d-flex align-items-center justify-content-center mt-5">
+                <!-- CONTENEDOR NUEVO -->
+                <div class="col-2 d-flex align-items-center">
+                    <h1 class="azul-fuerte mr-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">
+                        TMIc
+                    </h1>
+
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                </div>
+                
+                <div class="col-10">
+                    <div class="d-flex col-12 align-items-center justify-content-center">
+                        <div class="circulo-laboratorio">23%</div>
+                        <div class="linea-horizontal-turquesa col"></div>
+                    </div>
+
+                
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <p class="text-justify">
+                                Ensayo de Temperatura Mínima de Ignición en Capa, 
+                                nos permite obtener la temperatura mínima de ignición 
+                                de una capa de polvo, en un rango de temperturas
+                                comprendido entre 50ºC a 400ºC.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style="font-family: Arial, sans-serif;">
+
+                        <table style="
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            width: 100%;
+                            overflow: hidden;
+                            border-radius: 12px;
+                        ">
+
+                            <thead>
+                                <tr style="background-color: #192B5C; color: white;">
+                                    <th style="padding: 12px; text-align: left;">Código</th>
+                                    <th style="padding: 12px; text-align: center;">Calibrado</th>
+                                    <th style="padding: 12px; text-align: center;">Próxima calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Tipo calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                </tr>
+                            </thead>
+
+                            <tbody style="background: white;">
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    
+                    <!--Resumen ensayos-->
+                    <div class="d-flex align-items-center justify-content-around mt-5">
+                        <div class="d-flex align-items-center justify-content-around col-4">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-flask azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">88</p>
+                                <p class="m-0 text-center col-11">Ensayos realizados</p>
+                            </div>
+                            
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-around col-4">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-clock azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">1060</p>
+                                <p class="m-0 text-center col-11">Horas empleadas</p>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+
+                    <!--Ensayo destacado-->
+                    <div style="min-height: 100px; border-radius: 1rem; background: linear-gradient(135deg, rgba(34, 184, 181, 0.15),rgba(34, 184, 181, 0.05))" class="mt-5">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-bookmark-star azul-turquesa numero-grande"></i>
+                            <h3 class="azul-fuerte">ENSAYO DESTACADO</h3>
+                        </div>
+                        <div class="col-9 m-auto">
+                                <div class="d-flex align-items-center justify-content-center pb-3">
+                                    <p class="text-center mx-3">TMIc:</p>
+                                    <p class="numero-mediano azul-turquesa m-0">230ºC</p>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--Página 6 TMIn-->
+    <div style="page-break-before: always;" class="a4">
+        <div class="laboratorio">
+            <div class="row d-flex align-items-center justify-content-center mt-5">
+                <!-- CONTENEDOR NUEVO -->
+                <div class="col-2 d-flex align-items-center">
+                    <h1 class="azul-fuerte mr-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">
+                        TMIn
+                    </h1>
+
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                </div>
+                
+                <div class="col-10">
+                    <div class="d-flex col-12 align-items-center justify-content-center">
+                        <div class="circulo-laboratorio">12%</div>
+                        <div class="linea-horizontal-turquesa col"></div>
+                    </div>
+
+                
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <p class="text-justify">
+                                Ensayo de Temperatura Mínima de Ignición en Nube, 
+                                nos permite obtener la temperatura mínima de ignición 
+                                en una nube de polvo, en un rango de temperturas comprendido 
+                                entre 100ºC a 800ºC.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style="font-family: Arial, sans-serif;">
+
+                        <table style="
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            width: 100%;
+                            overflow: hidden;
+                            border-radius: 12px;
+                        ">
+
+                            <thead>
+                                <tr style="background-color: #192B5C; color: white;">
+                                    <th style="padding: 12px; text-align: left;">Código</th>
+                                    <th style="padding: 12px; text-align: center;">Calibrado</th>
+                                    <th style="padding: 12px; text-align: center;">Próxima calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Tipo calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                </tr>
+                            </thead>
+
+                            <tbody style="background: white;">
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    
+                    <!--Resumen ensayos-->
+                    <div class="d-flex align-items-center justify-content-around mt-5">
+                        <div class="d-flex align-items-center justify-content-around col-4">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-flask azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">88</p>
+                                <p class="m-0 text-center col-11">Ensayos realizados</p>
+                            </div>
+                            
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-around col-4">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-clock azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">1060</p>
+                                <p class="m-0 text-center col-11">Horas empleadas</p>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+
+                    <!--Ensayo destacado-->
+                    <div style="min-height: 100px; border-radius: 1rem; background: linear-gradient(135deg, rgba(34, 184, 181, 0.15),rgba(34, 184, 181, 0.05))" class="mt-5">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-bookmark-star azul-turquesa numero-grande"></i>
+                            <h3 class="azul-fuerte">ENSAYO DESTACADO</h3>
+                        </div>
+                        <div class="col-9 m-auto">
+                                <div class="d-flex align-items-center justify-content-center pb-3">
+                                    <p class="text-center mx-3">TMIn:</p>
+                                    <p class="numero-mediano azul-turquesa m-0">320ºC</p>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--Página 7 EMI-->
+    <div style="page-break-before: always;" class="a4">
+        <div class="laboratorio">
+            <div class="row d-flex align-items-center justify-content-center mt-5">
+                <!-- CONTENEDOR NUEVO -->
+                <div class="col-2 d-flex align-items-center">
+                    <h1 class="azul-fuerte mr-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">
+                        EMI
+                    </h1>
+
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                </div>
+                
+                <div class="col-10">
+                    <div class="d-flex col-12 align-items-center justify-content-center">
+                        <div class="circulo-laboratorio">12%</div>
+                        <div class="linea-horizontal-turquesa col"></div>
+                    </div>
+
+                
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <p class="text-justify">
+                                Ensayo de Energía Mínima de inflamación, 
+                                nos permite obtener la energía mínima de ignición 
+                                en una nube de polvo, en un rango de energías comprendido 
+                                entre 1mJ a 1000 mJ.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style="font-family: Arial, sans-serif;">
+
+                        <table style="
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            width: 100%;
+                            overflow: hidden;
+                            border-radius: 12px;
+                        ">
+
+                            <thead>
+                                <tr style="background-color: #192B5C; color: white;">
+                                    <th style="padding: 12px; text-align: left;">Código</th>
+                                    <th style="padding: 12px; text-align: center;">Calibrado</th>
+                                    <th style="padding: 12px; text-align: center;">Próxima calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Tipo calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                </tr>
+                            </thead>
+
+                            <tbody style="background: white;">
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    
+                    <!--Resumen ensayos-->
+                    <div class="d-flex align-items-center justify-content-around mt-5">
+                        <div class="d-flex align-items-center justify-content-around col-4">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-flask azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">88</p>
+                                <p class="m-0 text-center col-11">Ensayos realizados</p>
+                            </div>
+                            
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-around col-4">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-clock azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">1060</p>
+                                <p class="m-0 text-center col-11">Horas empleadas</p>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+
+                    <!--Ensayo destacado-->
+                    <div style="min-height: 100px; border-radius: 1rem; background: linear-gradient(135deg, rgba(34, 184, 181, 0.15),rgba(34, 184, 181, 0.05))" class="mt-5">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-bookmark-star azul-turquesa numero-grande"></i>
+                            <h3 class="azul-fuerte">ENSAYO DESTACADO</h3>
+                        </div>
+                        <div class="col-9 m-auto">
+                                <div class="d-flex align-items-center justify-content-center pb-3">
+                                    <p class="text-center mx-3">EMI:</p>
+                                    <p class="numero-mediano azul-turquesa m-0">2,6 mJ</p>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--Página 8 LIE-->
+    <div style="page-break-before: always;" class="a4">
+        <div class="laboratorio">
+            <div class="row d-flex align-items-center justify-content-center mt-5">
+                <!-- CONTENEDOR NUEVO -->
+                <div class="col-2 d-flex align-items-center">
+                    <h1 class="azul-fuerte mr-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">
+                        LIE
+                    </h1>
+
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                </div>
+                
+                <div class="col-10">
+                    <div class="d-flex col-12 align-items-center justify-content-center">
+                        <div class="circulo-laboratorio">33%</div>
+                        <div class="linea-horizontal-turquesa col"></div>
+                    </div>
+
+                
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <p class="text-justify">
+                                Ensayo de Limite Inferior de Explosividad, determina la
+                                menor concentración necesaria para producir una explosión, 
+                                la ignición se realiza con unas cerillas con un poder de 2kJ.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style="font-family: Arial, sans-serif;">
+
+                        <table style="
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            width: 100%;
+                            overflow: hidden;
+                            border-radius: 12px;
+                        ">
+
+                            <thead>
+                                <tr style="background-color: #192B5C; color: white;">
+                                    <th style="padding: 12px; text-align: left;">Código</th>
+                                    <th style="padding: 12px; text-align: center;">Calibrado</th>
+                                    <th style="padding: 12px; text-align: center;">Próxima calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Tipo calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                </tr>
+                            </thead>
+
+                            <tbody style="background: white;">
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            PO0079
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    
+                    <!--Resumen ensayos-->
+                    <div class="d-flex align-items-center justify-content-between mt-5">
+                        <div class="d-flex align-items-center justify-content-around col-3">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-flask azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">88</p>
+                                <p class="m-0 text-center col-11">Ensayos realizados</p>
+                            </div>
+                            
+                        </div>
+                        <div class="d-flex align-items-center justify-content-around col-3">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-fire azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">1320</p>
+                                <p class="m-0 text-center">Inflamadores usados</p>
+                            </div>
+                            
+                        </div>
+                        <div class="d-flex align-items-center justify-content-around col-3">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-clock azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">1060</p>
+                                <p class="m-0 text-center col-11">Horas empleadas</p>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+
+                    <!--Ensayo destacado-->
+                    <div style="min-height: 100px; border-radius: 1rem; background: linear-gradient(135deg, rgba(34, 184, 181, 0.15),rgba(34, 184, 181, 0.05))" class="mt-5">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-bookmark-star azul-turquesa numero-grande"></i>
+                            <h3 class="azul-fuerte">ENSAYO DESTACADO</h3>
+                        </div>
+                        <div class="col-9 m-auto">
+                                <div class="d-flex align-items-center justify-content-center pb-3">
+                                    <p class="text-center mx-3">LIE:</p>
+                                    <p class="numero-mediano azul-turquesa m-0">60 g/m3</p>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+     <!--Página 9 Pmax-->
+    <div style="page-break-before: always;" class="a4">
+        <div class="laboratorio">
+            <div class="row d-flex align-items-center justify-content-center mt-5">
+                <!-- CONTENEDOR NUEVO -->
+                <div class="col-2 d-flex align-items-center">
+                    <h1 class="azul-fuerte mr-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">
+                        PMAX
+                    </h1>
+
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                </div>
+                
+                <div class="col-10">
+                    <div class="d-flex col-12 align-items-center justify-content-center">
+                        <div class="circulo-laboratorio">33%</div>
+                        <div class="linea-horizontal-turquesa col"></div>
+                    </div>
+
+                
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <p class="text-justify">
+                                Ensayo de severidad a la explosión, se busca obtener los parámetros de Pmax, dPdTmax,
+                                lo que nos permite calcular la constante kmax con la que poder caracterizar la muestra 
+                                según el tipo de explosión, la ignición se realiza con unas cerillas con un poder de 10kJ.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" style="font-family: Arial, sans-serif;">
+
+                        <table style="
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            width: 100%;
+                            overflow: hidden;
+                            border-radius: 12px;
+                        ">
+
+                            <thead>
+                                <tr style="background-color: #192B5C; color: white;">
+                                    <th style="padding: 12px; text-align: left;">Código</th>
+                                    <th style="padding: 12px; text-align: center;">Calibrado</th>
+                                    <th style="padding: 12px; text-align: center;">Próxima calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Tipo calibración</th>
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                </tr>
+                            </thead>
+
+                            <tbody style="background: white;">
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 14px;">
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            EQ-001
+                                        </div>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <span style="margin-left:6px;">Sí</span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        2026-12-01
+                                    </td>
+
+                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+
+                                    <td style="text-align:center;">1999</td>
+                                </tr>
+
+                                
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    
+                    <!--Resumen ensayos-->
+                    <div class="d-flex align-items-center justify-content-between mt-5">
+                        <div class="d-flex align-items-center justify-content-around col-3">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-flask azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">88</p>
+                                <p class="m-0 text-center col-11">Ensayos realizados</p>
+                            </div>
+                            
+                        </div>
+                        <div class="d-flex align-items-center justify-content-around col-3">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-fire azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">1320</p>
+                                <p class="m-0 text-center">Inflamadores usados</p>
+                            </div>
+                            
+                        </div>
+                        <div class="d-flex align-items-center justify-content-around col-3">
+                            <div class="numero-mediano d-flex align-items-center justify-content-center">
+                                <i class="bi bi-clock azul-fuerte"></i>
+                            </div>
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="numero-mediano m-0">1060</p>
+                                <p class="m-0 text-center col-11">Horas empleadas</p>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+
+                    <!--Ensayo destacado-->
+                    <div style="min-height: 100px; border-radius: 1rem; background: linear-gradient(135deg, rgba(34, 184, 181, 0.15),rgba(34, 184, 181, 0.05))" class="mt-5">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-bookmark-star azul-turquesa numero-grande"></i>
+                            <h3 class="azul-fuerte">ENSAYO DESTACADO</h3>
+                        </div>
+                        <div class="col-9 m-auto">
+                            <div class="d-flex align-items-center justify-content-between mt-1">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="mb-0">Pmax</p>
+                                <p class="numero-mediano azul-turquesa mt-0"> 8,7</p>
+                                </div>
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="mb-0">dPdT</p>
+                                <p class="numero-mediano azul-turquesa mt-0"> 758</p>
+                                </div>
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="mb-0">kmax</p>
+                                <p class="numero-mediano azul-turquesa mt-0"> 234</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    
+</div>
+
+
+<!-- ================= CLIENTES ================= -->
+<div>
+     <!--Página 10-->
+    <div style="page-break-before: always;" class="a4">
+        <div class="laboratorio">
+            <div class="titulo-actividad mb-5">
+                <h1 class="titulo-codigo">03</h1>
+                <h2 class="titulo-nombre">Clientes</h2>
+                <div class="linea-horizontal-medio"></div>
+            </div>
+
+            <div class="mb-5">
+                <p class="text-justify"> 
+                    El apartado de clientes analiza el origen y comportamiento de la cartera, 
+                    diferenciando clientes nuevos y recurrentes, así como su volumen de muestras y nivel de actividad. 
+                    <br><br>
+                    Además, se estudian indicadores clave como la captación, fidelización y contribución de los principales emisores, 
+                    facilitando la detección de tendencias y la toma de decisiones.
+                </p>
+            </div>
+            <div class="d-flex align-items-stretch justify-content-between">
+
+                <div class="col-7">
+                    <div class="mb-5">
+                        <h4 class="azul-fuerte mb-0 mt-0">NUMERO EMPRESAS</h4>
+                        <p class="azul-fuerte mb-0 mt-0 letra-muy-pequena">
+                            Nuevos vs recurrentes
+                        </p>
+
+                        <div style="height: 250px;">
+                            <canvas id="donut"></canvas>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="azul-fuerte mb-0">TOP 5 EMPRESAS</h4>
+                        <p class="azul-fuerte mb-0 mt-0 letra-muy-pequena">
+                            Numero de muestras
+                        </p>
+
+                        <div style="height: 250px;">
+                            <canvas id="empresasChar"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 d-flex flex-column justify-content-between align-items-stretch">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="col">
+                            <i class="bi bi-buildings numero-grande azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">12 %</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Nuevas empresas
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="col">
+                            <i class="bi bi-graph-up-arrow numero-grande azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">8,5 %</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Crecimiento aual
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="col">
+                            <i class="bi bi-align-center numero-grande azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">1,9</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Promedio muestras por empresa
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="col">
+                            <i class="bi bi-repeat-1 numero-grande azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">32%</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Tasa recurrencia anual
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="col">
+                            <i class="bi bi-repeat numero-grande azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">27%</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Tasa recurrencia total
+                            </p>
+                        </div>
+                    </div>
+                    
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--Página 11-->
+    <div style="page-break-before: always;" class="a4">
+        <div class="laboratorio">
+            <div>
+                <div class="row d-flex align-items-center mt-5">
+                    <div class="col-2">
+                        <h3 class="azul-fuerte m-0"> Mapa</h3>
+                    </div>
+                    
+                    <div class="col-10">
+                        <div class="linea-horizontal-fuerte"></div>
+                    </div>
+                </div>
+                <div>
+                    <p> 
+                        Distribución geográfica de las empresas en el territorio nacional. <br>
+                        Mediante una representación cromática se identifican las zonas de España 
+                        con mayor actividad y volumen de muestras aportadas.
+                    </p>
+                </div>
+                
+                <div id="mapa"></div>
+
+                <div class="d-flex align-items-center justify-content-between">
+
+                    <div class="d-flex flex-column justify-content-between">
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <i class="bi bi-geo numero-mediano azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">88%</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Muestras nacionales
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column justify-content-between">
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <i class="bi bi-globe-americas numero-mediano azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Numero muestras internacionales
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column justify-content-between">
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <i class="bi bi-fullscreen-exit numero-mediano azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12 %</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Conentración en 5 provincias
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column justify-content-between">
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <i class="bi bi-search numero-mediano azul-fuerte"></i>
+                        </div>
+
+                        <div>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12</p>
+                            <p class="m-0 text-center letra-pequena">
+                                Provincias con presencia
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div>
+                    <h4 class="azul-fuerte mt-5 mb-0 letra-media">Empresas activas por provincia</h4>
+
+                    <div class="card-body">
+
+                        <!-- TITULOS -->
+                        <div class="row fw-bold mb-3 pb-2" 
+                            style="border-bottom:1px solid #dfe3eb; color:#1d2b53;">
+
+                            <div class="col-5">Comunidad Autónoma</div>
+                            <div class="col-2 text-center">Empresas</div>
+                            <div class="col-3"></div>
+                            <div class="col-2 text-center">% del total</div>
+
+                        </div>
+
+                        <!-- FILA -->
+                        <div class="row align-items-center mb-3">
+
+                            <!-- PROVINCIA -->
+                            <div class="col-5 d-flex align-items-center">
+
+                                <span style="
+                                    width:14px;
+                                    height:14px;
+                                    border-radius:50%;
+                                    background:#0b1f77;
+                                    display:inline-block;
+                                    margin-right:10px;
+                                "></span>
+
+                                Madrid
+
+                            </div>
+
+                            <!-- EMPRESAS -->
+                            <div class="col-2 fw-bold">
+                                <p class="text-center"> 42 </p>
+                            </div>
+
+                            <!-- BARRA -->
+                            <div class="col-3">
+
+                                <div class="progress" style="
+                                    height:16px;
+                                    background:#edf2fb;
+                                    border-radius:20px;
+                                ">
+
+                                    <div class="progress-bar"
+                                        style="
+                                            width:43.3%;
+                                            background:#0b1f77;
+                                            border-radius:20px;
+                                        ">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- PORCENTAJE -->
+                            <div class="col-2 text-center fw-bold">
+                                43,3%
+                            </div>
+
+                        </div>
+
+                        <!-- FILA -->
+                        <div class="row align-items-center mb-3">
+
+                            <div class="col-5 d-flex align-items-center">
+
+                                <span style="
+                                    width:14px;
+                                    height:14px;
+                                    border-radius:50%;
+                                    background:#2f6fd6;
+                                    display:inline-block;
+                                    margin-right:10px;
+                                "></span>
+
+                                Cataluña
+
+                            </div>
+
+                            <div class="col-2 fw-bold">
+                                <p class="text-center"> 31 </p>
+                            </div>
+
+                            <div class="col-3">
+
+                                <div class="progress" style="
+                                    height:16px;
+                                    background:#edf2fb;
+                                    border-radius:20px;
+                                ">
+
+                                    <div class="progress-bar"
+                                        style="
+                                            width:32%;
+                                            background:#2f6fd6;
+                                            border-radius:20px;
+                                        ">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 text-center fw-bold">
+                                32%
+                            </div>
+
+                        </div>
+
+                        <!-- FILA -->
+                        <div class="row align-items-center mb-3">
+
+                            <div class="col-5 d-flex align-items-center">
+
+                                <span style="
+                                    width:14px;
+                                    height:14px;
+                                    border-radius:50%;
+                                    background:#74b9ff;
+                                    display:inline-block;
+                                    margin-right:10px;
+                                "></span>
+
+                                Andalucía
+
+                            </div>
+
+                            <div class="col-2 fw-bold">
+                                <p class="text-center"> 12 </p>
+                            </div>
+
+                            <div class="col-3">
+
+                                <div class="progress" style="
+                                    height:16px;
+                                    background:#edf2fb;
+                                    border-radius:20px;
+                                ">
+
+                                    <div class="progress-bar"
+                                        style="
+                                            width:12.4%;
+                                            background:#74b9ff;
+                                            border-radius:20px;
+                                        ">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-2 text-center fw-bold">
+                                12,4%
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 
+<!--
 <script>
     const top_empresas = {{top_empresas_json|safe}};
 </script>
+-->
 
 <!--Contador graficos-->
 <script>
-    window.totalCharts = 4;      // 👈 número de gráficos que tienes
+    window.totalCharts = 6;      // 👈 número de gráficos que tienes
     window.renderedCharts = 0;   // 👈 contador
 </script>
 
@@ -964,26 +2262,92 @@ body {
 <script src="{{chart_pie_js}}"></script>
 <script src="{{bar_chart_js}}"></script>
 <script src="{{line_chart_js}}"></script>
+<script src="{{donut}}"></script>
+<script src="{{empresasChar}}"></script>
 
+<!--Mapa-->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<script>
+    const geojson = JSON.parse('{{ mapa|safe }}');
+
+    const width = 600;
+    const height = 410;
+
+    const svg = d3.select("#mapa")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("transform", "scale(0.90)")
+        .style("transform-origin", "top left");
+
+    // escala de color
+    const color = d3.scaleSequential()
+        .domain([0, 120])
+        .interpolator(d3.interpolateBlues);
+
+    // datos
+    const clientes = {
+        "madrid": 120,
+        "barcelona": 95,
+        "valencia": 80,
+        "sevilla": 60,
+        "zaragoza": 40,
+        "malaga": 55
+    };
+
+    // proyección centrada en península
+    const projection = d3.geoMercator()
+        .center([-3.5, 40.2])
+        .scale(2200)
+        .translate([width / 2, height / 2]);
+
+    const path = d3.geoPath().projection(projection);
+
+    geojson.features.forEach(d => {
+        const name = d.properties.name.toLowerCase();
+        d.properties.value = clientes[name] || 0;
+    });
+
+    svg.selectAll("path")
+        .data(geojson.features)
+        .enter()
+        .append("path")
+        .attr("d", function(d) {
+
+            const name = d.properties.name.toLowerCase();
+
+            // Canarias movidas manualmente
+            if (
+                name.includes("palmas") ||
+                name.includes("santa cruz de tenerife")
+            ) {
+
+                const canariasPath = d3.select(this);
+
+                // dibujar normalmente
+                const original = path(d);
+
+                // crear path temporal
+                canariasPath.attr("d", original);
+
+                // mover y reducir
+                canariasPath.attr(
+                    "transform",
+                    "translate(-250,250) scale(0.7)"
+                );
+
+                return original;
+            }
+
+            return path(d);
+        })
+        .attr("fill", d => color(d.properties.value))
+        .attr("stroke", "#000")
+        .attr("stroke-width", 0.5);
+
+</script>
 
 
 
 </html>
-
-<!--
-<div>
-    <div class="card-body">
-        <div class="chart-pie pt-4 pb-2" style="height:600px; width: 600px;">
-            <canvas id="myPieChart"></canvas>
-        </div>
-        <div class="mt-4 text-center small">
-            {%for empresa in top_empresas%}
-                <span class="mr-2">
-                    <i class="fas fa-circle text-{{empresa.color}}"></i> {{empresa.empresa}}
-                </span>
-            {%endfor%}
-            
-        </div>
-    </div>
-
-</div>
