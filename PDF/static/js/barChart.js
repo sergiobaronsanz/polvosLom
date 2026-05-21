@@ -1,21 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
-
+    //Datos evolución representa el presente y compariva anual el año pasado
+ 
     const data = {
-        labels: ['2025', '2026'],
+        labels: [yearAnterior_json, year_json],
         datasets: [
             {
                 label: 'Muestras',
-                data: [17, 30],
+                data: [comparativaAnual.muestras, datosEvolucion.muestras],
                 backgroundColor: '#192B5C'
             },
             {
                 label: 'Expedientes',
-                data: [7, 8],
+                data: [comparativaAnual.expedientes, datosEvolucion.expedientes, 8],
                 backgroundColor: '#2E95AA'
             },
             {
                 label: 'Empresas',
-                data: [3, 7],
+                data: [comparativaAnual.empresas, datosEvolucion.empresas, 7],
                 backgroundColor: '#5F6B8B'
             }
         ]

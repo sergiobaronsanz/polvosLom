@@ -5,40 +5,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const labels = [];
     const dataEnsayos = [];
     const dataHoras = [];
+    const colors = [];
 
-    const top_empresas = [
-        { ensayo: "TMIc", nEnsayos: 25, horas: 120 },
-        { ensayo: "TMIn", nEnsayos: 18, horas: 95 },
-        { ensayo: "EMI", nEnsayos: 12, horas: 60 },
-        { ensayo: "LIE", nEnsayos: 9, horas: 40 },
-        { ensayo: "PMAX", nEnsayos: 6, horas: 90 },
-        { ensayo: "REC", nEnsayos: 6, horas: 28 },
-        { ensayo: "CLO", nEnsayos: 6, horas: 25 },
-        { ensayo: "N1", nEnsayos: 6, horas: 22 },
-        { ensayo: "N2", nEnsayos: 6, horas: 20 },
-        { ensayo: "N4", nEnsayos: 6, horas: 18 },
-        { ensayo: "O1", nEnsayos: 6, horas: 15 },
-    ];
+    // 👉 Datos desde Django
+    calculosEnsayos.ensayosOrdenados.forEach(e => {
 
-    top_empresas.forEach(e => {
-        labels.push(e.ensayo);
-        dataEnsayos.push(e.nEnsayos);
+        labels.push(e.nombre);
+        dataEnsayos.push(e.ensayos);
         dataHoras.push(e.horas);
-    });
+        colors.push(e.color);
 
-    const colors = [
-        '#1E3A8A',
-        '#2563EB',
-        '#3B82F6',
-        '#60A5FA',
-        '#93C5FD',
-        '#2E95AA',
-        '#14B8A6',
-        '#22C55E',
-        '#84CC16',
-        '#F59E0B',
-        '#EF4444'
-    ];
+    });
 
     const centerTextPlugin = {
 
@@ -73,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.font = '14px Arial';
             ctx.fillStyle = '#6B7280';
 
-            // texto distinto según gráfico
             const text = chart.canvas.id === 'myPieChart'
                 ? 'ensayos'
                 : 'horas';
@@ -85,26 +61,42 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const baseOptions = {
+
         responsive: true,
         devicePixelRatio: 3,
-        layout: { padding: { top: 0 } },
+
+        layout: {
+            padding: {
+                top: 0
+            }
+        },
+
         animation: {
-            duration: 0, 
+            duration: 0,
             onComplete: () => {
                 window.chartRendered = true;
             }
         },
+
         plugins: {
-            legend: { display: false }, // 👈 una sola leyenda externa
+
+            legend: {
+                display: false
+            },
+
             datalabels: {
                 display: false
             }
+
         }
+
     };
 
-    // 👉 ENSAYOS (izquierda)
+    // 👉 ENSAYOS
     new Chart(document.getElementById('myPieChart'), {
+
         type: 'doughnut',
+
         data: {
             labels: labels,
             datasets: [{
@@ -113,13 +105,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 hoverOffset: 4
             }]
         },
+
         options: baseOptions,
+
         plugins: [centerTextPlugin],
+
     });
 
-    // 👉 HORAS (derecha)
+    // 👉 HORAS
     new Chart(document.getElementById('myPieChart_2'), {
+
         type: 'doughnut',
+
         data: {
             labels: labels,
             datasets: [{
@@ -128,31 +125,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 hoverOffset: 4
             }]
         },
+
         options: baseOptions,
-        plugins: [centerTextPlugin] 
+
+        plugins: [centerTextPlugin]
+
     });
 
-    // 👉 LEYENDA CENTRAL COMPARTIDA
+    // 👉 LEYENDA
     const legendContainer = document.getElementById('customLegend');
 
-    labels.forEach((label, i) => {
+    calculosEnsayos.ensayosOrdenados.forEach((e) => {
+
         const item = document.createElement('div');
+
         item.style.display = 'flex';
         item.style.alignItems = 'center';
         item.style.gap = '6px';
 
         const colorBox = document.createElement('span');
+
         colorBox.style.width = '12px';
         colorBox.style.height = '12px';
-        colorBox.style.backgroundColor = colors[i];
+        colorBox.style.backgroundColor = e.color;
+        colorBox.style.borderRadius = '50%';
 
         const text = document.createElement('span');
-        text.textContent = label;
-         text.style.fontSize = '12px';
+
+        text.textContent = `${e.nombre} (${e.porcentaje}%)`;
+        text.style.fontSize = '12px';
 
         item.appendChild(colorBox);
         item.appendChild(text);
+
         legendContainer.appendChild(item);
+
     });
 
 });

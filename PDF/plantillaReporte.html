@@ -459,6 +459,21 @@ body {
     margin-top: 6px;
 }
 
+.circulo-actividad{
+    padding: 7px;
+    border: 3px solid #e1e4e8;
+    border-radius: 50%;
+
+    background-color: #e1e4e8;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
 /******************* LABORATORIO ***********************/
 .laboratorio{
     height: 90%;
@@ -530,11 +545,7 @@ body {
         </div>
 
         <div class="periodo">
-            {% if periodo|length == 2 %}
-                <p>Entre el {{ periodo[0] }} y el {{ periodo[1] }}</p>
-            {% else %}
-                <p>Año {{ periodo[0] }}</p>
-            {% endif %}
+                <p>Año {{ year}}</p>
         </div>
         <div id="logoPortada">
             <div>
@@ -594,7 +605,7 @@ body {
                 <div class="linea-horizontal-medio"></div>
             </div>
             <div>
-                <h4 class="azul-fuerte text-justify">Evolución de la actividad del laboratorio de sustancias inflamables durante {{periodo[0]}}, y la comparativa de la evolución con respecto al año anterior</h4>
+                <h4 class="azul-fuerte text-justify">Evolución de la actividad del laboratorio de sustancias inflamables durante {{year}}, y la comparativa de la evolución con respecto al año anterior</h4>
                 <!--Cuadro evolucion-->
                 <div class="d-flex align-items-center justify-content-between mt-5 p-4 bg-light" style="min-height: 100px; border-radius: 1rem;">
                     <div class="d-flex align-items-center">
@@ -606,7 +617,7 @@ body {
                     <div class="row d-flex  align-items-start" style="min-height: 80px;">
                         <div class="col d-flex flex-column">
                             <div style="width: 80%; margin: auto;">
-                                <p class="text-center mb-0 mt-0 letra-grande font-weight-bold azul-turquesa fw-bold">125</p>
+                                <p class="text-center mb-0 mt-0 letra-grande font-weight-bold azul-turquesa fw-bold">{{datosEvolucion.muestras}}</p>
                                 <p class="text-center mb-1 mt-0 azul-turquesa fw-bold">Muestras</p>
                                 <div class="linea-horizontal-turquesa"></div>
 
@@ -615,7 +626,7 @@ body {
                         </div>
                         <div class="col d-flex flex-column">
                             <div style="width: 80%; margin: auto;">
-                                <p class="text-center mb-0 mt-0 letra-grande font-weight-bold azul-turquesa fw-bold">87</p>
+                                <p class="text-center mb-0 mt-0 letra-grande font-weight-bold azul-turquesa fw-bold">{{datosEvolucion.expedientes}}</p>
                                 <p class="text-center mb-1 mt-0 azul-turquesa fw-bold">Expedientes</p>
                                 <div class="linea-horizontal-turquesa"></div>
 
@@ -624,7 +635,7 @@ body {
                         </div>
                         <div class="col d-flex flex-column">
                             <div style="width: 80%; margin: auto;">
-                                <p class="text-center mb-0 mt-0 letra-grande font-weight-bold azul-turquesa fw-bold">77</p>
+                                <p class="text-center mb-0 mt-0 letra-grande font-weight-bold azul-turquesa fw-bold">{{datosEvolucion.empresas}}</p>
                                 <p class="text-center mb-1 mt-0 azul-turquesa fw-bold">Empresas</p>
                                 <div class="linea-horizontal-turquesa"></div>
                                 <p class="letra-muy-pequena text-justify mt-2">Número de clientes totales.</p>
@@ -663,7 +674,7 @@ body {
             <div class="mb-5">
                 <div class="row d-flex align-items-center mt-5">
                     <div class="col-4">
-                        <h3 class="azul-fuerte m-0"> Comparativa anual</h3>
+                        <h3 class="azul-fuerte m-0">Promedio anual</h3>
                     </div>
                     
                     <div class="col-8">
@@ -672,45 +683,45 @@ body {
                     
                 </div>             
 
-                <div class="d-flex align-items-center justify-content-between mt-5 mb-3">
-                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 150px; border-radius: 1rem; border-left: 6px solid #1E3A8A;">
+                <div class="d-flex align-items-center justify-content-between mt-5 mb-4">
+                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 120px; border-radius: 1rem; border-left: 6px solid #1E3A8A;">
                         
                         <div class="numero-grande col-4 d-flex align-items-center">
-                            <i class="bi bi-virus azul-fuerte m-auto"></i>
+                            <i class="bi bi-virus azul-fuerte m-auto numero-mediano circulo-actividad"></i>
                         </div>
 
                         <div class="col-8 d-flex flex-column align-items-center">
-                            <p class="m-0 azul-fuerte numero-mediano ">17</p>
+                            <p class="m-0 azul-fuerte numero-mediano ">{{promedioMensual.promedioMuestras}}</p>
                             <h4 class="mb-0 azul-fuerte m-0"> MUESTRAS</h4>
                             <p class="letra-muy-pequena mt-1 azul-fuerte text-center">Media mensual de las muestras recibidas</p>
                         </div>
 
                     </div>
 
-                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 150px; border-radius: 1rem; border-left: 6px solid #2E95AA;">
+                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 120px; border-radius: 1rem; border-left: 6px solid #2E95AA;">
                         
                         <div class="numero-grande col-4 d-flex align-items-center">
-                            <i class="bi bi-folder azul-turquesa m-auto"></i>
+                            <i class="bi bi-folder azul-turquesa m-auto numero-mediano circulo-actividad"></i>
                         </div>
 
                         <div class="col-8 d-flex flex-column align-items-center">
-                            <p class="m-0 azul-fuerte numero-mediano">8</p>
+                            <p class="m-0 azul-fuerte numero-mediano">{{promedioMensual.promedioExpedientes}}</p>
                             <h4 class="mb-0 azul-fuerte m-0"> EXPEDIENTES</h4>
                             <p class="letra-muy-pequena mt-1 azul-fuerte text-center">Media mensual de los expedientes realizados</p>
                         </div>
 
                     </div>
 
-                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 150px; border-radius: 1rem; border-left: 6px solid #5F6B8B;">
+                    <div class="d-flex align-items-center justify-content-between col-4" style="min-height: 120px; border-radius: 1rem; border-left: 6px solid #5F6B8B;">
                         
                         <div class="numero-grande col-4 d-flex align-items-center">
-                            <i class="bi bi-building-fill azul-medio m-auto numero-mediano"></i>
+                            <i class="bi bi-building-fill azul-medio m-auto numero-mediano circulo-actividad"></i>
                         </div>
 
                         <div class="col-8 d-flex flex-column align-items-center">
-                            <p class="m-0 azul-fuerte letra-media">+33</p>
+                            <p class="m-0 azul-fuerte numero-mediano">{{promedioMensual.empresasNuevas}}</p>
                             <h4 class="mb-0 azul-fuerte letra-pequena mt-0"> EMPRESAS</h4>
-                            <p class="letra-muy-pequena mt-1 azul-fuerte text-center">Nuevas empresas añadidas</p>
+                            <p class="letra-muy-pequena mt-1 azul-fuerte text-center">Clientes nuevos llegados este año</p>
                         </div>
 
                     </div>
@@ -743,17 +754,17 @@ body {
                 <div class="col-11 d-flex align-items-center justify-content-between m-auto" style="min-height: 150px; border-radius: 1rem;">
                     <div class="col-8 d-flex justify-content-between align-items-center" style="height: 100%;">
                         <div class="d-flex flex-column align-items-center justify-content-center">
-                            <p class="azul-fuerte mb-2 numero-mediano"> +10%</p>
+                            <p class="azul-fuerte mb-2 numero-mediano"> {{calculosComparativa.incrementoMuestras}}</p>
                             <p class="text-center mt-0 azul-fuerte"> Muestras</p>
                         </div>
 
                         <div class="d-flex flex-column align-items-center justify-content-center">
-                            <p class="azul-fuerte mb-2 numero-mediano"> +5%</p>
+                            <p class="azul-fuerte mb-2 numero-mediano"> {{calculosComparativa.incrementoExpedientes}}</p>
                             <p class="text-center mt-0 azul-fuerte"> Expedientes</p>
                         </div>
 
                         <div class="d-flex flex-column align-items-center justify-content-center">
-                            <p class="azul-fuerte mb-2 numero-mediano"> +3%</p>
+                            <p class="azul-fuerte mb-2 numero-mediano"> {{calculosComparativa.incrementoEmpresas}}</p>
                             <p class="text-center mt-0 azul-fuerte">Empresas</p>
                         </div>
 
@@ -764,11 +775,11 @@ body {
                     <div class="col-4">
                         <h3 class="azul-fuerte text-center m-0 mb-2">PERIODO COMPARATIVO</h3>
                         <div class="d-flex justify-content-between align-items-center  m-auto">
-                            <h4 class="mb-0 mt-0 azul-medio">2025</h4>
+                            <h4 class="mb-0 mt-0 azul-medio">{{yearAnterior}}</h4>
                                 <div style="width: 30%;">
                                     <div class="linea-horizontal-turquesa"></div>
                                 </div>
-                            <h4 class="mb-0 mt-0 azul-medio">2026</h4>
+                            <h4 class="mb-0 mt-0 azul-medio">{{year}}</h4>
                         </div>
                     </div>
                 </div>
@@ -932,139 +943,21 @@ body {
                     </thead>
 
                     <tbody>
+                        {%for ensayo in calculosEnsayos.ensayosOrdenados%}
+                            <tr class="mb-3">
+                                <td>
+                                    <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
+                                        <span style="width:10px; height:10px; background: {{ensayo.color}}; display:inline-block;"></span>
+                                        {{ensayo.nombre}}
+                                    </div>
+                                </td>
+                                <td>{{ensayo.porcentaje}}%</td>
+                                <td>{{ensayo.ensayos}}</td>
+                                <td>{{ensayo.horas}}</td>
+                            </tr>
+                        {%endfor%}
 
-                        <tr class="mb-3">
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#1E3A8A; display:inline-block;"></span>
-                                    TMIc
-                                </div>
-                            </td>
-                            <td>22.1%</td>
-                            <td>25</td>
-                            <td>120</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#2563EB; display:inline-block;"></span>
-                                    TMIn
-                                </div>
-                            </td>
-                            <td>15.9%</td>
-                            <td>18</td>
-                            <td>95</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#3B82F6; display:inline-block;"></span>
-                                    EMI
-                                </div>
-                            </td>
-                            <td>10.6%</td>
-                            <td>12</td>
-                            <td>60</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#60A5FA; display:inline-block;"></span>
-                                    LIE
-                                </div>
-                            </td>
-                            <td>8.0%</td>
-                            <td>9</td>
-                            <td>40</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#93C5FD; display:inline-block;"></span>
-                                    PMAX
-                                </div>
-                            </td>
-                            <td>5.3%</td>
-                            <td>6</td>
-                            <td>30</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#2E95AA; display:inline-block;"></span>
-                                    REC
-                                </div>
-                            </td>
-                            <td>5.3%</td>
-                            <td>6</td>
-                            <td>28</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#14B8A6; display:inline-block;"></span>
-                                    CLO
-                                </div>
-                            </td>
-                            <td>5.3%</td>
-                            <td>6</td>
-                            <td>25</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#22C55E; display:inline-block;"></span>
-                                    N1
-                                </div>
-                            </td>
-                            <td>5.3%</td>
-                            <td>6</td>
-                            <td>22</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#84CC16; display:inline-block;"></span>
-                                    N2
-                                </div>
-                            </td>
-                            <td>5.3%</td>
-                            <td>6</td>
-                            <td>20</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#F59E0B; display:inline-block;"></span>
-                                    N4
-                                </div>
-                            </td>
-                            <td>5.3%</td>
-                            <td>6</td>
-                            <td>18</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div style="display:flex; justify-content:start; align-items:center; gap:6px;">
-                                    <span style="width:10px; height:10px; background:#EF4444; display:inline-block;"></span>
-                                    O1
-                                </div>
-                            </td>
-                            <td>5.3%</td>
-                            <td>6</td>
-                            <td>15</td>
-                        </tr>
-
+                        
 
                         
 
@@ -1090,13 +983,12 @@ body {
                     <h1 class="azul-fuerte mr-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">
                         TMIc
                     </h1>
-
-                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">{{calculosEnsayos.TMIC.normativa}}</h3>
                 </div>
                 
                 <div class="col-10">
                     <div class="d-flex col-12 align-items-center justify-content-center">
-                        <div class="circulo-laboratorio">23%</div>
+                        <div class="circulo-laboratorio">{{calculosEnsayos.TMIC.porcentaje}} %</div>
                         <div class="linea-horizontal-turquesa col"></div>
                     </div>
 
@@ -2030,7 +1922,7 @@ body {
                         <div>
                             <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12</p>
                             <p class="m-0 text-center letra-pequena">
-                                Numero muestras internacionales
+                                Muestras internacionales
                             </p>
                         </div>
                     </div>
@@ -2043,7 +1935,7 @@ body {
                         <div>
                             <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12 %</p>
                             <p class="m-0 text-center letra-pequena">
-                                Conentración en 5 provincias
+                                Concentración en 5 provincias
                             </p>
                         </div>
                     </div>
@@ -2241,6 +2133,18 @@ body {
 </script>
 -->
 
+<!--Variables-->
+<script>
+    const year_json= JSON.parse('{{year_json|safe}}');
+    const yearAnterior_json= JSON.parse('{{yearAnterior_json|safe}}')
+    const muestrasMensual= JSON.parse('{{ muestrasMensual|safe }}');
+    const expedientesMensual= JSON.parse('{{expedientesMensual|safe }}');
+    const datosEvolucion= JSON.parse('{{datosEvolucion_json}}')
+    const comparativaAnual= JSON.parse('{{comparativaAnual|safe}}')
+    const calculosEnsayos= JSON.parse('{{calculosEnsayos_json|safe}}')
+
+</script>
+
 <!--Contador graficos-->
 <script>
     window.totalCharts = 6;      // 👈 número de gráficos que tienes
@@ -2256,6 +2160,7 @@ body {
         }
     }
 </script>
+
 <!--Gáficos-->
 <script src="{{Chart}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
@@ -2267,6 +2172,7 @@ body {
 
 <!--Mapa-->
 <script src="https://d3js.org/d3.v7.min.js"></script>
+
 
 <script>
     const geojson = JSON.parse('{{ mapa|safe }}');

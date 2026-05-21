@@ -10,10 +10,16 @@ import os
 import tempfile
 from polvosLom import settings
 import webbrowser
-from expedientes.models import Empresa
 from django.utils import timezone
 from django.db.models import Count, Q, F, ExpressionWrapper, FloatField
 import json
+from django.db.models import Sum
+
+from expedientes.models import Empresa, Expedientes
+from muestras.models import Muestras
+from django.db.models.functions import ExtractMonth
+from ensayos.models import *
+
 
 
 
@@ -76,6 +82,40 @@ class InformePDF:
             mapa = json.load(f)
         mapa = json.dumps(mapa)
 
+        ########### Genaración de variables #######
+        year= int(self.periodo[0])
+        yearAnterior= year -1
+        datos= GeneradorVariables(year)
+
+        datosEvolucion= datos.evolucionGeneral()
+        datosEvolucion_json= json.dumps(datosEvolucion)
+
+        muestrasMensual=datos.muestrasMensual()
+        expedientesMensual= datos.expedientesMensual()
+
+        muestrasMensual_json= json.dumps(muestrasMensual)
+        expedientesMensual_json= json.dumps(expedientesMensual)
+
+        promedioMensual = {
+            "promedioMuestras": round(int(datosEvolucion["muestras"]) / 12, 1),
+            "promedioExpedientes": round(int(datosEvolucion["expedientes"]) / 12, 1),
+            "empresasNuevas": datos.empresasNuevas(),
+        }
+
+        comparativaAnual= datos.comparativaAnual()
+        comparativaAnual_json= json.dumps(comparativaAnual)
+
+        year_json= json.dumps(year)
+        yearAnterior_json= json.dumps(yearAnterior)
+
+        calculosComparativa= datos.calculosComparativa()
+
+        calculosEnsayos= datos.calculosEnsayos()
+        calculosEnsayos_json= json.dumps(calculosEnsayos)
+
+
+
+
         ########### Render template ###########
         html = template.render(
             periodo=self.periodo,
@@ -94,7 +134,25 @@ class InformePDF:
             top_empresas_json= top_empresas_json,
             mapa=mapa,
             donut=donut,
-            empresasChar=empresasChar
+            empresasChar=empresasChar,
+            promedioMensual= promedioMensual,
+            
+
+            #Variables
+            year= year,
+            year_json= year_json,
+            yearAnterior= yearAnterior,
+            yearAnterior_json= yearAnterior_json,
+            datosEvolucion=datosEvolucion,
+            datosEvolucion_json= datosEvolucion_json,
+
+            muestrasMensual= muestrasMensual_json,
+            expedientesMensual= expedientesMensual_json,
+            comparativaAnual= comparativaAnual_json,
+            calculosComparativa= calculosComparativa,
+            calculosEnsayos= calculosEnsayos,
+            calculosEnsayos_json= calculosEnsayos_json,
+
         )
 
         # =========================
@@ -150,6 +208,396 @@ class InformePDF:
             browser.close()
 
         return pdf
+
+
+class GeneradorVariables:
+    def __init__(self, year):
+        self.year = year
+
+    def evolucionGeneral(self):
+        # Número total de muestras del año
+        nMuestras = Muestras.objects.filter(
+            fecha__year=self.year
+        ).count()
+
+        nExpedientes = Expedientes.objects.filter(
+            fecha__year=self.year
+        ).count()
+
+        nEmpresas = Expedientes.objects.filter(
+            fecha__year=self.year
+        ).values('empresa').distinct().count()
+
+        return {
+            "muestras": nMuestras,
+            "expedientes": nExpedientes,
+            "empresas": nEmpresas
+        }
+        
+    
+    def muestrasMensual(self):
+        #Número de muestras realizadas por mes
+        # Agrupar por mes y contar
+        muestras_por_mes_qs = (
+            Muestras.objects
+                .filter(fecha__year=self.year)
+                .annotate(mes=ExtractMonth('fecha'))
+                .values('mes')
+                .annotate(total=Count('id'))
+                .order_by('mes')
+            )
+
+        muestras_por_mes_dict= {mes:0 for mes in range(1,13)}
+
+        for item in muestras_por_mes_qs:
+            muestras_por_mes_dict[item['mes']]= item['total']
+
+        muestrasPorMes = [muestras_por_mes_dict[mes] for mes in range(1, 13)]
+
+        return muestrasPorMes
+    
+
+    def expedientesMensual(self):
+        #Número de muestras realizadas por mes
+        # Agrupar por mes y contar
+        expedientes_por_mes_qs = (
+            Expedientes.objects
+                .filter(fecha__year=self.year)
+                .annotate(mes=ExtractMonth('fecha'))
+                .values('mes')
+                .annotate(total=Count('id'))
+                .order_by('mes')
+            )
+
+        expedientes_por_mes_dict= {mes:0 for mes in range(1,13)}
+
+        for item in expedientes_por_mes_qs:
+            expedientes_por_mes_dict[item['mes']]= item['total']
+
+        expedientesPorMes = [expedientes_por_mes_dict[mes] for mes in range(1, 13)]
+
+        return expedientesPorMes
+
+
+    def empresasNuevas (self):
+        empresasNuevas = (
+            Muestras.objects
+            .filter(
+                id_muestra=1,
+                fecha__year=self.year
+            )
+            .values('empresa')
+            .distinct()
+            .count()
+        )
+        
+        return empresasNuevas
+    
+
+    def comparativaAnual (self):
+        yearAnterior= self.year - 1
+        
+        nMuestrasAnterior = Muestras.objects.filter(
+            fecha__year=yearAnterior
+        ).count()
+
+        nExpedientesAnterior = Expedientes.objects.filter(
+            fecha__year=yearAnterior
+        ).count()
+
+        nEmpresasAnterior = Expedientes.objects.filter(
+            fecha__year=yearAnterior
+        ).values('empresa').distinct().count()
+
+        return {
+            "muestras": nMuestrasAnterior,
+            "expedientes": nExpedientesAnterior,
+            "empresas": nEmpresasAnterior
+        }
+
+
+    def calculosComparativa (self):
+        evolucion = self.evolucionGeneral()
+        comparativa = self.comparativaAnual()
+
+        muestras_actual = evolucion['muestras']
+        muestras_anterior = comparativa['muestras']
+
+        expedientes_actual = evolucion['expedientes']
+        expedientes_anterior = comparativa['expedientes']
+
+        empresas_actual = evolucion['empresas']
+        empresas_anterior = comparativa['empresas']
+
+
+        incrementoMuestras = (
+            (muestras_actual - muestras_anterior)
+            / muestras_anterior
+        ) * 100
+
+        incrementoExpedientes = (
+            (expedientes_actual - expedientes_anterior)
+            / expedientes_anterior
+        ) * 100
+
+        incrementoEmpresas = (
+            (empresas_actual - empresas_anterior)
+            / empresas_anterior
+        ) * 100
+
+
+        incrementoMuestras = f"{incrementoMuestras:+.1f}%"
+        incrementoExpedientes = f"{incrementoExpedientes:+.1f}%"
+        incrementoEmpresas = f"{incrementoEmpresas:+.1f}%"
+
+
+        return {
+            "incrementoMuestras": incrementoMuestras,
+            "incrementoExpedientes": incrementoExpedientes,
+            "incrementoEmpresas": incrementoEmpresas,
+        }
+
+
+    def calculosEnsayos(self):
+
+        colors = [
+            '#1E3A8A',
+            '#2563EB',
+            '#3B82F6',
+            '#60A5FA',
+            '#93C5FD',
+            '#2E95AA',
+            '#14B8A6',
+            '#22C55E',
+            '#84CC16',
+            '#F59E0B',
+            '#EF4444'
+        ]
+
+        # TMIC
+        tmic = TMIc.objects.filter(fechaFin__year=self.year)
+        nTmic = tmic.count()
+        hTmic = float(tmic.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+        normativa = ListaEnsayos.objects.get(ensayo="TMIc")
+        normaTmic= normativa.normativa
+                
+
+        # TMIN
+        tmin = TMIn.objects.filter(fechaFin__year=self.year)
+        nTmin = tmin.count()
+        hTmin = float(tmin.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # EMI
+        emi = EMI.objects.filter(fechaFin__year=self.year)
+        nEmi = emi.count()
+        hEmi = float(emi.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # LIE
+        lie = LIE.objects.filter(fechaFin__year=self.year)
+        nLie = lie.count()
+        hLie = float(lie.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # PMAX
+        pmax = Pmax.objects.filter(fechaFin__year=self.year)
+        nPmax = pmax.count()
+        hPmax = float(pmax.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # CLO
+        clo = CLO.objects.filter(fechaFin__year=self.year)
+        nClo = clo.count()
+        hClo = float(clo.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # N1
+        n1 = N1.objects.filter(fechaFin__year=self.year)
+        nN1 = n1.count()
+        hN1 = float(n1.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # N2
+        n2 = N2.objects.filter(fechaFin__year=self.year)
+        nN2 = n2.count()
+        hN2 = float(n2.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # N4
+        n4 = N4.objects.filter(fechaFin__year=self.year)
+        nN4 = n4.count()
+        hN4 = float(n4.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # O1
+        o1 = O1.objects.filter(fechaFin__year=self.year)
+        nO1 = o1.count()
+        hO1 = float(o1.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # REC
+        rec = REC.objects.filter(fechaFin__year=self.year)
+        nRec = rec.count()
+        hRec = float(rec.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
+        # Totales
+        totalEnsayos = (
+            nTmic + nTmin + nEmi + nLie + nPmax +
+            nClo + nN1 + nN2 + nN4 + nO1 + nRec
+        )
+
+        totalHoras = (
+            hTmic + hTmin + hEmi + hLie + hPmax +
+            hClo + hN1 + hN2 + hN4 + hO1 + hRec
+        )
+
+        # Porcentajes
+        if totalEnsayos > 0:
+            pTmic = int(round((nTmic / totalEnsayos) * 100))
+            pTmin = int(round((nTmin / totalEnsayos) * 100))
+            pEmi = int(round((nEmi / totalEnsayos) * 100))
+            pLie = int(round((nLie / totalEnsayos) * 100))
+            pPmax = int(round((nPmax / totalEnsayos) * 100))
+            pClo = int(round((nClo / totalEnsayos) * 100))
+            pN1 = int(round((nN1 / totalEnsayos) * 100))
+            pN2 = int(round((nN2 / totalEnsayos) * 100))
+            pN4 = int(round((nN4 / totalEnsayos) * 100))
+            pO1 = int(round((nO1 / totalEnsayos) * 100))
+            pRec = int(round((nRec / totalEnsayos) * 100))
+        else:
+            pTmic = pTmin = pEmi = pLie = pPmax = 0
+            pClo = pN1 = pN2 = pN4 = pO1 = pRec = 0
+
+        # Lista ordenada
+        ensayosOrdenados = [
+            {
+                "nombre": "TMIC",
+                "ensayos": nTmic,
+                "horas": int(round(hTmic, 0)),
+                "porcentaje": pTmic,
+                "color": colors[0]
+            },
+            {
+                "nombre": "TMIN",
+                "ensayos": nTmin,
+                "horas": int(round(hTmin, 0)),
+                "porcentaje": pTmin,
+                "color": colors[1]
+            },
+            {
+                "nombre": "EMI",
+                "ensayos": nEmi,
+                "horas": int(round(hEmi, 0)),
+                "porcentaje": pEmi,
+                "color": colors[2]
+            },
+            {
+                "nombre": "LIE",
+                "ensayos": nLie,
+                "horas": int(round(hLie, 0)),
+                "porcentaje": pLie,
+                "color": colors[3]
+            },
+            {
+                "nombre": "PMAX",
+                "ensayos": nPmax,
+                "horas": int(round(hPmax, 0)),
+                "porcentaje": pPmax,
+                "color": colors[4]
+            },
+            {
+                "nombre": "CLO",
+                "ensayos": nClo,
+                "horas": int(round(hClo, 0)),
+                "porcentaje": pClo,
+                "color": colors[5]
+            },
+            {
+                "nombre": "N1",
+                "ensayos": nN1,
+                "horas": int(round(hN1, 0)),
+                "porcentaje": pN1,
+                "color": colors[6]
+            },
+            {
+                "nombre": "N2",
+                "ensayos": nN2,
+                "horas": int(round(hN2, 0)),
+                "porcentaje": pN2,
+                "color": colors[7]
+            },
+            {
+                "nombre": "N4",
+                "ensayos": nN4,
+                "horas": int(round(hN4, 0)),
+                "porcentaje": pN4,
+                "color": colors[8]
+            },
+            {
+                "nombre": "O1",
+                "ensayos": nO1,
+                "horas": int(round(hO1, 0)),
+                "porcentaje": pO1,
+                "color": colors[9]
+            },
+            {
+                "nombre": "REC",
+                "ensayos": nRec,
+                "horas": int(round(hRec, 0)),
+                "porcentaje": pRec,
+                "color": colors[10]
+            },
+        ]
+
+        ensayosOrdenados = sorted(
+            ensayosOrdenados,
+            key=lambda x: x['ensayos'],
+            reverse=True
+        )
+
+        return {
+            "totalEnsayos": totalEnsayos,
+            "totalHoras": int(round(totalHoras, 0)),
+            "ensayosOrdenados": ensayosOrdenados,
+            
+            "TMIC": {
+                "horas": int(round(hTmic, 0)),
+                "porcentaje": pTmic,
+                "normativa": normaTmic,
+            },
+        }
+
+
+    def equipos (self):
+        tmic= Equipos.objects.filter(ensayos__ensayo = "TMIc")
+
+
+
+
+
+############ QUEDA QUE TERMINEMOS LOS ENSAYOS (TMIN, LIE, EMI, PMAX) EN CALCULOS COMPARATIVA Y LUEGO QUE SE GESTIONEN TODOS LOS EQUIPOS
+
+
+
+
+
+
+
+
 
 class mapaGenerator (): 
     def crearMapa():
