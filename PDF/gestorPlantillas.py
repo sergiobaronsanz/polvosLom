@@ -16,9 +16,12 @@ import json
 from django.db.models import Sum
 
 from expedientes.models import Empresa, Expedientes
-from muestras.models import Muestras
+from muestras.models import Muestras, DescripcionMuestra
 from django.db.models.functions import ExtractMonth
 from ensayos.models import *
+import math
+
+from collections import Counter
 
 
 
@@ -54,6 +57,9 @@ class InformePDF:
 
         mapa= os.path.join(self.ruta, "static", "js", "spain-provinces.geojson")
 
+        mapa_chart_js= "file:///" + os.path.join(self.ruta, "static", "js", "mapa.js").replace("\\", "/")
+
+
         donut="file:///" + os.path.join(self.ruta, "static", "js", "donutChart.js").replace("\\", "/")
         empresasChar= "file:///" + os.path.join(self.ruta, "static", "js", "empresasChar.js").replace("\\", "/")
 
@@ -61,21 +67,6 @@ class InformePDF:
         ########### Variables ###########
         #Fecha actual
         año_actual = timezone.now().year
-        top_empresas = Empresa.objects.filter(
-                muestras__fecha__year=año_actual
-            ).annotate(
-                total_muestras=Count('muestras')
-            ).order_by('-total_muestras')[:5]
-        
-        #Empresas
-        empresasTop= []
-        colores= ["primary", "success", "info", "secondary", "warning"]
-        bucle= 0
-        for empresa in top_empresas:
-            empresasTop.append({'empresa': empresa.empresa, 'nMuestras': empresa.total_muestras, 'color': colores[bucle]})
-            bucle = bucle + 1
-        
-        top_empresas_json= json.dumps(empresasTop)
 
         #Mapa
         with open(mapa, encoding="utf-8") as f:
@@ -113,8 +104,28 @@ class InformePDF:
         calculosEnsayos= datos.calculosEnsayos()
         calculosEnsayos_json= json.dumps(calculosEnsayos)
 
+        equipos= datos.equipos()
 
+        clientes= datos.clientes()
 
+        clientes_json= json.dumps(clientes)
+
+        top_empresas=datos.top_empresas()
+        top_empresas_json = json.dumps(
+            list(
+                top_empresas.values(
+                    'empresa',
+                    'total_muestras'
+                )
+            )
+        )
+
+        procedencia_muestras= datos.procedencia()
+        procedencia_muestras_json= json.dumps(procedencia_muestras['contador_espanolas'])
+
+        datosMapa= datos.datosMapa()
+
+        top5= datos.top5()
 
         ########### Render template ###########
         html = template.render(
@@ -130,9 +141,8 @@ class InformePDF:
             Chart=Chart,
             bar_chart_js=bar_chart_js,
             line_chart_js=line_chart_js,
-            top_empresas= top_empresas,
-            top_empresas_json= top_empresas_json,
             mapa=mapa,
+            mapa_chart_js=mapa_chart_js,
             donut=donut,
             empresasChar=empresasChar,
             promedioMensual= promedioMensual,
@@ -152,13 +162,20 @@ class InformePDF:
             calculosComparativa= calculosComparativa,
             calculosEnsayos= calculosEnsayos,
             calculosEnsayos_json= calculosEnsayos_json,
+            equipos= equipos,
+            clientes=clientes,
+            clientes_json= clientes_json,
+            top_empresas_json= top_empresas_json,
+            procedencia_muestras_json= procedencia_muestras_json,
+            datosMapa= datosMapa,
+            top5 =top5,
 
         )
 
         # =========================
         # 🧪 MODO DEBUG
         # =========================
-        prueba= True
+        prueba= False
         if prueba:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
                 f.write(html.encode("utf-8"))
@@ -382,6 +399,11 @@ class GeneradorVariables:
         )['total'] or 0)
         normativa = ListaEnsayos.objects.get(ensayo="TMIc")
         normaTmic= normativa.normativa
+        ensayoDestacadoTmic = TMIc.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        valorEnsayoDestacadoTmic= ensayoDestacadoTmic.resultado
+
+        print(ensayoDestacadoTmic)
+        print()
                 
 
         # TMIN
@@ -390,6 +412,10 @@ class GeneradorVariables:
         hTmin = float(tmin.aggregate(
             total=Sum('horasEnsayo')
         )['total'] or 0)
+        normativa = ListaEnsayos.objects.get(ensayo="TMIn")
+        normaTmin= normativa.normativa
+        ensayoDestacadoTmin = TMIn.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        valorEnsayoDestacadoTmin= int(float(ensayoDestacadoTmin.resultado))
 
         # EMI
         emi = EMI.objects.filter(fechaFin__year=self.year)
@@ -397,6 +423,10 @@ class GeneradorVariables:
         hEmi = float(emi.aggregate(
             total=Sum('horasEnsayo')
         )['total'] or 0)
+        normativa = ListaEnsayos.objects.get(ensayo="EMI")
+        normaEmi= normativa.normativa
+        ensayoDestacadoEmi = EMI.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        valorEnsayoDestacadoEmi= int(float(ensayoDestacadoEmi.resultado))
 
         # LIE
         lie = LIE.objects.filter(fechaFin__year=self.year)
@@ -404,6 +434,12 @@ class GeneradorVariables:
         hLie = float(lie.aggregate(
             total=Sum('horasEnsayo')
         )['total'] or 0)
+        normativa = ListaEnsayos.objects.get(ensayo="LIE")
+        normaLie= normativa.normativa
+        ensayoDestacadoLie = LIE.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        valorEnsayoDestacadoLie= int(float(ensayoDestacadoLie.resultado))
+        nEnsayosLIE= ResultadosLIE.objects.filter(ensayo__fechaInicio__year= self.year).count()
+        nInflamadores = math.ceil((nEnsayosLIE * 2) * 1.1)
 
         # PMAX
         pmax = Pmax.objects.filter(fechaFin__year=self.year)
@@ -411,6 +447,18 @@ class GeneradorVariables:
         hPmax = float(pmax.aggregate(
             total=Sum('horasEnsayo')
         )['total'] or 0)
+        normativa = ListaEnsayos.objects.get(ensayo="Pmax")
+        normaPmax= normativa.normativa
+        ensayoDestacadoPmax = Pmax.objects.filter(fechaInicio__year= self.year).order_by('pmax').last()
+        ensayoDestacadoDpdt = Pmax.objects.filter(fechaInicio__year= self.year).order_by('dpdt').last()
+        ensayoDestacadoKmax= Pmax.objects.filter(fechaInicio__year= self.year).order_by('kmax').last()
+
+        valorEnsayoDestacadoPmax= float(ensayoDestacadoPmax.pmax)
+        valorEnsayoDestacadoDpdt= int(float(ensayoDestacadoDpdt.dpdt))
+        valorEnsayoDestacadoKmax= int(float(ensayoDestacadoKmax.kmax))
+
+        nEnsayosPmax= ResultadosPmax.objects.filter(ensayo__fechaInicio__year= self.year).count()
+        nInflamadores = math.ceil((nEnsayosLIE * 2) * 1.1)
 
         # CLO
         clo = CLO.objects.filter(fechaFin__year=self.year)
@@ -575,27 +623,276 @@ class GeneradorVariables:
             "ensayosOrdenados": ensayosOrdenados,
             
             "TMIC": {
-                "horas": int(round(hTmic, 0)),
                 "porcentaje": pTmic,
                 "normativa": normaTmic,
+                "ensayos": nTmic,
+                "horas": int(round(hTmic, 0)),
+                "ensayoDestacado": valorEnsayoDestacadoTmic,
+            },
+
+            "TMIN": {
+                "porcentaje": pTmin,
+                "normativa": normaTmin,
+                "ensayos": nTmin,
+                "horas": int(round(hTmin, 0)),
+                "ensayoDestacado": valorEnsayoDestacadoTmin,
+            },
+
+            "EMI": {
+                "porcentaje": pEmi,
+                "normativa": normaEmi,
+                "ensayos": nEmi,
+                "horas": int(round(hEmi, 0)),
+                "ensayoDestacado": valorEnsayoDestacadoEmi,
+            },
+
+            "LIE": {
+                "porcentaje": pLie,
+                "normativa": normaLie,
+                "ensayos": nLie,
+                "horas": int(round(hLie, 0)),
+                "ensayoDestacado": valorEnsayoDestacadoLie,
+                "inflamadores": nInflamadores,
+
+            },
+
+            "PMAX": {
+                "porcentaje": pPmax,
+                "normativa": normaPmax,
+                "ensayos": nPmax,
+                "horas": int(round(hPmax, 0)),
+                "ensayoDestacadoPmax": valorEnsayoDestacadoPmax,
+                "ensayoDestacadoDpdt": valorEnsayoDestacadoDpdt,
+                "ensayoDestacadoKmax": valorEnsayoDestacadoKmax,
+                "inflamadores": nInflamadores,
+
             },
         }
-
+        
 
     def equipos (self):
         tmic= Equipos.objects.filter(ensayos__ensayo = "TMIc")
+        tmin= Equipos.objects.filter(ensayos__ensayo = "TMIn")
+        emi= Equipos.objects.filter(ensayos__ensayo = "EMI")
+        lie= Equipos.objects.filter(ensayos__ensayo = "LIE")
+        pmax= Equipos.objects.filter(ensayos__ensayo = "Pmax")
+        
+        return {
+            'tmic': tmic,
+            'tmin': tmin,
+            'emi': emi,
+            'lie': lie,
+            'pmax':pmax
+        }
+
+
+    def clientes(self):
+        numeroEmpresas= Muestras.objects.filter(fecha__year=self.year).values('empresa').distinct().count()
+        empresasNuevas= Muestras.objects.filter(id_muestra=1,fecha__year=self.year).values('empresa').distinct().count()
+        empresasRecurrentes= numeroEmpresas - empresasNuevas
+        muestrasTotales= Muestras.objects.filter(fecha__year= self.year).count()
+        pormedioMuestras= muestrasTotales/numeroEmpresas
+
+        if numeroEmpresas > 0:
+            porcentajeNuevasEmpresas= empresasNuevas/numeroEmpresas * 100
+            
+        else:
+            porcentajeNuevasEmpresas = 0
+        
+        porcentajeNuevasEmpresas = f"{porcentajeNuevasEmpresas:+.1f}%"
+
+        numeroEmpresasAnterior= Muestras.objects.filter(fecha__year=self.year -1).values('empresa').distinct().count()
+
+        #Porcentaje crecimiento Empresas
+        if numeroEmpresasAnterior > 0:
+            crecimiento = (
+                (numeroEmpresas - numeroEmpresasAnterior)
+                / numeroEmpresasAnterior
+            ) * 100
+
+            crecimiento = f"{crecimiento:+.1f}%"
+        else:
+            crecimiento = "0.0%"
+
+        
+        # Porcentaje fidelización anual
+        empresasRepetidoras = Empresa.objects.annotate(
+            n_expedientes=Count(
+                'expedientes',
+                filter=Q(expedientes__fecha__year=self.year)
+            )).filter(
+                n_expedientes__gt=1
+            ).count()
+
+        if numeroEmpresas > 0:
+            porcentajeRepeticion = (
+                empresasRepetidoras / numeroEmpresas) * 100
+        else:
+            porcentajeRepeticion = 0
+        
+        porcentajeRepeticion = f"{porcentajeRepeticion:+.1f}%"
+
+        return{
+            "empresas":numeroEmpresas,
+            "empresasNuevas": empresasNuevas,
+            "empresasRecurrentes": empresasRecurrentes,
+            "porcentajeNuevasEmpresas": porcentajeNuevasEmpresas,
+            "crecimiento": crecimiento,
+            "promedio": pormedioMuestras,
+            "fidelización": porcentajeRepeticion,
+        }
+    
+    def top_empresas(self):
+        top_empresas = Empresa.objects.filter(
+            muestras__fecha__year=self.year
+        ).exclude(
+            abreviatura="LOM"
+        ).annotate(
+            total_muestras=Count('muestras')
+        ).order_by('-total_muestras')[:5]
+        
+        return top_empresas
+
+
+    def procedencia(self):
+
+        def limpiar(texto):
+            if pd.isna(texto):
+                return texto
+
+            texto = texto.lower()
+            texto = ''.join(
+                c for c in unicodedata.normalize('NFD', texto)
+                if unicodedata.category(c) != 'Mn'
+            )
+            return texto.strip()
+
+        PROVINCIAS_ESPANA = {
+            'alava', 'albacete', 'alicante', 'almeria', 'asturias',
+            'avila', 'badajoz', 'barcelona', 'burgos', 'caceres',
+            'cadiz', 'cantabria', 'castellon', 'ciudad real', 'cordoba',
+            'cuenca', 'girona', 'granada', 'guadalajara', 'guipuzcoa',
+            'huelva', 'huesca', 'islas baleares', 'jaen', 'a coruna',
+            'la rioja', 'las palmas', 'leon', 'lleida', 'lugo',
+            'madrid', 'malaga', 'murcia', 'navarra', 'ourense',
+            'palencia', 'pontevedra', 'salamanca', 'segovia', 'sevilla',
+            'soria', 'tarragona', 'santa cruz de tenerife', 'teruel',
+            'toledo', 'valencia', 'valladolid', 'vizcaya', 'zamora',
+            'zaragoza'
+        }
+
+        EQUIVALENCIAS = {
+            'coruna': 'a coruna',
+            'la coruna': 'a coruna',
+            'gipuzkoa': 'guipuzcoa',
+            'guipuzcua': 'guipuzcoa',
+            'bizkaia': 'vizcaya',
+            'gerona': 'girona',
+            'lerida': 'lleida',
+            'baleares': 'islas baleares',
+            'illes balears': 'islas baleares',
+            'orense': 'ourense',
+            'araba': 'alava',
+        }
+
+        procedencias = (
+            DescripcionMuestra.objects
+            .filter(muestra__fecha__year=self.year)
+            .values_list('procedencia', flat=True)
+        )
+
+        contador = Counter(
+            EQUIVALENCIAS.get(limpiar(p), limpiar(p))
+            for p in procedencias
+            if p
+        )
+
+        contador_espanolas = Counter({
+            provincia: muestras
+            for provincia, muestras in contador.items()
+            if provincia in PROVINCIAS_ESPANA
+        })
+
+        contador_no_espanolas = Counter({
+            provincia: muestras
+            for provincia, muestras in contador.items()
+            if provincia not in PROVINCIAS_ESPANA
+        })
+
+
+        return{
+            'contador_espanolas': contador_espanolas,
+            'contador_no_espanolas': contador_no_espanolas,
+        }
+            
+    
+    def datosMapa(self):
+        nNacional = len(self.procedencia()['contador_espanolas'])
+        nInternacional = len(self.procedencia()['contador_no_espanolas'])
+        nTotal= nNacional + nInternacional
+
+        totalMuestrasNacional = sum(self.procedencia()['contador_espanolas'].values())
+        
+        top5= self.procedencia()['contador_espanolas'].most_common(5)
+        total_top5 = sum(cantidad for _, cantidad in top5)
+
+
+        if nTotal > 0:
+            porcentajeNacional = round((nNacional / nTotal) * 100, 1)
+            porcentajeInternacional = round((nInternacional / nTotal) * 100, 1)
+            porcentajeTopProvincias= round((total_top5/totalMuestrasNacional)*100,1)
+        else:
+            porcentajeNacional = 0
+            porcentajeInternacional = 0
 
 
 
+        return {
+            'nacional': nNacional,
+            'internacional': nInternacional,
+            'porcentaje_nacional': porcentajeNacional,
+            'porcentaje_internacional': porcentajeInternacional,
+            'porcentajeTopProvincias': porcentajeTopProvincias,
+            'provinciasTotales': nTotal,
+        }
+
+    def top5(self):
+        top5 = self.procedencia()['contador_espanolas'].most_common(5)
+        totalMuestrasNacional = sum(
+            self.procedencia()['contador_espanolas'].values()
+        )
+
+        colores = [
+            '#0b1f77',
+            '#2f6fd6',
+            '#74b9ff',
+            '#a5d8ff',
+            '#d0ebff',
+        ]
+
+        topPorcentaje = []
+
+        for i, (provincia, muestras) in enumerate(top5):
+            porcentaje = round(
+                (muestras / totalMuestrasNacional) * 100,
+                1
+            )
+
+            topPorcentaje.append({
+                'provincia': provincia,
+                'muestras': muestras,
+                'porcentaje': porcentaje,
+                'color': colores[i]
+            })
+
+        return topPorcentaje
+
+        
+
+        
 
 
-############ QUEDA QUE TERMINEMOS LOS ENSAYOS (TMIN, LIE, EMI, PMAX) EN CALCULOS COMPARATIVA Y LUEGO QUE SE GESTIONEN TODOS LOS EQUIPOS
-
-
-
-
-
-
+#Queda pasar a JSON los datos para los graficos del apartado cliente NEMPRESAS Y TOP y el mapa
 
 
 

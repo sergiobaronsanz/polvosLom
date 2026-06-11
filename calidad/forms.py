@@ -17,6 +17,8 @@ class EquiposForm(forms.ModelForm):
             'fechaCaducidadCalibracion': forms.TextInput(attrs={'class': 'form-control form-control-sm secado', 'style': 'text-align: center;', 'type': 'date'}),
             'tipoCalibracion': forms.Select(attrs={'class': 'form-control form-control secado', 'style': 'text-align: center;', 'type': 'date'}),
             'estadoCalibracion': forms.Select(attrs={'class': 'form-control form-control secado', 'style': 'text-align: center;', 'type': 'date'}),
+            'yearCompra': forms.NumberInput(attrs={'class': 'form-control form-control secado', 'style': 'text-align: center;'}),
+
         }
         
 

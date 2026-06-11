@@ -33,6 +33,7 @@ class Equipos (models.Model):
     fechaCaducidadCalibracion= models.DateField(verbose_name="Fecha próxima calibración", null= True, blank=True)
     tipoCalibracion = models.CharField(max_length=10, verbose_name= "Tipo Calibración",choices=tipo_calibracion, default='0')
     estadoCalibracion = models.CharField(max_length=10, verbose_name= "Estado Calibración", choices=tipo_estado, default= '0')
+    yearCompra= models.IntegerField(verbose_name="Año de compra", null=True, blank=True)
     
     class Meta():
         verbose_name="Equipo"

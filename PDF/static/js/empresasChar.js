@@ -1,25 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    console.log("HOLAAAAAAAAA")
+    console.log(top_empresas_json);
+    console.log(typeof top_empresas_json);
+    console.log(top_empresas_json);
+    console.log(top_empresas_json[0]);
 
     Chart.register(ChartDataLabels);
 
-    const labels = [];
-    const dataEmpresas = [];
-
-    const empresas = [
-        { empresa: "Inditex", total: 42 },
-        { empresa: "Mercadona", total: 35 },
-        { empresa: "Iberdrola", total: 28 },
-        { empresa: "Repsol", total: 18 },
-        { empresa: "Telefónica y técnicas reunidas", total: 12 },
-    ];
-
-    empresas.forEach(e => {
-
-        labels.push(e.empresa);
-        dataEmpresas.push(e.total);
-    });
+    const labels = top_empresas_json.map(e => e.empresa);
+    const dataEmpresas = top_empresas_json.map(e => e.total_muestras);
 
     const colors = [
         '#1E3A8A',

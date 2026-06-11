@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    
+    empresasNuevas= clientes_json.empresasNuevas
+    empresasRecurrentes= clientes_json.empresasRecurrentes
 
     Chart.register(ChartDataLabels);
 
@@ -6,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const dataEnsayos = [];
 
     const tipo_empresas = [
-        { empresa: "Nuevas", nEmpresas: 25 },
-        { empresa: "Recurrentes", nEmpresas: 72 },
+        { empresa: "Nuevas", nEmpresas: empresasNuevas },
+        { empresa: "Recurrentes", nEmpresas: empresasRecurrentes},
     ];
 
     const total = tipo_empresas.reduce(

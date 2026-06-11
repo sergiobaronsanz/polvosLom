@@ -1017,7 +1017,7 @@ body {
                             <thead>
                                 <tr style="background-color: #192B5C; color: white;">
                                     <th style="padding: 12px; text-align: left;">Código</th>
-                                    <th style="padding: 12px; text-align: center;">Calibrado</th>
+                                    <th style="padding: 12px; text-align: center;">Controlado</th>
                                     <th style="padding: 12px; text-align: center;">Próxima calibración</th>
                                     <th style="padding: 12px; text-align: center;">Tipo calibración</th>
                                     <th style="padding: 12px; text-align: center;">Fecha compra</th>
@@ -1025,48 +1025,27 @@ body {
                             </thead>
 
                             <tbody style="background: white;">
+                                {%for ensayo in equipos.tmic%}
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 14px;">
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                {{ensayo.codigo}}
+                                            </div>
+                                        </td>
 
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
+                                        <td style="text-align:center;">
+                                            <span style="margin-left:6px;">{{ "Sí" if ensayo.controlado else "No" }}</span>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
+                                        <td style="text-align:center;">
+                                            {{ensayo.fechaCaducidadCalibracion}}
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
+                                        <td style="padding: 12px; text-align: center;">{{ensayo.get_tipoCalibracion_display()}}</td>
 
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
-
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
-
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
-
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
-
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
-
-                                
+                                        <td style="text-align:center;">{{ensayo.yearCompra}}</td>
+                                    </tr>
+                                {%endfor%}
 
                             </tbody>
 
@@ -1082,7 +1061,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">88</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.TMIC.ensayos}}</p>
                                 <p class="m-0 text-center col-11">Ensayos realizados</p>
                             </div>
                             
@@ -1094,7 +1073,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">1060</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.TMIC.horas}}</p>
                                 <p class="m-0 text-center col-11">Horas empleadas</p>
                             </div>
                             
@@ -1112,7 +1091,7 @@ body {
                         <div class="col-9 m-auto">
                                 <div class="d-flex align-items-center justify-content-center pb-3">
                                     <p class="text-center mx-3">TMIc:</p>
-                                    <p class="numero-mediano azul-turquesa m-0">230ºC</p>
+                                    <p class="numero-mediano azul-turquesa m-0">{{calculosEnsayos.TMIC.ensayoDestacado}}ºC</p>
                                 </div>
                         </div>
                     </div>
@@ -1133,12 +1112,12 @@ body {
                         TMIn
                     </h1>
 
-                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">{{calculosEnsayos.TMIN.normativa}}</h3>
                 </div>
                 
                 <div class="col-10">
                     <div class="d-flex col-12 align-items-center justify-content-center">
-                        <div class="circulo-laboratorio">12%</div>
+                        <div class="circulo-laboratorio">{{calculosEnsayos.TMIN.porcentaje}}%</div>
                         <div class="linea-horizontal-turquesa col"></div>
                     </div>
 
@@ -1176,45 +1155,27 @@ body {
 
                             <tbody style="background: white;">
 
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
+                                {%for ensayo in equipos.tmin%}
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 14px;">
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                {{ensayo.codigo}}
+                                            </div>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
+                                        <td style="text-align:center;">
+                                            <span style="margin-left:6px;">{{ "Sí" if ensayo.controlado else "No" }}</span>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
+                                        <td style="text-align:center;">
+                                            {{ensayo.fechaCaducidadCalibracion}}
+                                        </td>
 
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                        <td style="padding: 12px; text-align: center;">{{ensayo.get_tipoCalibracion_display()}}</td>
 
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
-
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
-
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
-
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
+                                        <td style="text-align:center;">{{ensayo.yearCompra}}</td>
+                                    </tr>
+                                {%endfor%}
 
                                 
 
@@ -1232,7 +1193,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">88</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.TMIN.ensayos}}</p>
                                 <p class="m-0 text-center col-11">Ensayos realizados</p>
                             </div>
                             
@@ -1244,7 +1205,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">1060</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.TMIN.horas}}</p>
                                 <p class="m-0 text-center col-11">Horas empleadas</p>
                             </div>
                             
@@ -1262,7 +1223,7 @@ body {
                         <div class="col-9 m-auto">
                                 <div class="d-flex align-items-center justify-content-center pb-3">
                                     <p class="text-center mx-3">TMIn:</p>
-                                    <p class="numero-mediano azul-turquesa m-0">320ºC</p>
+                                    <p class="numero-mediano azul-turquesa m-0">{{calculosEnsayos.TMIN.ensayoDestacado}}</p>
                                 </div>
                         </div>
                     </div>
@@ -1283,12 +1244,12 @@ body {
                         EMI
                     </h1>
 
-                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">{{calculosEnsayos.EMI.normativa}}</h3>
                 </div>
                 
                 <div class="col-10">
                     <div class="d-flex col-12 align-items-center justify-content-center">
-                        <div class="circulo-laboratorio">12%</div>
+                        <div class="circulo-laboratorio">{{calculosEnsayos.EMI.porcentaje}}%</div>
                         <div class="linea-horizontal-turquesa col"></div>
                     </div>
 
@@ -1326,45 +1287,27 @@ body {
 
                             <tbody style="background: white;">
 
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
+                                {%for ensayo in equipos.emi%}
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 14px;">
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                {{ensayo.codigo}}
+                                            </div>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
+                                        <td style="text-align:center;">
+                                            <span style="margin-left:6px;">{{ "Sí" if ensayo.controlado else "No" }}</span>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
+                                        <td style="text-align:center;">
+                                            {{ensayo.fechaCaducidadCalibracion}}
+                                        </td>
 
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                        <td style="padding: 12px; text-align: center;">{{ensayo.get_tipoCalibracion_display()}}</td>
 
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
-
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
-
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
-
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
+                                        <td style="text-align:center;">{{ensayo.yearCompra}}</td>
+                                    </tr>
+                                {%endfor%}
 
                                 
 
@@ -1382,7 +1325,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">88</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.EMI.ensayos}}</p>
                                 <p class="m-0 text-center col-11">Ensayos realizados</p>
                             </div>
                             
@@ -1394,7 +1337,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">1060</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.EMI.horas}}</p>
                                 <p class="m-0 text-center col-11">Horas empleadas</p>
                             </div>
                             
@@ -1412,7 +1355,7 @@ body {
                         <div class="col-9 m-auto">
                                 <div class="d-flex align-items-center justify-content-center pb-3">
                                     <p class="text-center mx-3">EMI:</p>
-                                    <p class="numero-mediano azul-turquesa m-0">2,6 mJ</p>
+                                    <p class="numero-mediano azul-turquesa m-0">{{calculosEnsayos.EMI.ensayoDestacado}} mJ</p>
                                 </div>
                         </div>
                     </div>
@@ -1433,12 +1376,12 @@ body {
                         LIE
                     </h1>
 
-                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">{{calculosEnsayos.LIE.normativa}}</h3>
                 </div>
                 
                 <div class="col-10">
                     <div class="d-flex col-12 align-items-center justify-content-center">
-                        <div class="circulo-laboratorio">33%</div>
+                        <div class="circulo-laboratorio">{{calculosEnsayos.LIE.porcentaje}}%</div>
                         <div class="linea-horizontal-turquesa col"></div>
                     </div>
 
@@ -1475,45 +1418,27 @@ body {
 
                             <tbody style="background: white;">
 
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
+                                {%for ensayo in equipos.lie%}
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 14px;">
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                {{ensayo.codigo}}
+                                            </div>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
+                                        <td style="text-align:center;">
+                                            <span style="margin-left:6px;">{{ "Sí" if ensayo.controlado else "No" }}</span>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
+                                        <td style="text-align:center;">
+                                            {{ensayo.fechaCaducidadCalibracion}}
+                                        </td>
 
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                        <td style="padding: 12px; text-align: center;">{{ensayo.get_tipoCalibracion_display()}}</td>
 
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
-
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            PO0079
-                                        </div>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
-
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
-
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
+                                        <td style="text-align:center;">{{ensayo.yearCompra}}</td>
+                                    </tr>
+                                {%endfor%}
 
                                 
 
@@ -1531,7 +1456,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">88</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.LIE.ensayos}}</p>
                                 <p class="m-0 text-center col-11">Ensayos realizados</p>
                             </div>
                             
@@ -1542,7 +1467,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">1320</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.LIE.inflamadores}}</p>
                                 <p class="m-0 text-center">Inflamadores usados</p>
                             </div>
                             
@@ -1553,7 +1478,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">1060</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.LIE.horas}}</p>
                                 <p class="m-0 text-center col-11">Horas empleadas</p>
                             </div>
                             
@@ -1571,7 +1496,7 @@ body {
                         <div class="col-9 m-auto">
                                 <div class="d-flex align-items-center justify-content-center pb-3">
                                     <p class="text-center mx-3">LIE:</p>
-                                    <p class="numero-mediano azul-turquesa m-0">60 g/m3</p>
+                                    <p class="numero-mediano azul-turquesa m-0">{{calculosEnsayos.LIE.ensayoDestacado}} g/m3</p>
                                 </div>
                         </div>
                     </div>
@@ -1592,12 +1517,12 @@ body {
                         PMAX
                     </h1>
 
-                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">UNE-EN-140074</h3>
+                    <h3 class="azul-turquesa ml-0" style="writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold;">{{calculosEnsayos.PMAX.norma}}</h3>
                 </div>
                 
                 <div class="col-10">
                     <div class="d-flex col-12 align-items-center justify-content-center">
-                        <div class="circulo-laboratorio">33%</div>
+                        <div class="circulo-laboratorio">{{calculosEnsayos.PMAX.porcentaje}}%</div>
                         <div class="linea-horizontal-turquesa col"></div>
                     </div>
 
@@ -1634,45 +1559,27 @@ body {
 
                             <tbody style="background: white;">
 
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
+                                {%for ensayo in equipos.pmax%}
+                                    <tr style="border-bottom: 1px solid #eee;">
+                                        <td style="padding: 14px;">
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                {{ensayo.codigo}}
+                                            </div>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
+                                        <td style="text-align:center;">
+                                            <span style="margin-left:6px;">{{ "Sí" if ensayo.controlado else "No" }}</span>
+                                        </td>
 
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
+                                        <td style="text-align:center;">
+                                            {{ensayo.fechaCaducidadCalibracion}}
+                                        </td>
 
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
+                                        <td style="padding: 12px; text-align: center;">{{ensayo.get_tipoCalibracion_display()}}</td>
 
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
-
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 14px;">
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            EQ-001
-                                        </div>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        <span style="margin-left:6px;">Sí</span>
-                                    </td>
-
-                                    <td style="text-align:center;">
-                                        2026-12-01
-                                    </td>
-
-                                    <th style="padding: 12px; text-align: center;">Fecha compra</th>
-
-                                    <td style="text-align:center;">1999</td>
-                                </tr>
+                                        <td style="text-align:center;">{{ensayo.yearCompra}}</td>
+                                    </tr>
+                                {%endfor%}
 
                                 
 
@@ -1690,7 +1597,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">88</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.PMAX.ensayos}}</p>
                                 <p class="m-0 text-center col-11">Ensayos realizados</p>
                             </div>
                             
@@ -1701,7 +1608,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">1320</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.PMAX.inflamadores}}</p>
                                 <p class="m-0 text-center">Inflamadores usados</p>
                             </div>
                             
@@ -1712,7 +1619,7 @@ body {
                             </div>
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
-                                <p class="numero-mediano m-0">1060</p>
+                                <p class="numero-mediano m-0">{{calculosEnsayos.PMAX.horas}}</p>
                                 <p class="m-0 text-center col-11">Horas empleadas</p>
                             </div>
                             
@@ -1731,15 +1638,15 @@ body {
                             <div class="d-flex align-items-center justify-content-between mt-1">
                                 <div class="d-flex flex-column align-items-center justify-content-center">
                                 <p class="mb-0">Pmax</p>
-                                <p class="numero-mediano azul-turquesa mt-0"> 8,7</p>
+                                <p class="numero-mediano azul-turquesa mt-0"> {{calculosEnsayos.PMAX.ensayoDestacadoPmax}} bar</p>
                                 </div>
                                 <div class="d-flex flex-column align-items-center justify-content-center">
                                 <p class="mb-0">dPdT</p>
-                                <p class="numero-mediano azul-turquesa mt-0"> 758</p>
+                                <p class="numero-mediano azul-turquesa mt-0"> {{calculosEnsayos.PMAX.ensayoDestacadoDpdt}} bar/s</p>
                                 </div>
                                 <div class="d-flex flex-column align-items-center justify-content-center">
                                 <p class="mb-0">kmax</p>
-                                <p class="numero-mediano azul-turquesa mt-0"> 234</p>
+                                <p class="numero-mediano azul-turquesa mt-0"> {{calculosEnsayos.PMAX.ensayoDestacadoKmax}}</p>
                                 </div>
                             </div>
                         </div>
@@ -1809,7 +1716,7 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano m-0 azul-fuerte text-center">12 %</p>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">{{clientes.porcentajeNuevasEmpresas}}</p>
                             <p class="m-0 text-center letra-pequena">
                                 Nuevas empresas
                             </p>
@@ -1822,7 +1729,7 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano m-0 azul-fuerte text-center">8,5 %</p>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">{{clientes.crecimiento}}</p>
                             <p class="m-0 text-center letra-pequena">
                                 Crecimiento aual
                             </p>
@@ -1835,7 +1742,7 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano m-0 azul-fuerte text-center">1,9</p>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">{{clientes.promedio}}</p>
                             <p class="m-0 text-center letra-pequena">
                                 Promedio muestras por empresa
                             </p>
@@ -1848,23 +1755,9 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano m-0 azul-fuerte text-center">32%</p>
+                            <p class="numero-mediano m-0 azul-fuerte text-center">{{clientes.fidelización}}</p>
                             <p class="m-0 text-center letra-pequena">
                                 Tasa recurrencia anual
-                            </p>
-                        </div>
-                    </div>
-
-
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="col">
-                            <i class="bi bi-repeat numero-grande azul-fuerte"></i>
-                        </div>
-
-                        <div>
-                            <p class="numero-mediano m-0 azul-fuerte text-center">27%</p>
-                            <p class="m-0 text-center letra-pequena">
-                                Tasa recurrencia total
                             </p>
                         </div>
                     </div>
@@ -1907,7 +1800,7 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">88%</p>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">{{datosMapa.porcentaje_nacional}}%</p>
                             <p class="m-0 text-center letra-pequena">
                                 Muestras nacionales
                             </p>
@@ -1920,7 +1813,7 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12</p>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">{{datosMapa.internacional}}</p>
                             <p class="m-0 text-center letra-pequena">
                                 Muestras internacionales
                             </p>
@@ -1933,9 +1826,9 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12 %</p>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">{{datosMapa.porcentajeTopProvincias}} %</p>
                             <p class="m-0 text-center letra-pequena">
-                                Concentración en 5 provincias
+                                se concentran en 5 provincias
                             </p>
                         </div>
                     </div>
@@ -1946,7 +1839,7 @@ body {
                         </div>
 
                         <div>
-                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">12</p>
+                            <p class="numero-mediano mt-2 mb-0 azul-fuerte text-center">{{datosMapa.provinciasTotales}}</p>
                             <p class="m-0 text-center letra-pequena">
                                 Provincias con presencia
                             </p>
@@ -1956,7 +1849,7 @@ body {
                 </div>
 
                 <div>
-                    <h4 class="azul-fuerte mt-5 mb-0 letra-media">Empresas activas por provincia</h4>
+                    <h4 class="azul-fuerte mt-5 mb-0 letra-media">Provincias con mayor actividad</h4>
 
                     <div class="card-body">
 
@@ -1965,159 +1858,66 @@ body {
                             style="border-bottom:1px solid #dfe3eb; color:#1d2b53;">
 
                             <div class="col-5">Comunidad Autónoma</div>
-                            <div class="col-2 text-center">Empresas</div>
+                            <div class="col-2 text-center">Muestras</div>
                             <div class="col-3"></div>
                             <div class="col-2 text-center">% del total</div>
 
                         </div>
 
                         <!-- FILA -->
-                        <div class="row align-items-center mb-3">
+                        {% for provincia in top5 %}
+                            <div class="row align-items-center mb-3">
 
-                            <!-- PROVINCIA -->
-                            <div class="col-5 d-flex align-items-center">
+                                <!-- PROVINCIA -->
+                                <div class="col-5 d-flex align-items-center">
 
-                                <span style="
-                                    width:14px;
-                                    height:14px;
-                                    border-radius:50%;
-                                    background:#0b1f77;
-                                    display:inline-block;
-                                    margin-right:10px;
-                                "></span>
+                                    <span style="
+                                        width:14px;
+                                        height:14px;
+                                        border-radius:50%;
+                                        background:{{provincia.color}};
+                                        display:inline-block;
+                                        margin-right:10px;
+                                    "></span>
 
-                                Madrid
+                                    {{provincia.provincia}}
 
-                            </div>
+                                </div>
 
-                            <!-- EMPRESAS -->
-                            <div class="col-2 fw-bold">
-                                <p class="text-center"> 42 </p>
-                            </div>
+                                <!-- EMPRESAS -->
+                                <div class="col-2 fw-bold">
+                                    <p class="text-center"> {{provincia.muestras}} </p>
+                                </div>
 
-                            <!-- BARRA -->
-                            <div class="col-3">
+                                <!-- BARRA -->
+                                <div class="col-3">
 
-                                <div class="progress" style="
-                                    height:16px;
-                                    background:#edf2fb;
-                                    border-radius:20px;
-                                ">
+                                    <div class="progress" style="
+                                        height:16px;
+                                        background:#edf2fb;
+                                        border-radius:20px;
+                                    ">
 
-                                    <div class="progress-bar"
-                                        style="
-                                            width:43.3%;
-                                            background:#0b1f77;
-                                            border-radius:20px;
-                                        ">
+                                        <div class="progress-bar"
+                                            style="
+                                                width:{{provincia.porcentaje}}%;
+                                                background:{{provincia.color}};
+                                                border-radius:20px;
+                                            ">
+                                        </div>
+
                                     </div>
 
                                 </div>
 
-                            </div>
-
-                            <!-- PORCENTAJE -->
-                            <div class="col-2 text-center fw-bold">
-                                43,3%
-                            </div>
-
-                        </div>
-
-                        <!-- FILA -->
-                        <div class="row align-items-center mb-3">
-
-                            <div class="col-5 d-flex align-items-center">
-
-                                <span style="
-                                    width:14px;
-                                    height:14px;
-                                    border-radius:50%;
-                                    background:#2f6fd6;
-                                    display:inline-block;
-                                    margin-right:10px;
-                                "></span>
-
-                                Cataluña
-
-                            </div>
-
-                            <div class="col-2 fw-bold">
-                                <p class="text-center"> 31 </p>
-                            </div>
-
-                            <div class="col-3">
-
-                                <div class="progress" style="
-                                    height:16px;
-                                    background:#edf2fb;
-                                    border-radius:20px;
-                                ">
-
-                                    <div class="progress-bar"
-                                        style="
-                                            width:32%;
-                                            background:#2f6fd6;
-                                            border-radius:20px;
-                                        ">
-                                    </div>
-
+                                <!-- PORCENTAJE -->
+                                <div class="col-2 text-center fw-bold">
+                                    {{provincia.porcentaje}}%
                                 </div>
 
                             </div>
+                        {%endfor%}
 
-                            <div class="col-2 text-center fw-bold">
-                                32%
-                            </div>
-
-                        </div>
-
-                        <!-- FILA -->
-                        <div class="row align-items-center mb-3">
-
-                            <div class="col-5 d-flex align-items-center">
-
-                                <span style="
-                                    width:14px;
-                                    height:14px;
-                                    border-radius:50%;
-                                    background:#74b9ff;
-                                    display:inline-block;
-                                    margin-right:10px;
-                                "></span>
-
-                                Andalucía
-
-                            </div>
-
-                            <div class="col-2 fw-bold">
-                                <p class="text-center"> 12 </p>
-                            </div>
-
-                            <div class="col-3">
-
-                                <div class="progress" style="
-                                    height:16px;
-                                    background:#edf2fb;
-                                    border-radius:20px;
-                                ">
-
-                                    <div class="progress-bar"
-                                        style="
-                                            width:12.4%;
-                                            background:#74b9ff;
-                                            border-radius:20px;
-                                        ">
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-2 text-center fw-bold">
-                                12,4%
-                            </div>
-
-                        </div>
                     </div>
                 </div>
             </div>
@@ -2127,11 +1927,6 @@ body {
 
 </body>
 
-<!--
-<script>
-    const top_empresas = {{top_empresas_json|safe}};
-</script>
--->
 
 <!--Variables-->
 <script>
@@ -2142,6 +1937,11 @@ body {
     const datosEvolucion= JSON.parse('{{datosEvolucion_json}}')
     const comparativaAnual= JSON.parse('{{comparativaAnual|safe}}')
     const calculosEnsayos= JSON.parse('{{calculosEnsayos_json|safe}}')
+    const clientes_json= JSON.parse('{{clientes_json|safe}}')
+    const top_empresas_json= JSON.parse('{{top_empresas_json}}')
+    const geojson = JSON.parse('{{ mapa|safe }}');
+    const procedencia_muestras_json = JSON.parse('{{ procedencia_muestras_json|safe }}');
+    
 
 </script>
 
@@ -2169,90 +1969,12 @@ body {
 <script src="{{line_chart_js}}"></script>
 <script src="{{donut}}"></script>
 <script src="{{empresasChar}}"></script>
+<script src="{{mapa_chart_js}}"></script>
+
+
 
 <!--Mapa-->
 <script src="https://d3js.org/d3.v7.min.js"></script>
-
-
-<script>
-    const geojson = JSON.parse('{{ mapa|safe }}');
-
-    const width = 600;
-    const height = 410;
-
-    const svg = d3.select("#mapa")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .style("transform", "scale(0.90)")
-        .style("transform-origin", "top left");
-
-    // escala de color
-    const color = d3.scaleSequential()
-        .domain([0, 120])
-        .interpolator(d3.interpolateBlues);
-
-    // datos
-    const clientes = {
-        "madrid": 120,
-        "barcelona": 95,
-        "valencia": 80,
-        "sevilla": 60,
-        "zaragoza": 40,
-        "malaga": 55
-    };
-
-    // proyección centrada en península
-    const projection = d3.geoMercator()
-        .center([-3.5, 40.2])
-        .scale(2200)
-        .translate([width / 2, height / 2]);
-
-    const path = d3.geoPath().projection(projection);
-
-    geojson.features.forEach(d => {
-        const name = d.properties.name.toLowerCase();
-        d.properties.value = clientes[name] || 0;
-    });
-
-    svg.selectAll("path")
-        .data(geojson.features)
-        .enter()
-        .append("path")
-        .attr("d", function(d) {
-
-            const name = d.properties.name.toLowerCase();
-
-            // Canarias movidas manualmente
-            if (
-                name.includes("palmas") ||
-                name.includes("santa cruz de tenerife")
-            ) {
-
-                const canariasPath = d3.select(this);
-
-                // dibujar normalmente
-                const original = path(d);
-
-                // crear path temporal
-                canariasPath.attr("d", original);
-
-                // mover y reducir
-                canariasPath.attr(
-                    "transform",
-                    "translate(-250,250) scale(0.7)"
-                );
-
-                return original;
-            }
-
-            return path(d);
-        })
-        .attr("fill", d => color(d.properties.value))
-        .attr("stroke", "#000")
-        .attr("stroke-width", 0.5);
-
-</script>
 
 
 

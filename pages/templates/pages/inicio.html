@@ -208,73 +208,91 @@
 
 
 		<!--Modal para generar reporte-->
-				<div class="modal fade" id="seleccionReporte" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content ">
-							<div class="modal-header">
-							<h5 class="modal-title" id="envioModalLabel">Selecciona el periodo del reporte</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							</div>
-
-							<form method= "POST" id="formReporte">
-								{%csrf_token%}
-							
-								<div class="modal-body">
-									<p> 
-										Selecciona el año para el que quieres que salga el reporte, o un periodo de tiempo concreto.
-									</p>
-
-
-									<div>
-										<div class = 'row m-auto col-3'>
-											<select id="tipoPeriodo" class= 'form-control form-control-sm text-center'>
-												<option value="1">Periodo</option>
-												<option value="2">Año</option>
-											</select>
-										</div>
-										
-										<div class= "mb-3 mt-3" id= "fechaInicio">
-											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
-												<p class= 'col m-0'> Desde </p>
-												{{formularioReporte.fechaInicio}}
-											</div>
-										</div>
-
-										<div class= "mb-3" id= "fechaFin">
-											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
-												<p class= 'col m-0'> Hasta </p>
-											{{formularioReporte.fechaFin}}
-											</div>
-										</div>	
-										
-										<div class= "mb-3 mt-3" id= "fechaYear">
-											<div class= "d-flex align-items-center col-6 justify-content-between m-auto">
-												<p class= 'col m-0'> Año </p>
-												{{formularioReporte.fechaYear}}
-											</div>
-										</div>	
-								</div>
-
-								<div class="modal-footer">
-									<button type="button" id= "generarReporte"class="btn btn-info">Generar</button>
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-								</div>
-
-							</form>
-						</div>
+		<div class="modal fade" id="seleccionReporte" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content ">
+					<div class="modal-header">
+					<h5 class="modal-title" id="envioModalLabel">Selecciona el periodo del reporte</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 					</div>
+
+					<form method="POST" id="formReporte">
+						{% csrf_token %}
+
+						<div class="modal-body">
+							<p>
+								Selecciona el año para el que quieres generar el reporte.
+							</p>
+
+							<div class="mb-3 mt-3" id="fechaYear">
+								<div class="d-flex align-items-center col-6 justify-content-between m-auto">
+									<p class="col m-0">Año</p>
+									{{ formularioReporte.fechaYear }}
+								</div>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" id="generarReporte" class="btn btn-info">
+								Generar
+							</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">
+								Cancelar
+							</button>
+						</div>
+					</form>
 				</div>
+			</div>
+		</div>
 
-		
-
-		
+		<div id="loader" class="loader-overlay">
+			<div class="loader"></div>
+			<p>Generando reporte...</p>
+		</div>
 
 	</div>
 	<!-- /.container-fluid -->    
 	 
 	<scripts>
+
+	<style>
+		.loader-overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(255,255,255,0.8);
+			z-index: 99999;
+
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+
+		.loader {
+			width: 60px;
+			height: 60px;
+			border: 6px solid #ddd;
+			border-top: 6px solid #36b9cc;
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+		}
+
+		@keyframes spin {
+			from { transform: rotate(0deg); }
+			to   { transform: rotate(360deg); }
+		}
+
+		.loader-overlay p {
+			margin-top: 15px;
+			font-size: 18px;
+			font-weight: bold;
+		}
+	</style>
 
 {%endblock%}
 
