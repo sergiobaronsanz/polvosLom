@@ -691,7 +691,7 @@ class GeneradorVariables:
         empresasNuevas= Muestras.objects.filter(id_muestra=1,fecha__year=self.year).values('empresa').distinct().count()
         empresasRecurrentes= numeroEmpresas - empresasNuevas
         muestrasTotales= Muestras.objects.filter(fecha__year= self.year).count()
-        pormedioMuestras= muestrasTotales/numeroEmpresas
+        pormedioMuestras= round(muestrasTotales/numeroEmpresas, 1)
 
         if numeroEmpresas > 0:
             porcentajeNuevasEmpresas= empresasNuevas/numeroEmpresas * 100
