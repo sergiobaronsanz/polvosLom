@@ -76,7 +76,7 @@ def ensayosRealizados(request, ensayo):
     if ensayo_id.ensayo == "Humedad":
         resultados = Humedad.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Granulometria":
-        resultados= Granulometria.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
+        resultados= Granulometria.objects.filter(resultado__isnull=False).order_by('-fechaFin')
     elif ensayo_id.ensayo== "TMIc":
         resultados= TMIc.objects.filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "TMIn":
@@ -89,6 +89,8 @@ def ensayosRealizados(request, ensayo):
         resultados= EMIsin.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Pmax":
         resultados= Pmax.objects.all().filter(pmax__isnull=False, dpdt__isnull=False, kmax__isnull=False).order_by('-fechaFin')
+    elif ensayo_id.ensayo== "exploNoExplo":
+        resultados= ExploNoExplo.objects.all().filter(pmax__isnull=False, dpdt__isnull=False, kmax__isnull=False).order_by('-fechaFin')
     elif ensayo_id.ensayo== "REC":
         resultados= REC.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "CLO":
