@@ -965,7 +965,7 @@ class ExploNoExplo(models.Model):
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
 
-    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=5)
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=3)
 
     class Meta():
         verbose_name="Pmax"

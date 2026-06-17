@@ -378,18 +378,19 @@ class GeneradorVariables:
     def calculosEnsayos(self):
 
         colors = [
-            '#1E3A8A',
-            '#2563EB',
-            '#3B82F6',
-            '#60A5FA',
-            '#93C5FD',
-            '#2E95AA',
-            '#14B8A6',
-            '#22C55E',
-            '#84CC16',
-            '#F59E0B',
-            '#EF4444'
-        ]
+        '#1E3A8A',
+        '#2563EB',
+        '#3B82F6',
+        '#60A5FA',
+        '#93C5FD',
+        '#2E95AA',
+        '#14B8A6',
+        '#22C55E',
+        '#84CC16',
+        '#F59E0B',
+        '#EF4444',
+        '#8B5CF6',
+    ]
 
         # TMIC
         tmic = TMIc.objects.filter(fechaFin__year=self.year)
@@ -502,15 +503,22 @@ class GeneradorVariables:
             total=Sum('horasEnsayo')
         )['total'] or 0)
 
+        # EXPLO/NOEXPLO
+        explo = ExploNoExplo.objects.filter(fechaFin__year=self.year)
+        nExplo = explo.count()
+        hExplo = float(explo.aggregate(
+            total=Sum('horasEnsayo')
+        )['total'] or 0)
+
         # Totales
         totalEnsayos = (
             nTmic + nTmin + nEmi + nLie + nPmax +
-            nClo + nN1 + nN2 + nN4 + nO1 + nRec
+            nClo + nN1 + nN2 + nN4 + nO1 + nRec + nExplo
         )
 
         totalHoras = (
             hTmic + hTmin + hEmi + hLie + hPmax +
-            hClo + hN1 + hN2 + hN4 + hO1 + hRec
+            hClo + hN1 + hN2 + hN4 + hO1 + hRec + hExplo
         )
 
         # Porcentajes
@@ -526,9 +534,11 @@ class GeneradorVariables:
             pN4 = int(round((nN4 / totalEnsayos) * 100))
             pO1 = int(round((nO1 / totalEnsayos) * 100))
             pRec = int(round((nRec / totalEnsayos) * 100))
+            pExplo= int(round((nExplo / totalEnsayos) * 100))
         else:
             pTmic = pTmin = pEmi = pLie = pPmax = 0
             pClo = pN1 = pN2 = pN4 = pO1 = pRec = 0
+            pExplo = 0
 
         # Lista ordenada
         ensayosOrdenados = [
@@ -608,6 +618,14 @@ class GeneradorVariables:
                 "horas": int(round(hRec, 0)),
                 "porcentaje": pRec,
                 "color": colors[10]
+            },
+
+            {
+                "nombre": "Explo/No Explo",
+                "ensayos": nExplo,
+                "horas": int(round(hExplo, 0)),
+                "porcentaje": pExplo,
+                "color": colors[11]
             },
         ]
 
