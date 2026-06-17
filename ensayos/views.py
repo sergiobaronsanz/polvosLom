@@ -3101,3 +3101,148 @@ def exploNoExplo (request, muestra_id):
         'equiposEnsayo': equiposEnsayo,
         'datosGuardados': datosGuardados,
     })
+
+
+#BZ
+@login_required
+def bz (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(BZ, ensayo__iexact= "BZ")
+    equipos= get_list_or_404(Equipos, ensayos=ensayo)
+    datosGuardados= False
+    usuario= request.user
+
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(BZ__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="bz") & ~Q(estado=1)
+    )
+    #########################################ME QUEDO POR AQUI, QUEDA SEGUIR CAMBIADO LOS N2 POR BZ y cmbiar los campos usados
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formBZ= BZForm(request.POST, prefix='bz')
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo')
+        
+        if formN2.is_valid() and formN2Resultados.is_valid() and equiposEnsayo.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('n2-muestra')) 
+            
+            #Comprobamos que no exista un ensayo  previo
+            n2_instancia= N2.objects.filter(muestra= muestra)
+            n2_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fechaInicio= formN2.cleaned_data['fechaInicio']
+            fechaFin= formN2.cleaned_data['fechaFin']
+            temperaturaAmbiente= formN2.cleaned_data['temperaturaAmbiente']
+            humedad= formN2.cleaned_data['humedad']
+            observacion=formN2.cleaned_data['observacion']
+
+            n2= N2.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                temperaturaAmbiente= temperaturaAmbiente,
+                humedad= humedad,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
+                observacion= observacion,
+                usuario= usuario,
+            )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
+            n2.equipos.set (equipos)
+
+            #Eliminamos los resultados
+            resultadosAnteriores= ResultadosN2.objects.filter(ensayo= n2)
+            if resultadosAnteriores:
+                for resultado in resultadosAnteriores:
+                    resultado.delete()
+
+            
+            #Guardamos los resultados en la tabla de resultados N2 
+            listaResultados= []  
+
+            for form in formN2Resultados:
+                if form.cleaned_data:  # Para evitar formularios vacíos
+                    resultado= form.cleaned_data['resultado']
+
+                    resultadosN2=ResultadosN2.objects.create(
+                        ensayo= n2,
+                        resultado= resultado
+                    )
+                    if resultado == "1":
+                        listaResultados.append(resultado)
+                    
+
+            #Guardamos en el modelo N2 el resultado del ensayo
+            if listaResultados:
+                resultado= "2"
+                n2.resultado= resultado
+                n2.save()
+            else:
+                resultado= "1"
+                n2.resultado= resultado
+                n2.save()
+
+            datosGuardados= True            
+        else:
+            print (formN2.errors)
+            formN2.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/n2.html', {
+                'ensayo': ensayo,
+                'formN2': formN2,
+                'formN2Resultados': formN2Resultados,
+                'equiposEnsayo': equiposEnsayo,
+                'datosGuardados': datosGuardados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_N2= N2.objects.get(muestra__id= muestra_id) 
+            equipos= ensayo_N2.equipos.all()           
+            
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fechaInicio= str(ensayo_N2.fechaInicio)
+            fechaFin= str(ensayo_N2.fechaFin)
+            temperaturaAmbiente= ensayo_N2.temperaturaAmbiente
+            humedad=ensayo_N2.humedad
+            observacion= ensayo_N2.observacion
+            
+            
+            formN2 = N2Form(prefix='n2', initial={
+                'muestra': muestra,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
+                'temperaturaAmbiente': temperaturaAmbiente,
+                'humedad': humedad,
+                'observacion': observacion,
+                })
+            
+            formN2.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            resultados= ResultadosN2.objects.filter(ensayo=ensayo_N2).order_by("id")
+
+            initial_data = []
+            for resultado in resultados:
+                initial_data.append({
+                    'resultado': resultado.resultado,
+                })
+            
+            # Crear el formset con los datos iniciales
+            N2ResultadosFormSet = formset_factory(N2ResultadosForm, extra=0)
+            formN2Resultados = N2ResultadosFormSet(prefix='n2Resultados',initial=initial_data)
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
+        
+        else:
+            formN2= BZForm(prefix='bz')
+            formN2.fields['muestra'].queryset = muestras_queryset
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})           
+
+
+    return render(request, 'ensayos/nuevosEnsayos/n2.html', {
+        'ensayo': ensayo,
+        'formN2': formN2,
+        'formN2Resultados': formN2Resultados,
+        'equiposEnsayo': equiposEnsayo,
+        'datosGuardados': datosGuardados,
+    })
