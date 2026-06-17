@@ -439,7 +439,7 @@ class GeneradorVariables:
         ensayoDestacadoLie = LIE.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
         valorEnsayoDestacadoLie= int(float(ensayoDestacadoLie.resultado))
         nEnsayosLIE= ResultadosLIE.objects.filter(ensayo__fechaInicio__year= self.year).count()
-        nInflamadores = math.ceil((nEnsayosLIE * 2) * 1.1)
+        nInflamadoresLie = math.ceil((nEnsayosLIE * 2) * 1.1)
 
         # PMAX
         pmax = Pmax.objects.filter(fechaFin__year=self.year)
@@ -458,7 +458,7 @@ class GeneradorVariables:
         valorEnsayoDestacadoKmax= int(float(ensayoDestacadoKmax.kmax))
 
         nEnsayosPmax= ResultadosPmax.objects.filter(ensayo__fechaInicio__year= self.year).count()
-        nInflamadores = math.ceil((nEnsayosLIE * 2) * 1.1)
+        nInflamadoresPmax = math.ceil((nEnsayosPmax * 2) * 1.1)
 
         # CLO
         clo = CLO.objects.filter(fechaFin__year=self.year)
@@ -652,7 +652,7 @@ class GeneradorVariables:
                 "ensayos": nLie,
                 "horas": int(round(hLie, 0)),
                 "ensayoDestacado": valorEnsayoDestacadoLie,
-                "inflamadores": nInflamadores,
+                "inflamadores": nInflamadoresLie,
 
             },
 
@@ -664,7 +664,7 @@ class GeneradorVariables:
                 "ensayoDestacadoPmax": valorEnsayoDestacadoPmax,
                 "ensayoDestacadoDpdt": valorEnsayoDestacadoDpdt,
                 "ensayoDestacadoKmax": valorEnsayoDestacadoKmax,
-                "inflamadores": nInflamadores,
+                "inflamadores": nInflamadoresPmax,
 
             },
         }
