@@ -1,0 +1,112 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} BZ ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{formBZ.muestra.label}}
+          {{formBZ.muestra}}
+      </div>
+
+      <div class= "col-3 d-flex flex-column align-items-start">
+		{{formBZ.fechaInicio.label}}
+		{{formBZ.fechaInicio}}
+	  </div>
+  
+	  <div class= "col-3 d-flex flex-column align-items-start">
+		  {{formBZ.fechaFin.label}}
+		  {{formBZ.fechaFin}}
+	  </div>
+  </div>
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col text-nowrap">
+        {{formBZ.temperaturaAmbiente.label}}
+        {{formBZ.temperaturaAmbiente}}
+
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{formBZ.humedad.label}}
+        {{formBZ.humedad}}
+      </div>
+  </div>
+
+  <div class= "row">
+    <div class= "col text-nowrap">
+        {{formBZ.tipoPolvo.label}}
+        {{formBZ.tipoPolvo}}
+    </div>
+    
+	<div class= "col text-nowrap">
+	{{formBZ.pruebaPreseleccion.label}}
+	{{formBZ.pruebaPreseleccion}}
+	</div>
+  </div>
+
+  <div class= "row mt-4 d-flex justify-content-center">
+    <div class= "col-8 text-nowrap">
+      {{equiposEnsayo}}
+    </div>
+  </div>
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3 col m-auto">
+    
+    {% if formBZ.non_field_errors %}
+            <div>
+                {% for error in formBZ.non_field_errors %}
+                    <p class= "text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    <div>
+        <p> Si todo es negativo pulsa  <button type= "button" id= "todoNegativo" class= "btn btn-sm btn-secondary"> aqui </button></p>
+    </div>
+
+      
+    <table id= "tabla" class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                {%for form in formBZResultados.forms.0%}
+                    <th class="align-middle">{{form.label}}</th>
+                {%endfor%}
+
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            {{ formBZResultados.management_form }}
+            {%for form in formBZResultados%}
+                <tr class="templateRow">
+                    <td>{{form.resultado}}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    
+
+    <div class= "col-12 mt-3 mb-3">
+        {{formBZ.observacion.label}}
+        {{formBZ.observacion}}
+    </div>
+    
+</div>
+
+{%endblock%}
+
+
+
+{%block script%}  
+    <script> ensayo= "bz" </script> 
+    <script src="{%static 'js/ensayos/bz.js'%}"></script> 
+{%endblock%}
