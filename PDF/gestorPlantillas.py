@@ -845,8 +845,8 @@ class GeneradorVariables:
             
     
     def datosMapa(self):
-        nNacional = len(self.procedencia()['contador_espanolas'])
-        nInternacional = len(self.procedencia()['contador_no_espanolas'])
+        nNacional = sum(self.procedencia()['contador_espanolas'].values())
+        nInternacional = sum(self.procedencia()['contador_no_espanolas'].values())
         nTotal= nNacional + nInternacional
 
         totalMuestrasNacional = sum(self.procedencia()['contador_espanolas'].values())
