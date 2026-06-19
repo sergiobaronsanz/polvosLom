@@ -850,7 +850,8 @@ class GeneradorVariables:
         nInternacional = sum(self.procedencia()['contador_no_espanolas'].values())
         nTotal= nNacional + nInternacional
 
-        totalMuestrasNacional = sum(self.procedencia()['contador_espanolas'].values())
+        nTotalProvincias= len(self.procedencia()['contador_espanolas']) + len(self.procedencia()['contador_no_espanolas'])
+        
         
         top5= self.procedencia()['contador_espanolas'].most_common(5)
         total_top5 = sum(cantidad for _, cantidad in top5)
@@ -859,7 +860,7 @@ class GeneradorVariables:
         if nTotal > 0:
             porcentajeNacional = round((nNacional / nTotal) * 100, 1)
             porcentajeInternacional = round((nInternacional / nTotal) * 100, 1)
-            porcentajeTopProvincias= round((total_top5/totalMuestrasNacional)*100,1)
+            porcentajeTopProvincias= round((total_top5/nNacional)*100,1)
         else:
             porcentajeNacional = 0
             porcentajeInternacional = 0
@@ -872,7 +873,7 @@ class GeneradorVariables:
             'porcentaje_nacional': porcentajeNacional,
             'porcentaje_internacional': porcentajeInternacional,
             'porcentajeTopProvincias': porcentajeTopProvincias,
-            'provinciasTotales': nTotal,
+            'provinciasTotales': nTotalProvincias,
         }
 
     def top5(self):
