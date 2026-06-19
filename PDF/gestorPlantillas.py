@@ -836,7 +836,8 @@ class GeneradorVariables:
             for provincia, muestras in contador.items()
             if provincia not in PROVINCIAS_ESPANA
         })
-
+        print(contador_espanolas)
+        print (contador_no_espanolas)
 
         return{
             'contador_espanolas': contador_espanolas,
