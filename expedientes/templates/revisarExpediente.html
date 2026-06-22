@@ -37,7 +37,7 @@
 					{%if expediente.estado == "5" %}
 						<button type= "button" id="generarZipExpediente" data-toggle= "modal" data-target="#modalMail" class="btn btn-primary p-2"> Enviar mail</button>
 					{%endif%}
-					<form method="GET" action="{% url 'ensayosMuestras' expediente expediente.empresa.empresa "1" %}">
+					<form method="GET" action="{% url 'ensayosMuestras' expediente expediente.empresa.id "1" %}">
 						<button class= " btn btn-info ml-3 mr-3"type="submit">Añadir muestra</button>
 					</form>
 					<form  id="eliminarExpediente" method="POST" action="{% url 'eliminarExpediente' expediente.expediente %}" onsubmit="return confirm('¿Seguro que deseas eliminar este expediente?');">
