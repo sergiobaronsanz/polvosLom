@@ -780,7 +780,6 @@ class PmaxForm(forms.Form):
     temperaturaAmbiente = forms.DecimalField(
         decimal_places=2,
         max_digits=5,
-        initial=20,
         label="Temperatura Ambiente",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
     )
@@ -788,6 +787,7 @@ class PmaxForm(forms.Form):
     temperaturaEsfera = forms.DecimalField(
         decimal_places=2,
         max_digits=5,
+        initial=20,
         label="Temperatura Esfera",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
     )
