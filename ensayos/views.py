@@ -105,6 +105,8 @@ def ensayosRealizados(request, ensayo):
         resultados= O1.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Tratamiento":
         resultados= Tratamiento.objects.all().order_by('-fechaFin')
+    elif ensayo_id.ensayo== "BZ":
+        resultados= BZ.objects.all().order_by('-fechaFin')
     else:
         resultados= None
     
@@ -3098,6 +3100,127 @@ def exploNoExplo (request, muestra_id):
         'ensayo': ensayo,
         'formExploNoExplo': formExploNoExplo,
         'formExploNoExploResultados': formExploNoExploResultados,
+        'equiposEnsayo': equiposEnsayo,
+        'datosGuardados': datosGuardados,
+    })
+
+
+#BZ
+@login_required
+def bz (request, muestra_id):
+     #Sacamos el ensayo
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "BZ")
+    equipos= get_list_or_404(Equipos, ensayos=ensayo)
+    datosGuardados= False
+    usuario= request.user
+
+  
+    #Filtramos las muestras que pueden salir
+    muestras_queryset= Muestras.objects.filter(
+        Q(bz__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="BZ") & ~Q(estado=1)
+    )
+    if request.method == 'POST':
+        #Recibimos los formularios diferenciándolos con el prefijo
+        formBZ= BZForm(request.POST, prefix='bz')
+        equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo')
+        
+        if formBZ.is_valid() and equiposEnsayo.is_valid():
+
+            muestra= get_object_or_404(Muestras, id= request.POST.get('bz-muestra')) 
+            
+            #Comprobamos que no exista un ensayo  previo
+            bz_instancia= BZ.objects.filter(muestra= muestra)
+            bz_instancia.delete()
+
+            
+            #Guardamos el formulario  a falta del resultado final
+            fechaInicio= formBZ.cleaned_data['fechaInicio']
+            fechaFin= formBZ.cleaned_data['fechaFin']
+            temperaturaEnsayo= formBZ.cleaned_data['temperaturaEnsayo']
+            humedad= formBZ.cleaned_data['humedad']
+            nRepeticiones= formBZ.cleaned_data['nRepeticiones']
+            tipoFuenteIgnicion= formBZ.cleaned_data['tipoFuenteIgnicion']
+            tiempoFuenteIgnicion= formBZ.cleaned_data['tiempoFuenteIgnicion']
+            tipoIgnicion= formBZ.cleaned_data['tipoIgnicion']
+            resultado= formBZ.cleaned_data['resultado']
+
+            observacion=formBZ.cleaned_data['observacion']
+
+            bz= BZ.objects.create(
+                muestra=muestra,
+                ensayo=ensayo,
+                humedad= humedad,
+                fechaInicio= fechaInicio,
+                fechaFin= fechaFin,
+                temperaturaEnsayo= temperaturaEnsayo,
+                nRepeticiones= nRepeticiones,
+                tipoFuenteIgnicion= tipoFuenteIgnicion,
+                tiempoFuenteIgnicion= tiempoFuenteIgnicion,
+                tipoIgnicion=tipoIgnicion,
+                resultado=resultado,
+                observacion= observacion,
+                usuario= usuario,
+            )
+            equipos= equiposEnsayo.cleaned_data['equiposEnsayo']
+            bz.equipos.set (equipos)
+            
+            datosGuardados= True            
+        else:
+            print (formBZ.errors)
+            formBZ.add_error(None, 'Error en el formulario, revisa los datos')
+            return render(request, 'ensayos/nuevosEnsayos/bz.html', {
+                'ensayo': ensayo,
+                'formBZ': formBZ,
+                'equiposEnsayo': equiposEnsayo,
+                'datosGuardados': datosGuardados,
+            })
+    else:
+        if muestra_id != 'nueva':
+            ensayo_BZ= BZ.objects.get(muestra__id= muestra_id) 
+            equipos= ensayo_BZ.equipos.all()           
+
+            muestra= Muestras.objects.get(id=muestra_id) 
+            fechaInicio= str(ensayo_BZ.fechaInicio)
+            fechaFin= str(ensayo_BZ.fechaFin)
+            temperaturaEnsayo= ensayo_BZ.temperaturaEnsayo
+            humedad=ensayo_BZ.humedad
+            nRepeticiones= ensayo_BZ.nRepeticiones
+            tipoFuenteIgnicion= ensayo_BZ.tipoFuenteIgnicion
+            tiempoFuenteIgnicion= ensayo_BZ.tiempoFuenteIgnicion
+            tipoIgnicion=ensayo_BZ.tipoIgnicion
+            resultado= ensayo_BZ.resultado,
+            observacion= ensayo_BZ.observacion
+            
+            formBZ = BZForm(prefix='bz', initial={
+                'muestra': muestra,
+                'fechaInicio': fechaInicio,
+                'fechaFin': fechaFin,
+                'temperaturaEnsayo': temperaturaEnsayo,
+                'humedad': humedad,
+                'nRepeticiones': nRepeticiones,
+                'tipoFuenteIgnicion': tipoFuenteIgnicion,
+                'tiempoFuenteIgnicion': tiempoFuenteIgnicion,
+                'tipoIgnicion': tipoIgnicion,
+                'resultado': resultado,
+                'observacion': observacion,
+                })
+            
+            formBZ.fields['muestra'].queryset = Muestras.objects.filter(id=muestra_id)
+
+            
+            # Crear el formset con los datos iniciales
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})
+        
+        else:
+            formBZ= BZForm(prefix='bz')
+            formBZ.fields['muestra'].queryset = muestras_queryset
+
+            equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})           
+
+
+    return render(request, 'ensayos/nuevosEnsayos/bz.html', {
+        'ensayo': ensayo,
+        'formBZ': formBZ,
         'equiposEnsayo': equiposEnsayo,
         'datosGuardados': datosGuardados,
     })

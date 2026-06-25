@@ -1,0 +1,109 @@
+{% extends 'ensayos/nuevosEnsayos/layoutEnsayos.html'%}
+{%load static%}
+
+{%block tituloEnsayo%} BZ ({{ensayo.normativa}})  {%endblock%}
+
+
+
+{%block condiciones%} 
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col d-flex flex-column align-items-start">
+          {{formBZ.muestra.label}}
+          {{formBZ.muestra}}
+      </div>
+
+      <div class= "col-3 d-flex flex-column align-items-start">
+		{{formBZ.fechaInicio.label}}
+		{{formBZ.fechaInicio}}
+	  </div>
+  
+	  <div class= "col-3 d-flex flex-column align-items-start">
+		  {{formBZ.fechaFin.label}}
+		  {{formBZ.fechaFin}}
+	  </div>
+  </div>
+
+  <div class= "row mt-3 mb-3">
+      <div class= "col text-nowrap">
+        {{formBZ.temperaturaEnsayo.label}}
+        {{formBZ.temperaturaEnsayo}}
+
+      </div>
+      
+      <div class= "col text-nowrap">
+        {{formBZ.humedad.label}}
+        {{formBZ.humedad}}
+      </div>
+  </div>
+
+  <div class= "row">
+    <div class= "col text-nowrap">
+        {{formBZ.nRepeticiones.label}}
+        {{formBZ.nRepeticiones}}
+    </div>
+    
+	<div class= "col text-nowrap">
+        {{formBZ.tipoFuenteIgnicion.label}}
+        {{formBZ.tipoFuenteIgnicion}}
+	</div>
+
+    <div class= "col text-nowrap">
+        {{formBZ.tiempoFuenteIgnicion.label}}
+        {{formBZ.tiempoFuenteIgnicion}}
+	</div>
+
+  </div>
+
+  <div class= "row mt-4 d-flex justify-content-center">
+    <div class= "col-8 text-nowrap">
+      {{equiposEnsayo}}
+    </div>
+  </div>
+
+{%endblock%}
+
+   
+
+{%block resultados%} 
+<div class= "row mt-3 mb-3 col m-auto">
+    
+    {% if formBZ.non_field_errors %}
+            <div>
+                {% for error in formBZ.non_field_errors %}
+                    <p class= "text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    <img src= "{% static "img/ensayos/bz.jpg" %}" class= "mb-5 w-100 m-auto">
+
+    
+
+    <div class= "col-12 mt-3 mb-3 row">
+        <div class= " col-9 mt-3 mb-3">
+            {{formBZ.tipoIgnicion.label}}
+            {{formBZ.tipoIgnicion}}
+        </div>
+        <div class= "col-3 mt-3 mb-3">
+            {{formBZ.resultado.label}}
+            {{formBZ.resultado}}
+        </div>
+    </div>
+    
+
+    <div class= "col-12 mt-3 mb-3">
+        {{formBZ.observacion.label}}
+        {{formBZ.observacion}}
+    </div>
+    
+</div>
+
+{%endblock%}
+
+
+
+{%block script%}  
+    <script> ensayo= "bz" </script> 
+    <script src="{%static 'js/ensayos/bz.js'%}"></script> 
+{%endblock%}

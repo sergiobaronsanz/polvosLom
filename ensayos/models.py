@@ -988,3 +988,58 @@ class ResultadosexploNoExplo (models.Model):
         
     def __str__(self):
         return f"{self.ensayo} | Pmax: {self.pm}, dP/dT: {self.dpdt} "
+    
+
+
+#BZ
+
+class BZ(models.Model):
+
+    ResultadosPosibles = [
+        ("1", "1"),
+        ("2", "2"),
+        ("3", "3"),
+        ("4", "4"),
+        ("5", "5"),
+    ]
+
+    clasesIgnicion= [
+        ("1", "Sin ignición"),
+        ("2", "Breve ignición, extinción rápida"),
+        ("3", "Combustión localizada o brasa menor de 40 mm"),
+        ("4", "Brasa sin chispas o descomposición lenta sin llama"),
+        ("5", "Chisporroteo o combustión lenta con llama"),
+        ("6", "Combustión muy rápida con llama o descomposición sin llama"),
+    ]
+
+    fuenteIgnicion= [
+        ("1", "Llama de gas"),
+        ("2", "Filamento incandescente")
+    ]
+    
+    muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
+    ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
+    temperaturaEnsayo= models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Temperatura Ensayo", blank= True, null= True)
+    humedad=  models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
+    nRepeticiones= models.IntegerField(verbose_name = "Número repeticiones", default=10, blank=True, null=True)
+    tipoFuenteIgnicion= models.CharField(verbose_name= "Tipo de fuente de ignición", choices=fuenteIgnicion, max_length=100)
+    tiempoFuenteIgnicion= models.IntegerField(verbose_name="Tiempo fuente ignición (s)", blank=True, null=True)
+    equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
+    tipoIgnicion= models.CharField(verbose_name="Tipo ignición", choices=clasesIgnicion, max_length=100, blank=True, null=True)
+    resultado= models.CharField(verbose_name="Clase combustión", choices=ResultadosPosibles, max_length=100, blank=True, null=True)
+    fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
+    fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
+    fechaAuto= models.DateField(verbose_name="Fecha automática", auto_now_add=True)
+    fechaRev= models.DateField(verbose_name="Fecha revisión", auto_now=True)
+    observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
+    usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
+
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
+
+    class Meta():
+        verbose_name="BZ"
+        verbose_name_plural="BZ"
+        
+    def __str__(self):
+        return f"{self.muestra} | Clase combustión: {self.resultado}" 
+    

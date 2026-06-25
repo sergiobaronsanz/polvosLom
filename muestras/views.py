@@ -151,6 +151,10 @@ def listaEnsayosMuestra(muestra):
         resultado= ExploNoExplo.objects.filter(muestra= muestra)
         print("exploNoExplo")
         resultados.extend(resultado)
+    if listaEnsayos.filter(ensayo__iexact= "BZ").exists():
+        resultado= BZ.objects.filter(muestra= muestra)
+        print("BZ")
+        resultados.extend(resultado)
 
     return resultados
 

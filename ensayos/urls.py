@@ -26,6 +26,8 @@ urlpatterns = [
     path('ensayos/n2/<str:muestra_id>/', views.n2, name="n2"),
     path('ensayos/n4/<str:muestra_id>/', views.n4, name="n4"),
     path('ensayos/o1/<str:muestra_id>/', views.o1, name="o1"),
+    path('ensayos/bz/<str:muestra_id>/', views.bz, name="bz"),
+
     path('ensayos/tratamiento/<str:muestra_id>/', views.tratamiento, name="tratamiento"),
     path('ensayos/exploNoExplo/<str:muestra_id>/', views.exploNoExplo, name="explonoexplo"),
 

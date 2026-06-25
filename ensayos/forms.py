@@ -1544,7 +1544,6 @@ class O1ResultadosForm(forms.Form):
 o1ResultadosFormSet= formset_factory(O1ResultadosForm, extra=5)
 
 
-
 from django import forms
 from django.shortcuts import get_object_or_404
 from .models import Muestras, Equipos, ListaEnsayos
@@ -1684,7 +1683,7 @@ class TratamientoForm(forms.Form):
 
 
 
-#PMAX
+#EXPLO/NO EXPLO
 class ExploNoExploForm(forms.Form):
     #Todos los campos # se deben establecer en la view
     #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
@@ -1817,3 +1816,106 @@ class ExploNoExploResultadosForm(forms.Form):
 
 
 exploNoExploResultadosFormSet= formset_factory(ExploNoExploResultadosForm, extra=7)
+
+
+#BZ
+class BZForm(forms.Form):
+    #Todos los campos # se deben establecer en la view
+    #ensayo= models.ForeignKey("Humedad", on_delete=models.CASCADE, verbose_name="Ensayo Humedad")
+    #resultado= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Resultado")
+    #equipos= models.ManyToManyField("Equipos", verbose_name="Equipos")
+    #tiempoEnsayo 
+
+    ResultadosPosibles = [
+        ("1", "1"),
+        ("2", "2"),
+        ("3", "3"),
+        ("4", "4"),
+        ("5", "5"),
+        ("6", "6"),
+    ]
+
+    clasesIgnicion= [
+        ("1", "Sin ignición"),
+        ("2", "Breve ignición, extinción rápida"),
+        ("3", "Combustión localizada o brasa menor de 40 mm"),
+        ("4", "Brasa sin chispas o descomposición lenta sin llama"),
+        ("5", "Chisporroteo o combustión lenta con llama"),
+        ("6", "Combustión muy rápida con llama o descomposición sin llama"),
+    ]
+
+    fuenteIgnicion= [
+        ("1", "Llama de gas"),
+        ("2", "Filamento incandescente")
+    ]
+
+    muestras= Muestras.objects.all()
+
+    
+    muestra = forms.ModelChoiceField(
+        queryset=muestras,
+        label="Muestra",
+        empty_label="Selecciona una muestra",  # Etiqueta para la opción vacía
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    fechaInicio= forms.DateField(
+        label="Fecha Inicio",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm',  'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+    fechaFin= forms.DateField(
+        label="Fecha Fin",
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+    )
+
+
+    temperaturaEnsayo = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Ensayo",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+    humedad= forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Humedad Ambiente",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
+
+    nRepeticiones= forms.IntegerField(
+        label="Número repeticiones",
+        initial=10,
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    )  
+
+    tipoFuenteIgnicion= forms.ChoiceField(
+        choices=fuenteIgnicion,
+        label="Fuente de ignición", 
+        initial= "1",
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; ', 'required': 'required'}),
+    )
+
+    tiempoFuenteIgnicion= forms.IntegerField(
+        label="Tiempo ignición (s)",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
+    ) 
+
+    tipoIgnicion= forms.ChoiceField(
+        choices=clasesIgnicion,
+        label= "Tipo de combustión",
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+    
+    resultado= forms.ChoiceField(
+        choices=ResultadosPosibles,
+        label= "Resultado",
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
+
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
