@@ -332,6 +332,24 @@ def crear_ensayos(sender, instance, action, **kwargs):
                         instance.save()
                         expediente.estado= "1"
                         expediente.save()
+
+            if ensayo.ensayo == "BZ":
+                if not BZ.objects.filter(muestra= instance).exists():
+                    resultados= BZ.objects.create(
+                        muestra= instance,
+                        ensayo= ensayo,
+                    )
+                    if descripcionMuestra:
+                        #Volvemos a poner la muestra y el expediente en estado de ensayando
+                        instance.estado= "3"
+                        instance.save()
+                        expediente.estado= "3"
+                        expediente.save()
+                    else:
+                        instance.estado= "1"
+                        instance.save()
+                        expediente.estado= "1"
+                        expediente.save()
                 
         porcentaje= porcentajeExpediente(expediente=expediente)
         expediente.porcentaje= porcentaje
@@ -421,6 +439,11 @@ def crear_ensayos(sender, instance, action, **kwargs):
 
         if not "explonoexplo" in listaEnsayosnueva:
             ensayoObjeto= ExploNoExplo.objects.filter(muestra= instance)
+            if ensayoObjeto.exists():
+                ensayoObjeto.delete()
+
+        if not "bz" in listaEnsayosnueva:
+            ensayoObjeto= BZ.objects.filter(muestra= instance)
             if ensayoObjeto.exists():
                 ensayoObjeto.delete()
         
@@ -557,6 +580,13 @@ def chequeo_expedientes_terminados(ensayo= None, muestra= None ):
         if "explonoexplo" in nombres:
             ensayo = ExploNoExplo.objects.filter(muestra=muestra).first()
             if ensayo and ensayo.pmax is not None and ensayo.dpdt is not None and ensayo.kmax is not None:
+                estadoListadoEnsayos.append(True)
+            else:
+                estadoListadoEnsayos.append(False)
+
+        if "bz" in nombres:
+            ensayo = BZ.objects.filter(muestra=muestra).first()
+            if ensayo and ensayo.resultado is not None:
                 estadoListadoEnsayos.append(True)
             else:
                 estadoListadoEnsayos.append(False)
@@ -728,8 +758,6 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                     if emisin.resultado:
                         horasTerminadas.append(emisin.horasEnsayo)
             
-            print("ensayo")
-            print(ensayo.ensayo.lower())
 
             # Verificar si el ensayo es "Explo/ No Explo"
             if "explonoexplo" in ensayo.ensayo.lower():
@@ -739,6 +767,14 @@ def porcentajeExpediente(ensayo= None, expediente= None):
                     horasTotales.append(exploNoExplo.horasEnsayo)
                     if exploNoExplo.pmax is not None and exploNoExplo.dpdt is not None and exploNoExplo.kmax is not None:
                         horasTerminadas.append(exploNoExplo.horasEnsayo)
+            
+            # Verificar si el ensayo es "BZ"
+            if "bz" in ensayo.ensayo.lower():
+                bz = BZ.objects.filter(muestra=muestra).first()
+                if bz:
+                    horasTotales.append(bz.horasEnsayo)
+                    if bz.resultado:
+                        horasTerminadas.append(bz.horasEnsayo)
                         
         
         # Sumar todas las horas de los ensayos seleccionados
@@ -911,6 +947,17 @@ def cambio_emisin(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender= ExploNoExplo)
 def cambio_exploNoExplo(sender, instance, created, **kwargs):
+    chequeo_expedientes_terminados(ensayo=instance)
+    porcentaje= porcentajeExpediente(ensayo=instance)
+    
+    muestra= instance.muestra
+    expediente= muestra.expediente
+    expediente.porcentaje= porcentaje
+    expediente.save()
+
+    
+@receiver(post_save, sender= BZ)
+def cambio_bz(sender, instance, created, **kwargs):
     chequeo_expedientes_terminados(ensayo=instance)
     porcentaje= porcentajeExpediente(ensayo=instance)
     

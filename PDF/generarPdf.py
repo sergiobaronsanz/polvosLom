@@ -75,6 +75,9 @@ class PDFGenerator:
     def generate_exploNoExplo_pdf(self):
         return self.plantilla.exploNoExplo()
     
+    def generate_bz_pdf(self):
+        return self.plantilla.bz()
+    
     def filtroEnsayos(self):
         pdf_files = []
         formateo_pdf_files= []
@@ -136,6 +139,8 @@ class PDFGenerator:
                 pdf_bytes = self.generate_EmiSin_pdf()
             if request['ensayo'] == 'exploNoExplo':
                 pdf_bytes = self.generate_exploNoExplo_pdf()
+            if request['ensayo'] == 'BZ':
+                pdf_bytes = self.generate_bz_pdf()
 
             if request['ensayo'] != 'Parte': #Incluye el parte en ensayos ZIP con un solo archivo (ejemplo se pide O1 solo)
                 nombre_archivo= (request['muestra_nombre']) + "-" + (request['ensayo'] + ".pdf")

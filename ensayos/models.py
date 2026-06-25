@@ -1003,6 +1003,15 @@ class BZ(models.Model):
         ("5", "5"),
     ]
 
+    clasesIgnicion= [
+        ("1", "Sin ignición"),
+        ("2", "Breve ignición, extinción rápida"),
+        ("3", "Combustión localizada o brasa menor de 40 mm"),
+        ("4", "Brasa sin chispas o descomposición lenta sin llama"),
+        ("5", "Chisporroteo o combustión lenta con llama"),
+        ("6", "Combustión muy rápida con llama o descomposición sin llama"),
+    ]
+
     fuenteIgnicion= [
         ("1", "Llama de gas"),
         ("2", "Filamento incandescente")
@@ -1016,6 +1025,7 @@ class BZ(models.Model):
     tipoFuenteIgnicion= models.CharField(verbose_name= "Tipo de fuente de ignición", choices=fuenteIgnicion, max_length=100)
     tiempoFuenteIgnicion= models.IntegerField(verbose_name="Tiempo fuente ignición (s)", blank=True, null=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
+    tipoIgnicion= models.CharField(verbose_name="Tipo ignición", choices=clasesIgnicion, max_length=100, blank=True, null=True)
     resultado= models.CharField(verbose_name="Clase combustión", choices=ResultadosPosibles, max_length=100, blank=True, null=True)
     fechaInicio= models.DateField(verbose_name="Fecha Inicio", blank=True, null=True)
     fechaFin= models.DateField(verbose_name="FechaFin", blank=True, null=True)
@@ -1024,7 +1034,7 @@ class BZ(models.Model):
     observacion=models.CharField(max_length=1000, verbose_name="Observacion", blank= True, null= True)
     usuario= models.ForeignKey(User, verbose_name= "Usuario", on_delete= models.CASCADE, blank=True, null= True)
 
-    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=3)
+    horasEnsayo= models.DecimalField(decimal_places=2, max_digits=5, verbose_name="Tiempo de ensayo", default=1)
 
     class Meta():
         verbose_name="BZ"

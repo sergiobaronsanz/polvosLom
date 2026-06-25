@@ -21,6 +21,8 @@ from django.db.models.functions import ExtractMonth
 from ensayos.models import *
 import math
 
+from django.db.models.functions import Cast
+
 from collections import Counter
 
 
@@ -400,7 +402,14 @@ class GeneradorVariables:
         )['total'] or 0)
         normativa = ListaEnsayos.objects.get(ensayo="TMIc")
         normaTmic= normativa.normativa
-        ensayoDestacadoTmic = TMIc.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        ensayoDestacadoTmic = (
+            TMIc.objects
+            .filter(fechaInicio__year=self.year)
+            .exclude(resultado="N/D")
+            .annotate(resultado_float=Cast("resultado", FloatField()))
+            .order_by("resultado_float")
+            .first()
+        )
         valorEnsayoDestacadoTmic= ensayoDestacadoTmic.resultado
 
         print(ensayoDestacadoTmic)
@@ -415,7 +424,14 @@ class GeneradorVariables:
         )['total'] or 0)
         normativa = ListaEnsayos.objects.get(ensayo="TMIn")
         normaTmin= normativa.normativa
-        ensayoDestacadoTmin = TMIn.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        ensayoDestacadoTmin = (
+            TMIn.objects
+            .filter(fechaInicio__year=self.year)
+            .exclude(resultado="N/D")
+            .annotate(resultado_float=Cast("resultado", FloatField()))
+            .order_by("resultado_float")
+            .first()
+        )
         valorEnsayoDestacadoTmin= int(float(ensayoDestacadoTmin.resultado))
 
         # EMI
@@ -426,7 +442,14 @@ class GeneradorVariables:
         )['total'] or 0)
         normativa = ListaEnsayos.objects.get(ensayo="EMI")
         normaEmi= normativa.normativa
-        ensayoDestacadoEmi = EMI.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        ensayoDestacadoEmi = (
+            EMI.objects
+            .filter(fechaInicio__year=self.year)
+            .exclude(resultado="N/D")
+            .annotate(resultado_float=Cast("resultado", FloatField()))
+            .order_by("resultado_float")
+            .first()
+        )
         valorEnsayoDestacadoEmi= int(float(ensayoDestacadoEmi.resultado))
 
         # LIE
@@ -437,7 +460,14 @@ class GeneradorVariables:
         )['total'] or 0)
         normativa = ListaEnsayos.objects.get(ensayo="LIE")
         normaLie= normativa.normativa
-        ensayoDestacadoLie = LIE.objects.filter(fechaInicio__year= self.year).exclude(resultado="N/D").order_by('resultado').first()
+        ensayoDestacadoLie = (
+            LIE.objects
+            .filter(fechaInicio__year=self.year)
+            .exclude(resultado="N/D")
+            .annotate(resultado_float=Cast("resultado", FloatField()))
+            .order_by("resultado_float")
+            .first()
+        )
         valorEnsayoDestacadoLie= int(float(ensayoDestacadoLie.resultado))
         nEnsayosLIE= ResultadosLIE.objects.filter(ensayo__fechaInicio__year= self.year).count()
         nInflamadoresLie = math.ceil((nEnsayosLIE * 2) * 1.1)

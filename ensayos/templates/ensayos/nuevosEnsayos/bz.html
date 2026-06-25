@@ -26,8 +26,8 @@
 
   <div class= "row mt-3 mb-3">
       <div class= "col text-nowrap">
-        {{formBZ.temperaturaAmbiente.label}}
-        {{formBZ.temperaturaAmbiente}}
+        {{formBZ.temperaturaEnsayo.label}}
+        {{formBZ.temperaturaEnsayo}}
 
       </div>
       
@@ -39,14 +39,20 @@
 
   <div class= "row">
     <div class= "col text-nowrap">
-        {{formBZ.tipoPolvo.label}}
-        {{formBZ.tipoPolvo}}
+        {{formBZ.nRepeticiones.label}}
+        {{formBZ.nRepeticiones}}
     </div>
     
 	<div class= "col text-nowrap">
-	{{formBZ.pruebaPreseleccion.label}}
-	{{formBZ.pruebaPreseleccion}}
+        {{formBZ.tipoFuenteIgnicion.label}}
+        {{formBZ.tipoFuenteIgnicion}}
 	</div>
+
+    <div class= "col text-nowrap">
+        {{formBZ.tiempoFuenteIgnicion.label}}
+        {{formBZ.tiempoFuenteIgnicion}}
+	</div>
+
   </div>
 
   <div class= "row mt-4 d-flex justify-content-center">
@@ -70,29 +76,20 @@
             </div>
     {% endif %}
 
-    <div>
-        <p> Si todo es negativo pulsa  <button type= "button" id= "todoNegativo" class= "btn btn-sm btn-secondary"> aqui </button></p>
+    <img src= "{% static "img/ensayos/bz.jpg" %}" class= "mb-5 w-100 m-auto">
+
+    
+
+    <div class= "col-12 mt-3 mb-3 row">
+        <div class= " col-9 mt-3 mb-3">
+            {{formBZ.tipoIgnicion.label}}
+            {{formBZ.tipoIgnicion}}
+        </div>
+        <div class= "col-3 mt-3 mb-3">
+            {{formBZ.resultado.label}}
+            {{formBZ.resultado}}
+        </div>
     </div>
-
-      
-    <table id= "tabla" class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                {%for form in formBZResultados.forms.0%}
-                    <th class="align-middle">{{form.label}}</th>
-                {%endfor%}
-
-            </tr>
-        </thead>
-        <tbody id="tbody">
-            {{ formBZResultados.management_form }}
-            {%for form in formBZResultados%}
-                <tr class="templateRow">
-                    <td>{{form.resultado}}</td>
-                </tr>
-            {%endfor%}
-        </tbody>
-    </table>
     
 
     <div class= "col-12 mt-3 mb-3">

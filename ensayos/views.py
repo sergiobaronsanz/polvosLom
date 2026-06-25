@@ -105,6 +105,8 @@ def ensayosRealizados(request, ensayo):
         resultados= O1.objects.all().filter(resultado__isnull=False).exclude(resultado__exact="").order_by('-fechaFin')
     elif ensayo_id.ensayo== "Tratamiento":
         resultados= Tratamiento.objects.all().order_by('-fechaFin')
+    elif ensayo_id.ensayo== "BZ":
+        resultados= BZ.objects.all().order_by('-fechaFin')
     else:
         resultados= None
     
@@ -3107,7 +3109,7 @@ def exploNoExplo (request, muestra_id):
 @login_required
 def bz (request, muestra_id):
      #Sacamos el ensayo
-    ensayo= get_object_or_404(BZ, ensayo__iexact= "BZ")
+    ensayo= get_object_or_404(ListaEnsayos, ensayo__iexact= "BZ")
     equipos= get_list_or_404(Equipos, ensayos=ensayo)
     datosGuardados= False
     usuario= request.user
@@ -3115,7 +3117,7 @@ def bz (request, muestra_id):
   
     #Filtramos las muestras que pueden salir
     muestras_queryset= Muestras.objects.filter(
-        Q(BZ__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="bz") & ~Q(estado=1)
+        Q(bz__resultado__isnull=True) & Q(listaEnsayos__ensayo__icontains="BZ") & ~Q(estado=1)
     )
     if request.method == 'POST':
         #Recibimos los formularios diferenciándolos con el prefijo
@@ -3139,6 +3141,7 @@ def bz (request, muestra_id):
             nRepeticiones= formBZ.cleaned_data['nRepeticiones']
             tipoFuenteIgnicion= formBZ.cleaned_data['tipoFuenteIgnicion']
             tiempoFuenteIgnicion= formBZ.cleaned_data['tiempoFuenteIgnicion']
+            tipoIgnicion= formBZ.cleaned_data['tipoIgnicion']
             resultado= formBZ.cleaned_data['resultado']
 
             observacion=formBZ.cleaned_data['observacion']
@@ -3153,6 +3156,7 @@ def bz (request, muestra_id):
                 nRepeticiones= nRepeticiones,
                 tipoFuenteIgnicion= tipoFuenteIgnicion,
                 tiempoFuenteIgnicion= tiempoFuenteIgnicion,
+                tipoIgnicion=tipoIgnicion,
                 resultado=resultado,
                 observacion= observacion,
                 usuario= usuario,
@@ -3178,26 +3182,25 @@ def bz (request, muestra_id):
             muestra= Muestras.objects.get(id=muestra_id) 
             fechaInicio= str(ensayo_BZ.fechaInicio)
             fechaFin= str(ensayo_BZ.fechaFin)
-            temperaturaAmbiente= ensayo_BZ.temperaturaAmbiente
+            temperaturaEnsayo= ensayo_BZ.temperaturaEnsayo
             humedad=ensayo_BZ.humedad
-            temperaturaEnsayo= ensayo_BZ.temperaturaEnsayo,
-            nRepeticiones= ensayo_BZ.nRepeticiones,
-            tipoFuenteIgnicion= ensayo_BZ.tipoFuenteIgnicion,
-            tiempoFuenteIgnicion= ensayo_BZ.tiempoFuenteIgnicion,
+            nRepeticiones= ensayo_BZ.nRepeticiones
+            tipoFuenteIgnicion= ensayo_BZ.tipoFuenteIgnicion
+            tiempoFuenteIgnicion= ensayo_BZ.tiempoFuenteIgnicion
+            tipoIgnicion=ensayo_BZ.tipoIgnicion
             resultado= ensayo_BZ.resultado,
             observacion= ensayo_BZ.observacion
-            
             
             formBZ = BZForm(prefix='bz', initial={
                 'muestra': muestra,
                 'fechaInicio': fechaInicio,
                 'fechaFin': fechaFin,
-                'temperaturaAmbiente': temperaturaAmbiente,
-                'humedad': humedad,
                 'temperaturaEnsayo': temperaturaEnsayo,
+                'humedad': humedad,
                 'nRepeticiones': nRepeticiones,
                 'tipoFuenteIgnicion': tipoFuenteIgnicion,
                 'tiempoFuenteIgnicion': tiempoFuenteIgnicion,
+                'tipoIgnicion': tipoIgnicion,
                 'resultado': resultado,
                 'observacion': observacion,
                 })

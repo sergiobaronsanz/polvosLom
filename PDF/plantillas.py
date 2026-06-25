@@ -1967,8 +1967,8 @@ class PlantillasEnsayo():
             resultadoCLO = "N/D"
             
                 
-            concentracionesNo=calculoConcentraciones(str(ultimaconcentracionOxigeno))
-            concentracionesSi=calculoConcentraciones(oxigenoSi)
+            concentracionesNo=calculoConcentracionesNo(str(ultimaconcentracionOxigeno))
+            concentracionesSi=calculoConcentracionesSi(oxigenoSi)
         
 
         
@@ -3051,6 +3051,165 @@ class PlantillasEnsayo():
         self.pdf.cell(w=95, h= 6,border= 1, txt= f"Conforme:",
                 align= "J", fill = 0)
         self.pdf.multi_cell(w=95, h= 6,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
+                align= "J", fill = 0)
+        
+        # Agregar más contenido dinámico aquí...
+        pdf=self.pdf
+        
+        
+        # Agregar más contenido dinámico aquí...
+        return self.pdf.output(dest='S').encode('latin1')  # Devuelve bytes
+    
+
+    
+    def bz(self):
+        ensayo= BZ.objects.get(muestra= self.muestra)
+        equipos=ensayo.equipos.all()
+        ensayoForma= self.descripcion.get_formaEnsayo_display()
+        fechaInicio= ensayo.fechaInicio
+        fechaFin= ensayo.fechaFin
+
+        self.pdf = PDFConPie(ensayo, orientation='P', unit='mm', format='A4')
+        self.pdf.add_page()
+        #TEXTO 
+        self.pdf.set_font('Arial', '', 12)
+        #IMAGEN
+        logo_path = os.path.join(self.rutaAbsoluta, 'Imagenes', 'LOGO.png')
+        self.pdf.image(logo_path, x=8, y=8, w=30, h=30, link="http://www.lom.upm.es", type='PNG')
+        #Celdas Cabecera
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 11)
+        self.pdf.cell(w= 100, h= 12, txt = f'{ensayo.ensayo.ensayo} ({ensayo.ensayo.normativa})', border= 1, 
+                align= "C", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        if fechaInicio!= fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = f"Fecha Inicio: {fechaInicio.strftime('%d/%m/%Y')}", border= "RT", 
+                    align= "L", fill = 0)
+        else:
+            self.pdf.multi_cell(w=0, h= 12, txt = "Fecha:", border= "RT", 
+                align= "L", fill = 0)
+
+        self.pdf.cell(w=35, h= 12,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=100, h= 12, txt = f'Nº Expediente: {ensayo.muestra.expediente.expediente}',border= "LRB", 
+                align= "C", fill = 0)
+        if fechaInicio == fechaFin:
+            self.pdf.multi_cell(w=0, h= 12, txt = fechaInicio.strftime("%d/%m/%Y"), border= "RB", 
+                    align= "C", fill = 0)
+        else:
+              self.pdf.multi_cell(w=0, h= 12, txt = f'Fecha fin: {fechaFin.strftime("%d/%m/%Y")} ', border= "RB", 
+                    align= "L", fill = 0)
+              
+
+        #Celda I/D muestra
+        self.pdf.multi_cell(w=0, h= 5,border= 0,
+                align= "C", fill = 0)
+        self.pdf.cell(w=130, h= 8,border= 0, txt= f"Material: {self.descripcion.id_fabricante}",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=60, h= 8,border= 0, txt= f"Identificación: {self.identificacion}",
+                align= "J", fill = 0)
+
+        #Celda Tratamiento de muestras  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.cell(w=65, h= 8,border= "LT", txt= "CONDICIONES MUESTRA",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.multi_cell(w=125, h= 8,border= "TR", txt= f"La muestra se ensaya {ensayoForma}",
+                align= "J", fill = 0)
+
+
+        #Celda Condiciones ambientales  
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "CONDICIONES AMBIENTALES",
+                align= "J", fill = 0)
+
+        self.pdf.set_font('Arial', '', 12)    
+        self.pdf.cell(w=95, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaEnsayo} ºC",
+                align= "C", fill = 0)
+
+        self.pdf.multi_cell(w=95, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
+                align= "C", fill = 0)
+
+
+        #Celda Equipos
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "EQUIPOS DE ENSAYO",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        self.pdf.multi_cell(w=190, h= 8,border= "LBR", txt = "Equipos: " + " | ".join(equipo.codigo for equipo in equipos),###
+                align= "J", fill = 0)
+        
+
+
+        # Celda Resultados
+        self.pdf.set_font('Arial', 'B', 12) 
+        self.pdf.multi_cell(w=190, h= 8,border= "LRT", txt= "RESULTADOS",
+                align= "J", fill = 0)
+        self.pdf.set_font('Arial', '', 12)
+        self.pdf.multi_cell( w=190, h=8, border="LR", align="L",
+                txt=f"Se llevan a cabo {ensayo.nRepeticiones} comprobaciones, mediante {ensayo.get_tipoFuenteIgnicion_display().lower()}, dicha fuente se mantiene activa durante {ensayo.tiempoFuenteIgnicion} segundos.",
+                fill=0)
+
+        self.pdf.multi_cell(w=190, h= 100,border= "LR", fill = 0)
+
+        # Ruta de la imagen
+        formulaImage_path = os.path.join(
+                self.rutaAbsoluta,
+                "Imagenes",
+                "bz.png"
+        )
+
+        # Medidas de la imagen
+        image_width = 100
+        image_height = 100
+
+        # Calcular posición horizontal para centrar
+        page_width = self.pdf.w - 2 * self.pdf.l_margin  # Ancho de la página sin márgenes
+        x_position = (page_width - image_width) / 2 + self.pdf.l_margin  # Centrar considerando los márgenes
+
+        # Obtener la posición actual después del texto
+        y_position = self.pdf.get_y() - (image_height)  # +10 para dejar un pequeño espacio después del texto
+
+        #volvemos el cursor a después de la imagen
+        self.pdf.set_y(y_position + image_height)
+
+        # Insertar la imagen centrada
+        self.pdf.image(formulaImage_path, x=x_position, y=y_position, w=image_width, h=image_height, link="http://www.lom.upm.es", type='PNG')
+
+        self.pdf.multi_cell(w=190, h= 6,border= "LR", fill = 0)
+        
+        self.pdf.multi_cell(w=190, h=8, border="LR", align="L", txt=f"{ensayo.get_tipoIgnicion_display()}. Clase de combustión: {ensayo.resultado}", 
+                fill=0)
+
+        """clasificacion=""
+        try:
+            # Intentamos convertir a número
+            resultado_num = float(resultado)
+            if resultado_num <= 1000:
+                clasificacion = "clasifica como polvo IIIC, polvo conductivo"
+            else:
+                clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
+        except ValueError:
+            # Si no es numérico (por ejemplo ">4E10")
+            if resultado == "<1E+03":
+                clasificacion = "clasifica como polvo IIIC, polvo conductivo"
+            else:
+                clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
+
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"RESISTIVIDAD ELECTRICA EN CAPA: {resultadoRec} ohm · m, {clasificacion}",
+                align= "J", fill = 0)"""
+        
+        
+        
+        self.pdf.multi_cell(w=190, h= 8,border= "LR", fill = 0)
+             
+        #Firma
+        self.pdf.set_font('Arial', '', 14) 
+        self.pdf.cell(w=95, h= 8,border= 1, txt= f"Conforme:",
+                align= "J", fill = 0)
+        self.pdf.multi_cell(w=95, h= 8,border= 1, txt= f"Realizado: {ensayo.usuario.firmas.firma}",###
                 align= "J", fill = 0)
         
         # Agregar más contenido dinámico aquí...

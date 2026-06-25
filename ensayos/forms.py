@@ -1832,6 +1832,16 @@ class BZForm(forms.Form):
         ("3", "3"),
         ("4", "4"),
         ("5", "5"),
+        ("6", "6"),
+    ]
+
+    clasesIgnicion= [
+        ("1", "Sin ignición"),
+        ("2", "Breve ignición, extinción rápida"),
+        ("3", "Combustión localizada o brasa menor de 40 mm"),
+        ("4", "Brasa sin chispas o descomposición lenta sin llama"),
+        ("5", "Chisporroteo o combustión lenta con llama"),
+        ("6", "Combustión muy rápida con llama o descomposición sin llama"),
     ]
 
     fuenteIgnicion= [
@@ -1884,19 +1894,24 @@ class BZForm(forms.Form):
         choices=fuenteIgnicion,
         label="Fuente de ignición", 
         initial= "1",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7;', 'required': 'required'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; ', 'required': 'required'}),
     )
 
     tiempoFuenteIgnicion= forms.IntegerField(
-        label="Tiempo ignición",
+        label="Tiempo ignición (s)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
     ) 
+
+    tipoIgnicion= forms.ChoiceField(
+        choices=clasesIgnicion,
+        label= "Tipo de combustión",
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+    )
     
     resultado= forms.ChoiceField(
         choices=ResultadosPosibles,
         label= "Resultado",
         widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
-
     )
 
     observacion=forms.CharField(
