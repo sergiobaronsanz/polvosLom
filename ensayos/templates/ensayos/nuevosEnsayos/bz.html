@@ -24,17 +24,17 @@
 	  </div>
   </div>
 
-  <div class= "row mt-3 mb-3">
-      <div class= "col text-nowrap">
-        {{formBZ.temperaturaEnsayo.label}}
-        {{formBZ.temperaturaEnsayo}}
-
-      </div>
-      
+  <div class= "row mt-3 mb-3">      
       <div class= "col text-nowrap">
         {{formBZ.humedad.label}}
         {{formBZ.humedad}}
       </div>
+
+	  <div class= "col text-nowrap">
+        {{formBZ.tipoFuenteIgnicion.label}}
+        {{formBZ.tipoFuenteIgnicion}}
+	</div>
+	  
   </div>
 
   <div class= "row">
@@ -43,10 +43,6 @@
         {{formBZ.nRepeticiones}}
     </div>
     
-	<div class= "col text-nowrap">
-        {{formBZ.tipoFuenteIgnicion.label}}
-        {{formBZ.tipoFuenteIgnicion}}
-	</div>
 
     <div class= "col text-nowrap">
         {{formBZ.tiempoFuenteIgnicion.label}}
@@ -79,18 +75,34 @@
     <img src= "{% static "img/ensayos/bz.jpg" %}" class= "mb-5 w-100 m-auto">
 
     
+	<table id= "tabla" class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                {%for form in formLieResultados.forms.0%}
+                    <th class="align-middle">{{form.label}}</th>
+                {%endfor%}
 
-    <div class= "col-12 mt-3 mb-3 row">
-        <div class= " col-9 mt-3 mb-3">
-            {{formBZ.tipoIgnicion.label}}
-            {{formBZ.tipoIgnicion}}
-        </div>
-        <div class= "col-3 mt-3 mb-3">
-            {{formBZ.resultado.label}}
-            {{formBZ.resultado}}
-        </div>
-    </div>
-    
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            {{ formBZResultados.management_form }}
+            {%for form in formBZResultados%}
+                <tr class="templateRow">
+                    <td class= "temperaturaEnsayo">{{form.temperaturaEnsayo}}</td>
+                    <td class= "tipoIgnicion">{{form.tipoIgnicion}}</td>
+                    <td class= "resultado">{{form.resultado}}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+
+	<div class= " col-12 d-flex justify-content-between">
+		<div class= "col-2 d-flex justify-content-between">
+			<button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
+			<button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+		</div>
+	</div>
+
 
     <div class= "col-12 mt-3 mb-3">
         {{formBZ.observacion.label}}
@@ -105,5 +117,6 @@
 
 {%block script%}  
     <script> ensayo= "bz" </script> 
+	<script src="{%static 'js/ensayos/general.js'%}"></script> 
     <script src="{%static 'js/ensayos/bz.js'%}"></script> 
 {%endblock%}
