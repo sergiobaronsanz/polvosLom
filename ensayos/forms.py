@@ -1870,13 +1870,6 @@ class BZForm(forms.Form):
     )
 
 
-    temperaturaEnsayo = forms.DecimalField(
-        decimal_places=2,
-        max_digits=5,
-        label="Temperatura Ensayo",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
-    )
-
     humedad= forms.DecimalField(
         decimal_places=2,
         max_digits=5,
@@ -1902,20 +1895,50 @@ class BZForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
     ) 
 
-    tipoIgnicion= forms.ChoiceField(
+    observacion=forms.CharField(
+        label= "Observación",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+    )
+
+class BZResultadosForm(forms.Form):
+
+    ResultadosPosibles = [
+        ("1", "1"),
+        ("2", "2"),
+        ("3", "3"),
+        ("4", "4"),
+        ("5", "5"),
+    ]
+
+    clasesIgnicion= [
+            ("1", "Sin ignición"),
+            ("2", "Breve ignición, extinción rápida"),
+            ("3", "Combustión localizada o brasa menor de 40 mm"),
+            ("4", "Brasa sin chispas o descomposición lenta sin llama"),
+            ("5", "Chisporroteo o combustión lenta con llama"),
+            ("6", "Combustión muy rápida con llama o descomposición sin llama"),
+    ]
+
+
+    temperaturaEnsayo = forms.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        label="Temperatura Ensayo",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+    )
+
+     tipoIgnicion= forms.ChoiceField(
         choices=clasesIgnicion,
         label= "Tipo de combustión",
         widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
     )
-    
+
     resultado= forms.ChoiceField(
         choices=ResultadosPosibles,
         label= "Resultado",
         widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
     )
 
-    observacion=forms.CharField(
-        label= "Observación",
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
-    )
+
+BZResultadosFormFormSet= formset_factory(BZResultadosForm, extra=1)
