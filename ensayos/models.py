@@ -1019,7 +1019,6 @@ class BZ(models.Model):
     
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
-    temperaturaEnsayo= models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Temperatura Ensayo", blank= True, null= True)
     humedad=  models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
     nRepeticiones= models.IntegerField(verbose_name = "Número repeticiones", default=10, blank=True, null=True)
     tipoFuenteIgnicion= models.CharField(verbose_name= "Tipo de fuente de ignición", choices=fuenteIgnicion, max_length=100)
@@ -1042,4 +1041,35 @@ class BZ(models.Model):
         
     def __str__(self):
         return f"{self.muestra} | Clase combustión: {self.resultado}" 
+
+class ResultadosBz (models.Model):
+
+     ResultadosPosibles = [
+        ("1", "1"),
+        ("2", "2"),
+        ("3", "3"),
+        ("4", "4"),
+        ("5", "5"),
+    ]
+
+    clasesIgnicion= [
+            ("1", "Sin ignición"),
+            ("2", "Breve ignición, extinción rápida"),
+            ("3", "Combustión localizada o brasa menor de 40 mm"),
+            ("4", "Brasa sin chispas o descomposición lenta sin llama"),
+            ("5", "Chisporroteo o combustión lenta con llama"),
+            ("6", "Combustión muy rápida con llama o descomposición sin llama"),
+    ]
+
+    ensayo= models.ForeignKey("BZ", on_delete=models.CASCADE, verbose_name="Ensayo BZ")
+    temperaturaEnsayo= models.IntegerField(verbose_name="Temperatura de ensayo")
+    tipoIgnicion= models.CharField(verbose_name="Tipo ignición", choices=clasesIgnicion, max_length=100, blank=True, null=True)
+    resultado=models.CharField(verbose_name="Clase combustión", choices=ResultadosPosibles, max_length=100, blank=True, null=True)
+    
+    class Meta():
+        verbose_name="Resultado BZ"
+        verbose_name_plural="Resultados BZ"
+        
+    def __str__(self):
+        return f"{self.ensayo} | {self.resultado} "
     
