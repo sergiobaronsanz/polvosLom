@@ -3065,6 +3065,7 @@ class PlantillasEnsayo():
     def bz(self):
         ensayo= BZ.objects.get(muestra= self.muestra)
         equipos=ensayo.equipos.all()
+        resultados= ResultadosBz.objects.filter(ensayo=ensayo)
         ensayoForma= self.descripcion.get_formaEnsayo_display()
         fechaInicio= ensayo.fechaInicio
         fechaFin= ensayo.fechaFin
@@ -3126,10 +3127,8 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
 
         self.pdf.set_font('Arial', '', 12)    
-        self.pdf.cell(w=95, h= 8,border= "L", txt= f"Temperatura: {ensayo.temperaturaEnsayo} ºC",
-                align= "C", fill = 0)
 
-        self.pdf.multi_cell(w=95, h= 8,border= "R", txt= f"Humedad: {ensayo.humedad} %",
+        self.pdf.multi_cell(w=190, h= 8,border= "RL", txt= f"Humedad: {ensayo.humedad} %",
                 align= "C", fill = 0)
 
 
@@ -3149,7 +3148,7 @@ class PlantillasEnsayo():
                 align= "J", fill = 0)
         self.pdf.set_font('Arial', '', 12)
         self.pdf.multi_cell( w=190, h=8, border="LR", align="L",
-                txt=f"Se llevan a cabo {ensayo.nRepeticiones} comprobaciones, mediante {ensayo.get_tipoFuenteIgnicion_display().lower()}, dicha fuente se mantiene activa durante {ensayo.tiempoFuenteIgnicion} segundos.",
+                txt=f"El ensayo se lleva a cabo mediante {ensayo.get_tipoFuenteIgnicion_display().lower()}, dicha fuente se mantiene activa durante {ensayo.tiempoFuenteIgnicion} segundos.",
                 fill=0)
 
         self.pdf.multi_cell(w=190, h= 100,border= "LR", fill = 0)
@@ -3179,31 +3178,13 @@ class PlantillasEnsayo():
         self.pdf.image(formulaImage_path, x=x_position, y=y_position, w=image_width, h=image_height, link="http://www.lom.upm.es", type='PNG')
 
         self.pdf.multi_cell(w=190, h= 6,border= "LR", fill = 0)
-        
-        self.pdf.multi_cell(w=190, h=8, border="LR", align="L", txt=f"{ensayo.get_tipoIgnicion_display()}. Clase de combustión: {ensayo.resultado}", 
+
+        for resultado in resultados:
+             self.pdf.multi_cell(w=190, h=8, border="LR", align="L", txt=f"Para una temperatura de {resultado.temperaturaEnsayo} ºC, se han realizado un total de {resultado.nRepeticiones} repeticiones, cuyo resultado ha sido: {resultado.get_tipoIgnicion_display()}. Clase de combustión: {resultado.resultado}", 
                 fill=0)
-
-        """clasificacion=""
-        try:
-            # Intentamos convertir a número
-            resultado_num = float(resultado)
-            if resultado_num <= 1000:
-                clasificacion = "clasifica como polvo IIIC, polvo conductivo"
-            else:
-                clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
-        except ValueError:
-            # Si no es numérico (por ejemplo ">4E10")
-            if resultado == "<1E+03":
-                clasificacion = "clasifica como polvo IIIC, polvo conductivo"
-            else:
-                clasificacion = "clasifica como polvo IIIB, polvo no conductivo"
-
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", txt= f"RESISTIVIDAD ELECTRICA EN CAPA: {resultadoRec} ohm · m, {clasificacion}",
-                align= "J", fill = 0)"""
+             self.pdf.multi_cell(w=190, h= 8,border= "LR", fill = 0)
         
         
-        
-        self.pdf.multi_cell(w=190, h= 8,border= "LR", fill = 0)
              
         #Firma
         self.pdf.set_font('Arial', '', 14) 

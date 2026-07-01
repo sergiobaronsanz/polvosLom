@@ -3122,10 +3122,11 @@ def bz (request, muestra_id):
     if request.method == 'POST':
         #Recibimos los formularios diferenciándolos con el prefijo
         formBZ= BZForm(request.POST, prefix='bz')
+        BZResultadosFormSet= formset_factory(BZResultadosForm, extra=0)
         formBZResultados= BZResultadosFormSet(request.POST, prefix='BZResultados') 
         equiposEnsayo= EquiposEnsayoForm(request.POST, prefix= 'equiposEnsayo')
         
-        if formBZ.is_valid() and formBZResultados.is_valid() equiposEnsayo.is_valid():
+        if formBZ.is_valid() and formBZResultados.is_valid() and equiposEnsayo.is_valid():
 
             muestra= get_object_or_404(Muestras, id= request.POST.get('bz-muestra')) 
             
@@ -3138,7 +3139,6 @@ def bz (request, muestra_id):
             fechaInicio= formBZ.cleaned_data['fechaInicio']
             fechaFin= formBZ.cleaned_data['fechaFin']
             humedad= formBZ.cleaned_data['humedad']
-            nRepeticiones= formBZ.cleaned_data['nRepeticiones']
             tipoFuenteIgnicion= formBZ.cleaned_data['tipoFuenteIgnicion']
             tiempoFuenteIgnicion= formBZ.cleaned_data['tiempoFuenteIgnicion']
 
@@ -3150,8 +3150,6 @@ def bz (request, muestra_id):
                 humedad= humedad,
                 fechaInicio= fechaInicio,
                 fechaFin= fechaFin,
-                temperaturaEnsayo= temperaturaEnsayo,
-                nRepeticiones= nRepeticiones,
                 tipoFuenteIgnicion= tipoFuenteIgnicion,
                 tiempoFuenteIgnicion= tiempoFuenteIgnicion,
                 observacion= observacion,
@@ -3174,11 +3172,13 @@ def bz (request, muestra_id):
             for form in formBZResultados:
                 if form.cleaned_data:  # Para evitar formularios vacíos
                     temperaturaEnsayo= form.cleaned_data['temperaturaEnsayo']
+                    nRepeticiones= form.cleaned_data['nRepeticiones']
                     tipoIgnicion= form.cleaned_data['tipoIgnicion']
                     resultado= form.cleaned_data['resultado']
 
                     resultadosBz=ResultadosBz.objects.create(
-                        ensayo= Bz,
+                        ensayo= bz,
+                        nRepeticiones= nRepeticiones,
                         temperaturaEnsayo= temperaturaEnsayo,
                         tipoIgnicion= tipoIgnicion,
                         resultado= resultado,
@@ -3213,9 +3213,7 @@ def bz (request, muestra_id):
             muestra= Muestras.objects.get(id=muestra_id) 
             fechaInicio= str(ensayo_BZ.fechaInicio)
             fechaFin= str(ensayo_BZ.fechaFin)
-            temperaturaEnsayo= ensayo_BZ.temperaturaEnsayo
             humedad=ensayo_BZ.humedad
-            nRepeticiones= ensayo_BZ.nRepeticiones
             tipoFuenteIgnicion= ensayo_BZ.tipoFuenteIgnicion
             tiempoFuenteIgnicion= ensayo_BZ.tiempoFuenteIgnicion
             tipoIgnicion=ensayo_BZ.tipoIgnicion
@@ -3227,7 +3225,6 @@ def bz (request, muestra_id):
                 'fechaInicio': fechaInicio,
                 'fechaFin': fechaFin,
                 'humedad': humedad,
-                'nRepeticiones': nRepeticiones,
                 'tipoFuenteIgnicion': tipoFuenteIgnicion,
                 'tiempoFuenteIgnicion': tiempoFuenteIgnicion,
                 'observacion': observacion,
@@ -3240,10 +3237,11 @@ def bz (request, muestra_id):
             initial_data = []
             for resultado in resultados:
                 initial_data.append({
-                    'temperaturaEnsayo'= resultado.temperaturaEnsayo,
-                    'tipoIgnicion'= resultado.tipoIgnicion,
-                    'resultado'= resultado.resultado, 
-                }
+                    'temperaturaEnsayo':resultado.temperaturaEnsayo,
+                    'nRepeticiones': resultado.nRepeticiones,
+                    'tipoIgnicion': resultado.tipoIgnicion,
+                    'resultado': resultado.resultado, 
+                })
             BZResultadosFormSet = formset_factory(BZResultadosForm, extra=0)
             formBZResultados = BZResultadosFormSet(prefix='BZResultados',initial=initial_data)
             
@@ -3254,6 +3252,7 @@ def bz (request, muestra_id):
             formBZ= BZForm(prefix='bz')
             formBZ.fields['muestra'].queryset = muestras_queryset
 
+            BZResultadosFormSet = formset_factory(BZResultadosForm, extra=1)
             formBZResultados=BZResultadosFormSet(prefix='BZResultados')
             equiposEnsayo= EquiposEnsayoForm(prefix= 'equiposEnsayo', initial= {'equiposEnsayo': equipos})           
 

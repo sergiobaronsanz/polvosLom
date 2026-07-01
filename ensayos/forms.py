@@ -1877,11 +1877,6 @@ class BZForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
     )  
 
-    nRepeticiones= forms.IntegerField(
-        label="Número repeticiones",
-        initial=10,
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})
-    )  
 
     tipoFuenteIgnicion= forms.ChoiceField(
         choices=fuenteIgnicion,
@@ -1909,6 +1904,7 @@ class BZResultadosForm(forms.Form):
         ("3", "3"),
         ("4", "4"),
         ("5", "5"),
+        ("6", "6"),
     ]
 
     clasesIgnicion= [
@@ -1924,21 +1920,31 @@ class BZResultadosForm(forms.Form):
     temperaturaEnsayo = forms.DecimalField(
         decimal_places=2,
         max_digits=5,
-        label="Temperatura Ensayo",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Otras atributos del widget si es necesario
+        label="Temperatura Ensayo (min)",
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': True, 'style': 'text-align: center;'}),
+        required=True, 
     )
 
-     tipoIgnicion= forms.ChoiceField(
+    nRepeticiones= forms.IntegerField(
+        label="Número repeticiones",
+        initial=10,
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': True, 'style': 'text-align: center;'}),
+        required=True, 
+    )  
+
+    tipoIgnicion= forms.ChoiceField(
         choices=clasesIgnicion,
         label= "Tipo de combustión",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': True, 'style': 'text-align: center;'}),
+        required=True, 
     )
 
     resultado= forms.ChoiceField(
         choices=ResultadosPosibles,
         label= "Resultado",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'})  # Agregar clases CSS si es necesario
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'required': True,'style': 'text-align: center; '}),
+        required=True, 
     )
 
 
-BZResultadosFormFormSet= formset_factory(BZResultadosForm, extra=1)
+BZResultadosFormSet= formset_factory(BZResultadosForm, extra=1)

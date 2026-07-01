@@ -1001,6 +1001,7 @@ class BZ(models.Model):
         ("3", "3"),
         ("4", "4"),
         ("5", "5"),
+        ("6", "6"),
     ]
 
     clasesIgnicion= [
@@ -1020,7 +1021,6 @@ class BZ(models.Model):
     muestra= models.ForeignKey(Muestras, on_delete=models.CASCADE, verbose_name="Muestra")
     ensayo= models.ForeignKey(ListaEnsayos, on_delete=models.CASCADE, verbose_name="Ensayo")
     humedad=  models.DecimalField(decimal_places=0, max_digits=5, verbose_name="Humedad Ambiente", blank= True, null= True)
-    nRepeticiones= models.IntegerField(verbose_name = "Número repeticiones", default=10, blank=True, null=True)
     tipoFuenteIgnicion= models.CharField(verbose_name= "Tipo de fuente de ignición", choices=fuenteIgnicion, max_length=100)
     tiempoFuenteIgnicion= models.IntegerField(verbose_name="Tiempo fuente ignición (s)", blank=True, null=True)
     equipos= models.ManyToManyField(Equipos, verbose_name="Equipos")
@@ -1044,12 +1044,13 @@ class BZ(models.Model):
 
 class ResultadosBz (models.Model):
 
-     ResultadosPosibles = [
+    ResultadosPosibles = [
         ("1", "1"),
         ("2", "2"),
         ("3", "3"),
         ("4", "4"),
         ("5", "5"),
+        ("6", "6"),
     ]
 
     clasesIgnicion= [
@@ -1063,6 +1064,7 @@ class ResultadosBz (models.Model):
 
     ensayo= models.ForeignKey("BZ", on_delete=models.CASCADE, verbose_name="Ensayo BZ")
     temperaturaEnsayo= models.IntegerField(verbose_name="Temperatura de ensayo")
+    nRepeticiones= models.IntegerField(verbose_name = "Número repeticiones", default=10, blank=True, null=True)
     tipoIgnicion= models.CharField(verbose_name="Tipo ignición", choices=clasesIgnicion, max_length=100, blank=True, null=True)
     resultado=models.CharField(verbose_name="Clase combustión", choices=ResultadosPosibles, max_length=100, blank=True, null=True)
     
