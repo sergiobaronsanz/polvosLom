@@ -136,7 +136,7 @@ STATIC_URL = '/static/'
 
 if not DEBUG:  # 👉 SERVIDOR / PRODUCCIÓN
     STATIC_ROOT = BASE_DIR / "staticfiles"
-    #STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 
 # Default primary key field type
