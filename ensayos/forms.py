@@ -1920,7 +1920,7 @@ class BZResultadosForm(forms.Form):
     temperaturaEnsayo = forms.DecimalField(
         decimal_places=2,
         max_digits=5,
-        label="Temperatura Ensayo (min)",
+        label="Temperatura Ensayo (ºC)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': True, 'style': 'text-align: center;'}),
         required=True, 
     )
