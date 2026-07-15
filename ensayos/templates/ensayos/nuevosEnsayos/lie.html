@@ -7,37 +7,37 @@
 
 {%block condiciones%} 
 
-  <div class= "row mt-3 mb-3">
-      <div class= "col d-flex flex-column align-items-start">
+  <div class= "row mt-3 ">
+      <div class= "col-md-6 d-flex flex-column align-items-start mb-3">
           {{formLie.muestra.label}}
           {{formLie.muestra}}
       </div>
 
-      <div class= "col-3 d-flex flex-column align-items-start">
+      <div class= "col-md-3 d-flex flex-column align-items-start mb-3">
 		{{formLie.fechaInicio.label}}
 		{{formLie.fechaInicio}}
 	  </div>
   
-	  <div class= "col-3 d-flex flex-column align-items-start">
+	  <div class= "col-md-3 d-flex flex-column align-items-start mb-3">
 		  {{formLie.fechaFin.label}}
 		  {{formLie.fechaFin}}
 	  </div>
   </div>
 
-  <div class= "row mt-3 mb-3">
-      <div class= "col text-nowrap">
+  <div class= "row mt-3">
+      <div class= "col mb-3 text-nowrap">
         {{formLie.temperaturaAmbiente.label}}
         {{formLie.temperaturaAmbiente}}
 
       </div>
 
-	  <div class= "col text-nowrap">
+	  <div class= "col mb-3 text-nowrap">
         {{formLie.temperaturaEsfera.label}}
         {{formLie.temperaturaEsfera}}
 
       </div>
       
-      <div class= "col text-nowrap">
+      <div class= "col mb-3 text-nowrap">
         {{formLie.humedad.label}}
         {{formLie.humedad}}
       </div>
@@ -70,7 +70,7 @@
    
 
 {%block resultados%} 
-<div class= "row mt-3 mb-3 col m-auto">
+<div class= "row mt-3 mb-3 col m-auto p-0">
     
     {% if formLie.non_field_errors %}
             <div>
@@ -81,7 +81,7 @@
     {% endif %}
 
       
-    <table id= "tabla" class="table table-striped table-bordered">
+    <table id= "tabla" class="table table-responsive table-bordered">
         <thead class="thead-dark">
             <tr>
                 {%for form in formLieResultados.forms.0%}
@@ -105,16 +105,16 @@
         </tbody>
     </table>
     <div class= " col-12 d-flex justify-content-between">
-		<div class= "col-2 d-flex justify-content-between">
-			<button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
-			<button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
-		</div>
+      <div class= "col-md-2 col-6 d-flex justify-content-between">
+          <button type= "button" id= "añadir-fila" class= "col-5 btn btn-info"><p class= "h4 m-0"> + </p></button>
+          <button type= "button" id= "borrar-fila" class= "col-5 border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+      </div>
 
-		<div>
-			<button type="button" class="btn btn-primary" id="abrirModal" data-toggle="modal" data-target="#ensayosModal">
-				Datos desde archivo
-			</button>
-		</div>
+      <div>
+        <button type="button" class=" col btn btn-primary" id="abrirModal" data-toggle="modal" data-target="#ensayosModal">
+          Datos desde archivo
+        </button>
+      </div>
 	</div>
 
 	<!--Modal-->

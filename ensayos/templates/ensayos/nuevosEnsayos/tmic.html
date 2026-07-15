@@ -2,36 +2,38 @@
 {%load static%}
 
 {%block tituloEnsayo%} TMIc ({{ensayo.normativa}})  {%endblock%}
-
-
-
+<!---->
+<!---->
+<!--TAAAAAAABLA RESPONSIVE: hay que seguir con TMIN, hay que añadirle tabla-responsive a table y en las primereos poner col-md-6 en el div de muestra y los demas-->
+<!---->
+<!---->
 {%block condiciones%} 
 
-  <div class= "row mt-3 mb-3">
-      <div class= "col d-flex flex-column align-items-start">
+  <div class= "row mt-3">
+      <div class= "col-md-6 d-flex flex-column align-items-start mb-3">
           {{formTmic.muestra.label}}
           {{formTmic.muestra}}
       </div>
 
-      <div class= "col-3 d-flex flex-column align-items-start">
+      <div class= "col-md-3  d-flex flex-column align-items-start mb-3">
 		{{formTmic.fechaInicio.label}}
 		{{formTmic.fechaInicio}}
 	  </div>
   
-	  <div class= "col-3 d-flex flex-column align-items-start">
+	  <div class= "col-md-3  d-flex flex-column align-items-start mb-3">
 		  {{formTmic.fechaFin.label}}
 		  {{formTmic.fechaFin}}
 	  </div>
   </div>
 
   <div class= "row">
-      <div class= "col text-nowrap">
+      <div class= "col text-nowrap mb-3">
         {{formTmic.temperaturaAmbiente.label}}
         {{formTmic.temperaturaAmbiente}}
 
       </div>
       
-      <div class= "col text-nowrap">
+      <div class= "col text-nowrap mb-3">
         {{formTmic.humedad.label}}
         {{formTmic.humedad}}
       </div>
@@ -39,19 +41,19 @@
       
   </div>
 
-  <div class= "row">
-	<div class= "col text-nowrap">
+  <div class= "row d-flex align-items-end justify-content-center">
+	<div class= "col text-nowrap mb-3">
         {{formTmic.presion.label}}
         {{formTmic.presion}}
     </div>
 
-	<div class= "col ">
+	<div class= "col mb-3">
         {{formTmic.tiempoMaxEnsayo.label}}
         {{formTmic.tiempoMaxEnsayo}}
     </div>
   </div>
 
-  <div class= "row mt-4 d-flex justify-content-center">
+  <div class= "row d-flex justify-content-center">
     <div class= "col-8 text-nowrap">
       {{equiposEnsayo}}
     </div>
@@ -62,7 +64,7 @@
    
 
 {%block resultados%} 
-<div class= "row mt-3 mb-3 col m-auto">
+<div class= "row mt-3 mb-3 col m-auto p-0">
     
     {% if formTmic.non_field_errors %}
             <div>
@@ -73,7 +75,7 @@
     {% endif %}
 
       
-    <table id= "tabla" class="table table-striped table-bordered">
+    <table id= "tabla" class="table coltable-striped table-responsive table-bordered">
         <thead class="thead-dark">
             <tr>
                 {%for form in formTmicResultados.forms.0%}
@@ -96,9 +98,9 @@
             {%endfor%}
         </tbody>
     </table>
-    <div class= "col-2 d-flex justify-content-between">
-        <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
-        <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+    <div class= "col-md-2 col-6 d-flex justify-content-between">
+        <button type= "button" id= "añadir-fila" class= "col-5 btn btn-info"><p class= "h4 m-0"> + </p></button>
+        <button type= "button" id= "borrar-fila" class= "col-5 border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
     </div>
 
     <div class= "col-12 mt-3 mb-3">

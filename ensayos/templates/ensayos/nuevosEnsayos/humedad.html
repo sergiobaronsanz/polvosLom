@@ -6,47 +6,47 @@
 {%block condiciones%} 
   
 
-  <div class= "row mt-3 mb-3">
-    <div class= "col-6 d-flex flex-column align-items-start">
+  <div class= "row mt-3">
+    <div class= "col-md-6 col-sm-12 mb-3 d-flex flex-column align-items-start">
         {{form.muestra.label}}
         {{form.muestra}}
     </div>
 
-    <div class= "col-3 d-flex flex-column align-items-start">
+    <div class= "col-md-3 col-sm-6 mb-3 d-flex flex-column align-items-start">
       {{form.fechaInicio.label}}
       {{form.fechaInicio}}
     </div>
 
-	<div class= "col-3 d-flex flex-column align-items-start">
-		{{form.fechaFin.label}}
-		{{form.fechaFin}}
-	</div>
+    <div class= "col-md-3 col-sm-6 mb-3 d-flex flex-column align-items-start">
+      {{form.fechaFin.label}}
+      {{form.fechaFin}}
+    </div>
 
   </div>
-  <div class= "col-10 m-auto ">
-      <div class= "d-flex justify-content-between align-items-center mt-3 mb-3">
-          <div>
+  <div class= "col-md-10 col-sm-12 m-auto">
+      <div class= "d-flex justify-content-between align-items-end mb-3">
+          <div class="col mb-3 ">
               {{form.temperaturaAmbiente.label}}
               {{form.temperaturaAmbiente}}
           </div>
-          <div>
+          <div class="col mb-3 ">
               {{form.humedad.label}}
               {{form.humedad}}
           </div>
       </div>
 
-      <div class= "d-flex justify-content-between align-items-center mt-3 mb-3 ">
-          <div>
+      <div class= "d-flex justify-content-between align-items-end ">
+          <div class="col mb-3 ">
               {{form.criterio.label}}
               {{form.criterio}}
           </div>
 
-          <div class= "d-flex flex-column" id= "tiempoEnsayo">
+          <div class= "col d-flex flex-column mb-3 " id= "tiempoEnsayo">
               {{form.tiempoEnsayo.label}}
               {{form.tiempoEnsayo}}
           </div>
 
-          <div>
+          <div class="col mb-3 ">
             {{form.tDesecacion.label}}
             {{form.tDesecacion}}
         </div>
@@ -54,7 +54,7 @@
       </div>
   </div>
 
-  <div class= "row mt-4 d-flex justify-content-center">
+  <div class= "row d-flex justify-content-center">
     <div class= "col-8 text-nowrap">
       {{equiposEnsayo}}
     </div>
@@ -63,7 +63,7 @@
 {%endblock%}
 
 {%block resultados%} 
-  <div class= "col-3 m-auto">
+  <div class= "col-md-3  m-auto">
     {{form.desviacion.label}}
     {{form.desviacion}}
   </div>

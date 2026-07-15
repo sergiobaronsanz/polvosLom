@@ -7,43 +7,43 @@
 
 {%block condiciones%} 
 
-  <div class= "row mt-3 mb-3">
-      <div class= "col d-flex flex-column align-items-start">
+  <div class= "row mt-3">
+      <div class= "col-md-6 d-flex flex-column align-items-start mb-3">
           {{formN1.muestra.label}}
           {{formN1.muestra}}
       </div>
 
-      <div class= "col-3 d-flex flex-column align-items-start">
+      <div class= "col-md-3 d-flex flex-column align-items-start mb-3">
 		{{formN1.fechaInicio.label}}
 		{{formN1.fechaInicio}}
 	  </div>
   
-	  <div class= "col-3 d-flex flex-column align-items-start">
+	  <div class= "col-md-3 d-flex flex-column align-items-start mb-3">
 		  {{formN1.fechaFin.label}}
 		  {{formN1.fechaFin}}
 	  </div>
   </div>
 
-  <div class= "row mt-3 mb-3">
-      <div class= "col text-nowrap">
+  <div class= "row mt-3">
+      <div class= "col text-nowrap mb-3">
         {{formN1.temperaturaAmbiente.label}}
         {{formN1.temperaturaAmbiente}}
 
       </div>
       
-      <div class= "col text-nowrap">
+      <div class= "col text-nowrap mb-3">
         {{formN1.humedad.label}}
         {{formN1.humedad}}
       </div>
   </div>
 
   <div class= "row">
-    <div class= "col text-nowrap">
+    <div class= "col text-nowrap mb-3">
         {{formN1.tipoPolvo.label}}
         {{formN1.tipoPolvo}}
       </div>
     
-      <div class= "col text-nowrap">
+      <div class= "col text-nowrap mb-3">
         {{formN1.pruebaPreseleccion.label}}
         {{formN1.pruebaPreseleccion}}
       </div>
@@ -60,7 +60,7 @@
    
 
 {%block resultados%} 
-<div class= "row mt-3 mb-3 col m-auto">
+<div class= "row mt-3 mb-3 col m-auto p-0">
     
     {% if formN1.non_field_errors %}
             <div>
@@ -90,9 +90,9 @@
             {%endfor%}
         </tbody>
     </table>
-    <div class= "col-2 d-flex justify-content-between">
-        <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
-        <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+    <div class= "col-md-2 col-6 d-flex justify-content-between">
+        <button type= "button" id= "añadir-fila" class= "col-5 btn btn-info"><p class= "h4 m-0"> + </p></button>
+        <button type= "button" id= "borrar-fila" class= "col-5 border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
     </div>
 
     <div class= "col-12 mt-3 mb-3">

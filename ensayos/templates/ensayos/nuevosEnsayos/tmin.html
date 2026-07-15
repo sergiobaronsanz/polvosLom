@@ -8,42 +8,42 @@
 {%block condiciones%} 
 
   <div class= "row mt-3 mb-3">
-      <div class= "col d-flex flex-column align-items-start">
+      <div class= "col-md-6 mb-3 d-flex flex-column align-items-start">
           {{formTmin.muestra.label}}
           {{formTmin.muestra}}
       </div>
 
-	  <div class= "col-3 d-flex flex-column align-items-start">
+	  <div class= "col-md-3 mb-3 d-flex flex-column align-items-start">
 		{{formTmin.fechaInicio.label}}
 		{{formTmin.fechaInicio}}
 	  </div>
   
-	  <div class= "col-3 d-flex flex-column align-items-start">
+	  <div class= "col-md-3 mb-3 d-flex flex-column align-items-start">
 		  {{formTmin.fechaFin.label}}
 		  {{formTmin.fechaFin}}
 	  </div>
   </div>
 
   <div class= "row">
-      <div class= "col text-nowrap">
+      <div class= "col mb-3 text-nowrap">
         {{formTmin.temperaturaAmbiente.label}}
         {{formTmin.temperaturaAmbiente}}
 
       </div>
       
-      <div class= "col text-nowrap">
+      <div class= "col mb-3 text-nowrap">
         {{formTmin.humedad.label}}
         {{formTmin.humedad}}
       </div>
 
-	  <div class= "col text-nowrap">
+	  <div class= "col mb-3 text-nowrap">
         {{formTmin.presion.label}}
         {{formTmin.presion}}
       </div>
 
   </div>
 
-  <div class= "row mt-4 d-flex justify-content-center">
+  <div class= "row d-flex justify-content-center">
     <div class= "col-8 text-nowrap">
       {{equiposEnsayo}}
     </div>
@@ -54,7 +54,7 @@
    
 
 {%block resultados%} 
-<div class= "row mt-3 mb-3 col m-auto">
+<div class= "row mt-3 mb-3 col m-auto p-0">
     
     {% if formTmin.non_field_errors %}
             <div>
@@ -65,11 +65,12 @@
     {% endif %}
 
       
-    <table id= "tabla" class="table table-striped table-bordered">
+    <table id= "tabla" class="table table-striped table-responsive table-bordered">
+
         <thead class="thead-dark">
             <tr>
                 {%for form in formTminResultados.forms.0%}
-                    <th class="align-middle">{{form.label}}</th>
+                    <th class="align-middle" style= "width: 120px">{{form.label}}</th>
                 {%endfor%}
 
             </tr>
@@ -87,9 +88,9 @@
             {%endfor%}
         </tbody>
     </table>
-    <div class= "col-2 d-flex justify-content-between">
-        <button type= "button" id= "añadir-fila" class= "btn btn-info"><p class= "h4 m-0"> + </p></button>
-        <button type= "button" id= "borrar-fila" class= "border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
+    <div class= "col-md-2 col-6 d-flex justify-content-between">
+        <button type= "button" id= "añadir-fila" class= "col-5 btn btn-info"><p class= "h4 m-0"> + </p></button>
+        <button type= "button" id= "borrar-fila" class= "col-5 border-0 btn btn-danger"> <p class= "h4 m-0"> - </p></button>
     </div>
 
     <div class= "col-12 mt-3 mb-3">

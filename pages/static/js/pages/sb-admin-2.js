@@ -10,18 +10,30 @@
     };
   });
 
-  // Close any open menu accordions when window is resized below 768px
-  $(window).resize(function() {
-    if ($(window).width() < 768) {
+  // Solo reaccionar cuando cambie el ancho de la ventana
+  let lastWindowWidth = window.innerWidth;
+
+  $(window).on('resize', function () {
+
+    // Si solo ha cambiado la altura (Safari al hacer scroll), no hacer nada
+    if (window.innerWidth === lastWindowWidth) {
+      return;
+    }
+
+    lastWindowWidth = window.innerWidth;
+
+    // Cerrar los submenús en pantallas pequeñas
+    if (window.innerWidth < 768) {
       $('.sidebar .collapse').collapse('hide');
-    };
-    
-    // Toggle the side navigation when window is resized below 480px
-    if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
+    }
+
+    // Colapsar el menú lateral en pantallas muy pequeñas
+    if (window.innerWidth < 480 && !$(".sidebar").hasClass("toggled")) {
       $("body").addClass("sidebar-toggled");
       $(".sidebar").addClass("toggled");
       $('.sidebar .collapse').collapse('hide');
-    };
+    }
+
   });
 
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over

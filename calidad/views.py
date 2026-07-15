@@ -6,12 +6,19 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 #Equipos
 @login_required
-def equipos (request):
-    equipos= Equipos.objects.all().order_by('codigo')
-    
-    return render (request, "equipos/equipos.html",{
-        'equipos': equipos
-        
+def equipos(request):
+    equipos = Equipos.objects.all().order_by('codigo')
+
+    if request.method == "POST":
+        filtro = request.POST.get("filtro", "")
+
+        if filtro:
+            equipos = equipos.filter(codigo__icontains=filtro)
+            # o por nombre:
+            # equipos = equipos.filter(nombre__icontains=filtro)
+
+    return render(request, "equipos/equipos.html", {
+        "equipos": equipos,
     })
     
 #Alta de nuevos equipos

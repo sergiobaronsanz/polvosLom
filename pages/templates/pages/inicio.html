@@ -20,12 +20,12 @@
 			<!-- Earnings (Monthly) Card Example -->
 			<div class="col-xl-3 col-md-6 mb-4">
 				<div class="card border-left-primary shadow h-100 py-2">
-					<div class="card-body">
+					<div class="m-3">
 						<div class="row no-gutters align-items-center">
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
 									Expedientes abiertos</div>
-								<div class="h5 mb-0 font-weight-bold text-gray-800">{{nExpedientesAbiertos}}</div>
+								<div class="h5 font-weight-bold text-gray-800">{{nExpedientesAbiertos}}</div>
 							</div>
 						</div>
 					</div>
@@ -35,7 +35,7 @@
 			<!-- Earnings (Monthly) Card Example -->
 			<div class="col-xl-3 col-md-6 mb-4">
 				<div class="card border-left-success shadow h-100 py-2">
-					<div class="card-body">
+					<div class="m-3">
 						<div class="row no-gutters align-items-center">
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
@@ -51,7 +51,7 @@
 			<!-- Earnings (Monthly) Card Example -->
 			<div class="col-xl-3 col-md-6 mb-4">
 				<div class="card border-left-info shadow h-100 py-2">
-					<div class="card-body">
+					<div class="m-3">
 						<div class="row no-gutters align-items-center">
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Expedienets cerrados
@@ -70,7 +70,7 @@
 			<!-- Pending Requests Card Example -->
 			<div class="col-xl-3 col-md-6 mb-4">
 				<div class="card border-left-warning shadow h-100 py-2">
-					<div class="card-body">
+					<div class="m-3">
 						<div class="row no-gutters align-items-center">
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
@@ -94,7 +94,7 @@
 					<div class="card-header py-3">
 						<h6 class="m-0 font-weight-bold text-primary">Evolución ensayos</h6>
 					</div>
-					<div class="card-body">
+					<div class="m-3">
 						{%for expediente in evolucionExpedientes%}
 							<h4 class="small font-weight-bold"><a href= {%url 'revisarExpediente' expediente.id%}>{{expediente.expediente}} | {{expediente.empresa}}</a><span
 									class="float-right">{{expediente.porcentaje}}%</span></h4>
@@ -188,22 +188,27 @@
 		</div>
 
 		<!-- Content Row -->
+
+		<!-- Content Row -->
 		<div class="row">
 
-			<!-- Bar Chart -->
-			<div class="card shadow mb-4">
-				<div class="card-header py-3">
-					<h6 class="m-0 font-weight-bold text-primary">Expedientes por año</h6>
-				</div>
-				<div class="card-body">
-					<div class="chart-bar">
-						<canvas id="myBarChart"></canvas>
-					</div>
-					<hr>
-				</div>
-			</div>
+			<!-- Content Column -->
+			<div class="col-lg-12 mb-4">
 
-		
+				<!-- Project Card Example -->
+				<div class="card shadow mb-4 ">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Expedientes por año</h6>
+					</div>
+					<div class="card-body">
+						<div class="chart-bar">
+							<canvas id="myBarChart"></canvas>
+						</div>
+						<hr>
+					</div>
+				</div>
+
+			</div>
 		</div>
 
 

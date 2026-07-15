@@ -40,7 +40,7 @@ class HumedadForm(forms.Form):
     
     fechaInicio= forms.DateField(
         label="Fecha Inicio",
-        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
+        widget=forms.DateInput(attrs={'class': 'form-control form-control-sm','placeholder':'Fecha Inicio' ,'style': 'text-align: center;', 'type': 'date'})  # Otras atributos del widget si es necesario
     )
     
     fechaFin= forms.DateField(
@@ -80,7 +80,7 @@ class HumedadForm(forms.Form):
 
     tDesecacion= forms.IntegerField(
         initial=100, 
-        label="Temperatura de Desecación",
+        label="Desecación (ºC)",
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
     )
     
@@ -333,21 +333,21 @@ class TmicResultadosForm(forms.Form):
 
     tPlato= forms.IntegerField(
         label="Temperatura Plato (ºC)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;', 'required': 'required'}),
         required=False,
     )
 
     tMax= forms.DecimalField(
         decimal_places=2,  
         label="Temperatura máxima (ªC)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     resultadoPrueba= forms.ChoiceField(
         choices=resultadosPosibles,
         label= "Resultado",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
 
     )
@@ -355,20 +355,20 @@ class TmicResultadosForm(forms.Form):
     tipoIgnicion= forms.ChoiceField(
         choices=ignicionesPosibles,
         label= "Tipo ignición",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     tiempoPrueba= forms.IntegerField(
         label= "Tiempo total (min)",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required':'required'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;', 'required':'required'}),
         required=False,
 
     )
 
     tiempoMax= forms.IntegerField(
         label= "Tiempo Tmax (min)",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
     
@@ -439,27 +439,27 @@ class TminResultadosForm(forms.Form):
 
     tHorno= forms.IntegerField( 
         label="Temperatura Horno (ºC)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;', 'required': 'required'}),
         required=False,
     )
 
     peso= forms.DecimalField(
         decimal_places=2,  
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required',}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;', 'required': 'required',}),
         required=False,
     )
 
     presion= forms.IntegerField( 
         label= "Presion (kPa)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;', 'required': 'required'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;', 'required': 'required'}),
         required=False,
     )
 
     resultadoPrueba= forms.ChoiceField(
         choices=resultadosPosibles,
         label= "Resultado",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
 
     )
@@ -568,41 +568,41 @@ class LieResultadosForm(forms.Form):
     concentracion= forms.DecimalField(
         decimal_places=2,  
         label="Concentración (g/m3)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     peso= forms.DecimalField(
         decimal_places=1,  
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'required': 'true', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'required': 'true', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     pex= forms.DecimalField(
         decimal_places=2,  
         label= "Pex (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     pm= forms.DecimalField(
         decimal_places=2,  
         label= "Pm (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     dpdt= forms.IntegerField( 
         label= "dP/dT (bar/s)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     resultadoPrueba= forms.ChoiceField(
         choices=resultadosPosibles,
         label= "Resultado",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': 'true', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
 
     )
@@ -699,19 +699,19 @@ class EmiResultadosForm(forms.Form):
 
     concentracion= forms.IntegerField(
         label="Concentración (g/m3)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     energia= forms.IntegerField(
         label="Energía (mJ)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     retardo= forms.IntegerField(
         label= "Retardo (ms)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
@@ -719,13 +719,13 @@ class EmiResultadosForm(forms.Form):
     resultadoPrueba= forms.ChoiceField(
         choices=resultadosPosibles,
         label= "Resultado",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm resultadosPruebas', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm resultadosPruebas', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     numeroEnsayo = forms.IntegerField(
         label="Nº Ensayo",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
         min_value=1,
         max_value=10,
@@ -849,21 +849,21 @@ class PmaxResultadosForm(forms.Form):
 
     concentracion= forms.IntegerField(
         label="Concentración (g/m3)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     peso= forms.DecimalField(  
         decimal_places=1,
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     serie= forms.ChoiceField(
         choices=seriesPosibles,
         label= "Series",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
@@ -871,13 +871,13 @@ class PmaxResultadosForm(forms.Form):
     pm_serie= forms.DecimalField(
         decimal_places=1,  
         label= "Pm (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     dpdt_serie= forms.IntegerField(  
         label= "dP/dT (bar/s)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
@@ -978,47 +978,47 @@ class CloResultadosForm(forms.Form):
 
     concentracion= forms.IntegerField(
         label="Concentración (g/m3)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center; min-width: 60px;'}),
         required=True,
     )
 
     peso= forms.DecimalField(
         decimal_places=1,  
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'readonly': 'readonly', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'readonly': 'readonly', 'style': 'text-align: center; min-width: 60px;'}),
         required=True,
     )
 
     pex= forms.DecimalField(
         decimal_places=2,  
         label= "Pex (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center; min-width: 60px;'}),
         required=True,
     )
 
     pm= forms.DecimalField(
         decimal_places=2,  
         label= "Pm (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center; min-width: 60px;'}),
         required=True,
     )
 
     dpdt= forms.IntegerField(
         label= "dP/dT (bar/s)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center; min-width: 60px;'}),
         required=True,
     )
 
     oxigeno= forms.IntegerField(
         label= "Oxígeno",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','required': 'true' , 'style': 'text-align: center; min-width: 60px;'}),
         required=True,
     )
 
     resultadoPrueba= forms.ChoiceField(
         choices=resultadosPosibles,
         label= "Resultado",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': 'true' ,'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': 'true' ,'style': 'text-align: center; min-width: 60px;'}),
         
 
     )
@@ -1097,8 +1097,8 @@ class RecResultadosForm(forms.Form):
 
     nPrueba= forms.ChoiceField(
         choices=resultadosPosibles,
-        label= "NumeroPrueba",
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': 'true' ,'style': 'text-align: center;'}),
+        label= "Nº Prueba",
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'required': 'true' ,'style': 'text-align: center; min-width: 40px;'}),
     )
     
     tension= forms.IntegerField(
@@ -1389,30 +1389,30 @@ class N4ResultadosForm(forms.Form):
     ]
     celda= forms.ChoiceField(
         choices=celdasDisponibles,
-        label="Celda", 
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7;', 'required': 'required'}),
+        label="Celda (mm)", 
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7; min-width: 60px;', 'required': 'required'}),
     )
 
     tConsigna= forms.ChoiceField(
         choices=temperaturasDisponibles,
         label="Temperatura", 
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7;', 'required': 'required'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects excludeSelect', 'style': 'text-align: center; pointer-events: none; opacity: 0.7; min-width: 60px;', 'required': 'required'}),
     )
 
     tMax= forms.DecimalField(
         label="Temperatura máxima", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center;', 'required': 'required'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center; min-width: 60px;', 'required': 'required'}),
     )
 
     tiempo= forms.IntegerField(
         label="Tiempo", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center;', 'required': 'required'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm inputs', 'style': 'text-align: center; min-width: 60px;', 'required': 'required'}),
     )
 
     resultado= forms.ChoiceField(
         choices=resultadosPosibles,
         label="Resultado", 
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects', 'style': 'text-align: center;',  'required': 'required'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm selects', 'style': 'text-align: center; min-width: 60px;',  'required': 'required'}),
     )
     
 
@@ -1504,40 +1504,40 @@ class O1ResultadosForm(forms.Form):
     proporcion= forms.ChoiceField(
         choices=porcentajes,
         label="Proporción", 
-        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'readonly':'readonly', 'style': 'text-align: center;'}),
+        widget=forms.Select(attrs={'class': 'form-control form-control-sm', 'readonly':'readonly', 'style': 'text-align: center; min-width: 70px;'}),
         required=False,
     )
 
 
     tiempo1= forms.IntegerField(
         label="T-1", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center; min-width: 60px;'}),
         
     )
 
     tiempo2= forms.IntegerField(
         label="T-2", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center; min-width: 60px;'}),
     )
 
     tiempo3= forms.IntegerField(
         label="T-3", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center; min-width: 60px;'}),
     )
 
     tiempo4= forms.IntegerField(
         label="T-4", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center; min-width: 60px;'}),
     )
 
     tiempo5= forms.IntegerField(
         label="T-5", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm tiempo', 'style': 'text-align: center; min-width: 60px;'}),
     )
 
     resultado= forms.FloatField(
         label="Resultado", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly':'readonly', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly':'readonly', 'style': 'text-align: center; min-width: 60px;'}),
         
     )
     
@@ -1789,14 +1789,14 @@ class ExploNoExploResultadosForm(forms.Form):
 
     concentracion= forms.IntegerField(
         label="Concentración (g/m3)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     peso= forms.DecimalField(  
         decimal_places=1,
         label="Peso (g)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'readonly': 'readonly', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
@@ -1804,13 +1804,13 @@ class ExploNoExploResultadosForm(forms.Form):
     pm_serie= forms.DecimalField(
         decimal_places=1,  
         label= "Pm (bar)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
     dpdt_serie= forms.IntegerField(  
         label= "dP/dT (bar/s)", 
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
 
