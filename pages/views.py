@@ -140,7 +140,7 @@ def logout_view(request):
     # Redirigir al usuario a la página de login o la página principal
     return redirect('login')  # O a la URL de tu preferencia
 
-
+"""
 @login_required
 def reporte(request):
     
@@ -171,8 +171,8 @@ def reporte(request):
 
         usuario = request.user
         #Pedimos el Reporte
-        pdf_gen = ReportGenerator(periodo, usuario)
-        output = pdf_gen.reporte()
+        #pdf_gen = ReportGenerator(periodo, usuario)
+        #output = pdf_gen.reporte()
 
         # Preparar la respuesta para enviar el archivo al cliente
         response = HttpResponse(output, content_type="application/pdf")
@@ -185,5 +185,5 @@ def reporte(request):
 
 
     return JsonResponse({'mensaje': 'Email enviado'})
-
+"""
 
