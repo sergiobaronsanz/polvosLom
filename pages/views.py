@@ -140,7 +140,7 @@ def logout_view(request):
     # Redirigir al usuario a la página de login o la página principal
     return redirect('login')  # O a la URL de tu preferencia
 
-"""
+
 @login_required
 def reporte(request):
     
@@ -181,9 +181,6 @@ def reporte(request):
 
         return response
 
-
-
-
     return JsonResponse({'mensaje': 'Email enviado'})
-"""
+
 
