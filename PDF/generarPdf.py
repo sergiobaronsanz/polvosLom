@@ -15,6 +15,7 @@ from muestras.models import DescripcionMuestra
 import os
 import os
 from django.conf import settings
+import time
 
 
 class PDFGenerator:
@@ -107,6 +108,7 @@ class PDFGenerator:
 
 
         for request in self.request:
+            inicio = time.perf_counter()
             if request['ensayo'] == 'Humedad':
                 pdf_bytes = self.generate_Humedad_pdf()
             if request['ensayo'] == 'Granulometria':
@@ -141,6 +143,8 @@ class PDFGenerator:
                 pdf_bytes = self.generate_exploNoExplo_pdf()
             if request['ensayo'] == 'BZ':
                 pdf_bytes = self.generate_bz_pdf()
+
+            print(f"{request['ensayo']} -> {time.perf_counter() - inicio:.3f} s")
 
             if request['ensayo'] != 'Parte': #Incluye el parte en ensayos ZIP con un solo archivo (ejemplo se pide O1 solo)
                 nombre_archivo= (request['muestra_nombre']) + "-" + (request['ensayo'] + ".pdf")
