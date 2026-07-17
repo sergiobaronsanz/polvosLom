@@ -171,8 +171,8 @@ def reporte(request):
 
         usuario = request.user
         #Pedimos el Reporte
-        #pdf_gen = ReportGenerator(periodo, usuario)
-        #output = pdf_gen.reporte()
+        pdf_gen = ReportGenerator(periodo, usuario)
+        output = pdf_gen.reporte()
 
         # Preparar la respuesta para enviar el archivo al cliente
         response = HttpResponse(output, content_type="application/pdf")
