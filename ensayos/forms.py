@@ -466,7 +466,7 @@ class TminResultadosForm(forms.Form):
     
     repeticiones= forms.IntegerField(
         label= "Repeticiones",
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center;'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'style': 'text-align: center; min-width: 60px;'}),
         required=False,
     )
     
