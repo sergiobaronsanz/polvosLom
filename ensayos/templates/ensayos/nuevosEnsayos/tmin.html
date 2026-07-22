@@ -64,13 +64,12 @@
             </div>
     {% endif %}
 
-      
-    <table id= "tabla" class="table coltable-striped  table-responsive table-bordered">
-
+     
+    <table id= "tabla" class="table coltable-striped table-responsive table-bordered">
         <thead class="thead-dark">
             <tr>
                 {%for form in formTminResultados.forms.0%}
-                    <th class="align-middle" style= "width: 120px">{{form.label}}</th>
+                    <th class="align-middle">{{form.label}}</th>
                 {%endfor%}
 
             </tr>
