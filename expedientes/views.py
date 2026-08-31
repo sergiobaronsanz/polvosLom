@@ -103,7 +103,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         print("No existe el expediente")
         
     try:
-        empresa= Empresa.objects.get(empresa=empresa)
+        empresa= Empresa.objects.get(id=empresa)
     except ObjectDoesNotExist:
         print("No existe la empresa") 
         
@@ -120,7 +120,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         id_muestra=1
     
     #Asignamos nombre
-    abreviaturaCompleta=empresa.abreviatura + "-" +str(id_muestra)
+    abreviaturaCompleta= empresa.abreviatura + "-" +str(id_muestra)
     
     #mandamos el formulario
     form= EnsayosMuestras()
