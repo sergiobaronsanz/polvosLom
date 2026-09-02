@@ -58,7 +58,7 @@ def nuevoExpediente(request):
             
             abreviatura= empresa.abreviatura 
             
-            return redirect('ensayosMuestras', nMuestras=nMuestrasForm, empresa= empresa, expediente=expediente)        
+            return redirect('ensayosMuestras', nMuestras=nMuestrasForm, empresa= empresa.id, expediente=expediente)        
     else:
         form = ExpedientesForm()
 
