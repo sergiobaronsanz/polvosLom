@@ -37,34 +37,103 @@ def muestras(request):
 @login_required
 def recepcionMuestra(request, muestra="nueva"):
     if request.method == 'POST':
+
         if muestra != "nueva":
             muestra_obj = Muestras.objects.get(id=muestra)
-            descripcion_existente = DescripcionMuestra.objects.get(muestra=muestra_obj)
-            form = DescripcionMuestraForm(request.POST, request.FILES, instance=descripcion_existente)
+
+            # Buscar la descripción existente.
+            # Usamos filter().first() porque puede haber duplicados
+            # antiguos en la base de datos.
+            descripcion_existente = (
+                DescripcionMuestra.objects
+                .filter(muestra=muestra_obj)
+                .order_by('id')
+                .first()
+            )
+
+            form = DescripcionMuestraForm(
+                request.POST,
+                request.FILES,
+                instance=descripcion_existente
+            )
+
         else:
-            form = DescripcionMuestraForm(request.POST, request.FILES)
+            form = DescripcionMuestraForm(
+                request.POST,
+                request.FILES
+            )
 
         if form.is_valid():
+
             descripcion = form.save(commit=False)
 
-            # Si no se subieron nuevas imágenes, conservar las anteriores
-            if muestra != "nueva":
-                if not request.FILES.get('imagenMuestra'):
-                    descripcion.imagenMuestra = descripcion_existente.imagenMuestra
-                if not request.FILES.get('imagenEnvoltorio'):
-                    descripcion.imagenEnvoltorio = descripcion_existente.imagenEnvoltorio
+            # ---------------------------------------------------------
+            # RECEPCIÓN DE UNA MUESTRA NUEVA
+            # ---------------------------------------------------------
+            if muestra == "nueva":
 
+                # La muestra viene indicada en el formulario
+                muestra_obj = descripcion.muestra
+
+                # Comprobar si YA existe una descripción para esta muestra
+                descripcion_existente = (
+                    DescripcionMuestra.objects
+                    .filter(muestra=muestra_obj)
+                    .order_by('id')
+                    .first()
+                )
+
+                if descripcion_existente:
+                    # IMPORTANTE:
+                    # En lugar de crear un registro nuevo,
+                    # utilizamos el registro que ya existe.
+                    descripcion.pk = descripcion_existente.pk
+
+            # ---------------------------------------------------------
+            # EDICIÓN DE UNA MUESTRA EXISTENTE
+            # ---------------------------------------------------------
+            else:
+
+                # Si no se subieron nuevas imágenes,
+                # conservar las anteriores
+                if descripcion_existente:
+
+                    if not request.FILES.get('imagenMuestra'):
+                        descripcion.imagenMuestra = (
+                            descripcion_existente.imagenMuestra
+                        )
+
+                    if not request.FILES.get('imagenEnvoltorio'):
+                        descripcion.imagenEnvoltorio = (
+                            descripcion_existente.imagenEnvoltorio
+                        )
+
+                # Aseguramos que la descripción pertenece
+                # a la muestra correcta
+                descripcion.muestra = muestra_obj
+
+            # ---------------------------------------------------------
+            # GUARDAR DESCRIPCIÓN
+            # ---------------------------------------------------------
             descripcion.save()
 
+            # ---------------------------------------------------------
+            # SI ES UNA RECEPCIÓN NUEVA
+            # ---------------------------------------------------------
             if muestra == "nueva":
+
                 # Actualizar estado de la muestra
-                muestra_obj = descripcion.muestra
                 muestra_obj.estado = "3"
                 muestra_obj.save()
 
-                # Cambiar estado del expediente si todas las muestras están en estado "3"
+                # Cambiar estado del expediente si todas
+                # las muestras están en estado "3"
                 expediente = muestra_obj.expediente
-                muestras = Muestras.objects.filter(expediente=expediente)
+
+                muestras = Muestras.objects.filter(
+                    expediente=expediente
+                )
+
                 if all(m.estado == "3" for m in muestras):
                     expediente.estado = "3"
                     expediente.save()
