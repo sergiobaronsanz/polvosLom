@@ -58,11 +58,12 @@ def nuevoExpediente(request):
             
             abreviatura= empresa.abreviatura 
             
-            return redirect('ensayosMuestras', nMuestras=nMuestrasForm, empresa= empresa.id, expediente=expediente)        
+            return redirect('ensayosMuestras', nMuestras=nMuestrasForm, empresa_id= empresa.id, expediente=expediente)        
     else:
         form = ExpedientesForm()
 
     return render(request, 'nuevoExpediente.html', {'form': form})
+
 @login_required
 def empresaSugerencias(request):
     term = request.POST.get('term', '').strip()  # <-- usa .get() y strip()
@@ -95,7 +96,7 @@ def abreviaturaExistente(request):
 
 #Seleccion de los ensayos para cada muestra
 @login_required
-def ensayosMuestras(request,expediente, empresa, nMuestras):
+def ensayosMuestras(request,expediente, empresa_id, nMuestras):
     #Extraemos los objetos de expediente y empresa
     try:
         expediente= Expedientes.objects.get(expediente=expediente)
@@ -103,7 +104,7 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
         print("No existe el expediente")
         
     try:
-        empresa= Empresa.objects.get(id=empresa)
+        empresa= Empresa.objects.get(id=empresa_id)
     except ObjectDoesNotExist:
         print("No existe la empresa") 
         
@@ -126,27 +127,50 @@ def ensayosMuestras(request,expediente, empresa, nMuestras):
     form= EnsayosMuestras()
 
     
-    if form.is_valid:
-        if request.POST:
-            listaEnsayos = request.POST.getlist('listaEnsayos')
-            observaciones= request.POST.get('observaciones')
+    # Mandamos el formulario
+    if request.method == 'POST':
+
+        form = EnsayosMuestras(request.POST)
+
+        if form.is_valid():
+
+            listaEnsayos = form.cleaned_data['listaEnsayos']
+            observaciones = form.cleaned_data['observaciones']
 
             print(listaEnsayos)
-            
-            nuevaMuestra= Muestras(
-                id_muestra= id_muestra, 
-                empresa= empresa, 
-                expediente= expediente, 
-                observaciones= observaciones)
+
+            nuevaMuestra = Muestras(
+                id_muestra=id_muestra,
+                empresa=empresa,
+                expediente=expediente,
+                observaciones=observaciones
+            )
+
             nuevaMuestra.save()
 
-             #Al ser una mny to many no se puede ingresar directamentec como las otras
-            nuevaMuestra.listaEnsayos.set(listaEnsayos)
-    
-            if nMuestras>1:
-                return redirect('ensayosMuestras', nMuestras=nMuestras-1, empresa= empresa, expediente=expediente) 
+            if listaEnsayos:
+                nuevaMuestra.listaEnsayos.set(listaEnsayos)
+
+                if nMuestras > 1:
+                    return redirect(
+                        'ensayosMuestras',
+                        nMuestras=nMuestras - 1,
+                        empresa_id=empresa.id,
+                        expediente=expediente.expediente
+                    )
+                else:
+                    return redirect('verExpedientes')
+
             else:
-                return redirect('verExpedientes')    
+                nuevaMuestra.delete()
+                form.add_error(
+                    'listaEnsayos',
+                    'Debes seleccionar al menos un ensayo.'
+                )
+
+    else:
+        form = EnsayosMuestras()
+      
             
     
     return render(request, 'ensayosMuestras.html',{

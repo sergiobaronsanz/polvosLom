@@ -10,22 +10,44 @@
       <div class="row justify-content-center">
           <div class="card mb-4 col-lg-8">
             <div class="card-body">
-              <h2 class="text-center mb-5"> Ingresa los datos de la muestra   </h2>
+              <h2 class="text-center mb-5"> Ingresa los datos de la muestra </h2>
                     <form method="post">
                         {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
                         <div class="my-4 row col-lg-12 align-items-center justify-content-center border border-info">
-                            <h4 class="col-lg-7 mb-0 mt-3" name= {{campo.label}}>Rellene los datos para {{abreviaturaCompleta}}</h4>                         
+                            <h4 class="col-lg-7 mb-0 mt-3">
+                                Rellene los datos para {{ abreviaturaCompleta }}
+                            </h4>
+
                             {% for campo in form %}
-                                <div class="my-4 row col-lg-12 align-items-center justify-content-center" >
-                                    <label class="col-lg-5 mb-0" name= {{campo.label}}>{{ campo.label }}</label>
+                                <div class="my-4 row col-lg-12 align-items-center justify-content-center">
+                                    <label class="col-lg-5 mb-0">
+                                        {{ campo.label }}
+                                    </label>
+
                                     <div class="col-lg-7">
                                         {{ campo }}
+
+                                        {% if campo.errors %}
+                                            <div class="text-danger">
+                                                {{ campo.errors }}
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
                         </div>
+
                         <div class="row justify-content-center">
-                            <button id= "enviarFormulario" type="submit" class="btn btn-primary">Guardar {{abreviaturaCompleta}}</button>
+                            <button id="enviarFormulario" type="submit" class="btn btn-primary">
+                                Guardar {{ abreviaturaCompleta }}
+                            </button>
                         </div>
                     </form>
             </div>
